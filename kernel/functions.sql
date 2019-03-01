@@ -7,6 +7,7 @@ drop function if exists internal_try_read_status_id;
 drop function if exists internal_try_read_category_id;
 drop function if exists internal_try_read_type_id;
 drop function if exists internal_try_read_level_id;
+drop function if exists internal_try_read_role_id;
 drop function if exists internal_try_read_resource_id;
 drop function if exists internal_try_read_link_id;
 drop function if exists __throw_error__;
@@ -56,6 +57,24 @@ begin
     end if;
 
     return __resource_id__;
+end; //
+
+create function internal_try_read_role_id
+(role_id int)
+returns int
+not deterministic
+begin
+    declare __role_id__ int;
+
+    select re_id into __role_id__
+    from role
+    where re_id = role_id;
+    
+    if (__role_id__ is null) then
+        select __throw_error__ (concat_ws("", "unknown role for id=", role_id)) into __role_id__;
+    end if;
+
+    return __role_id__;
 end; //
 
 create function internal_try_read_level_id

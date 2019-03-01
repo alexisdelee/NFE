@@ -9,6 +9,7 @@ drop table if exists level;
 drop table if exists type;
 drop table if exists region;
 drop table if exists user;
+drop table if exists role;
 drop table if exists resource;
 
 create table resource (
@@ -23,6 +24,15 @@ engine=InnoDB
 default charset="utf8" collate="utf8_general_ci"
 row_format=compressed;
 
+create table role (
+    ro_id int unsigned primary key auto_increment,
+    ro_shortname varchar(25) not null,
+    unique (ro_shortname)
+)
+engine=InnoDB
+default charset="utf8" collate="utf8_general_ci"
+row_format=compressed;
+
 create table user (
     usr_id int unsigned primary key auto_increment,
     usr_pseudo varchar(100) not null,
@@ -31,13 +41,17 @@ create table user (
     usr_salt char(32), -- 128 bits @random
     usr_iterations int not null, -- for hmac
     usr_avatar int unsigned,
+    usr_role int unsigned not null,
     usr_deleted boolean not null default false,
     usr_created datetime default current_timestamp,
     usr_updated datetime on update current_timestamp,
-    unique (usr_pseudo),
+    unique (usr_pseudo, usr_nfeid),
     constraint user_avatar_key
         foreign key (usr_avatar)
-        references resource(re_id)
+        references resource(re_id),
+    constraint user_role_key
+        foreign key (usr_role)
+        references role(ro_id)
 )
 engine=InnoDB
 default charset="utf8" collate="utf8_general_ci"

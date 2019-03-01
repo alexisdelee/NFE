@@ -99,6 +99,7 @@ drop procedure if exists assign_commentary_to_ticket;
 drop procedure if exists assign_user_to_ticket;
 drop procedure if exists create_ticket;
 drop procedure if exists create_user;
+drop procedure if exists create_role;
 drop procedure if exists create_region;
 
 delimiter //
@@ -112,6 +113,13 @@ begin
     values (postal, capital, nccenr);
 end; //
 
+create procedure create_role
+(in shortname varchar(25))
+begin
+    insert into role (ro_shortname)
+    values (shortname);
+end; //
+
 create procedure create_user
 (in pseudo varchar(100),
  in nfeid char(10),
@@ -119,20 +127,21 @@ create procedure create_user
  in salt char(32),
  in iterations int,
  in folder varchar(255),
- in filename varchar(255))
+ in filename varchar(255),
+ in role int)
 begin
     declare __resource_id__ int;
 
     if ((folder is not null) and (filename is not null)) then
         call internal_create_resource (folder, filename, __resource_id__);
         
-        insert into user (usr_pseudo, usr_nfeid, usr_password, usr_salt, usr_iterations, usr_avatar)
-        select pseudo, nfeid, password, salt, iterations, re_id
+        insert into user (usr_pseudo, usr_nfeid, usr_password, usr_salt, usr_iterations, usr_avatar, usr_role)
+        select pseudo, nfeid, password, salt, iterations, re_id, role
         from resource
         where re_id = __resource_id__;
     else
-        insert into user (usr_pseudo, usr_nfeid, usr_password, usr_salt, usr_iterations)
-        values (pseudo, nfeid, password, salt, iterations);
+        insert into user (usr_pseudo, usr_nfeid, usr_password, usr_salt, usr_iterations, usr_role)
+        values (pseudo, nfeid, password, salt, iterations, role);
     end if;
 end; //
 
