@@ -32,6 +32,7 @@ call create_region ("93", "13055", "Provence-Alpes-Côtes d'Azur");
 call create_region ("94", "2A004", "Corse");
 
 call create_role ("anonymous");
+call create_role ("agent");
 call create_role ("operator");
 call create_role ("administrator");
 call create_role ("root");
@@ -98,7 +99,7 @@ call internal_create_status ("Fini", "over", null, 4);
 
 -- test
 
-call create_user ("root", "Vm6MJXw6hc", "8b631b4d6bed1ce02f89d0afe7d5a1d86b2e7961fa18ba7bd55fe88a521eae02", "m7dPtXzSJsTuma4V24hA", 200, null, null, 4); -- 1secret,
+call create_user ("root", "Vm6MJXw6hc", "8b631b4d6bed1ce02f89d0afe7d5a1d86b2e7961fa18ba7bd55fe88a521eae02", "m7dPtXzSJsTuma4V24hA", 200, null, null, 5); -- 1secret,
 
 call create_ticket (null, null, "abcdef", 1, 1, 2, null, 1);
 call assign_user_to_ticket (1, 1);
