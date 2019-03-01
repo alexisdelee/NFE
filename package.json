@@ -1,10 +1,10 @@
 {
-    "name": "Ticketing",
+    "name": "NFE",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
     "scripts": {
-        "db:import": "mysql -u root < ticketing.sql"
+        "db:import": "mysql -u root < nfe.sql"
     },
     "keywords": [],
     "author": "",
