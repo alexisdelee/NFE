@@ -1,0 +1,12 @@
+{
+    "name": "Ticketing",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "db:import": "mysql -u root < ticketing.sql"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC"
+}
