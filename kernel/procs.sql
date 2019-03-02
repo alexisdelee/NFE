@@ -5,8 +5,8 @@ source kernel/functions.sql;
 drop procedure if exists internal_create_universal;
 drop procedure if exists internal_create_status;
 drop procedure if exists internal_create_category;
-drop procedure if exists internal_create_type;
-drop procedure if exists internal_create_level;
+drop procedure if exists internal_create_tracker;
+drop procedure if exists internal_create_priority;
 drop procedure if exists internal_create_resource;
 drop procedure if exists internal_create_link;
 
@@ -34,7 +34,7 @@ begin
         and re_filename = filename;
 end; //
 
-create procedure internal_create_level
+create procedure internal_create_priority
 (in name varchar(100),
  in shortname varchar(25),
  in description text,
@@ -45,13 +45,13 @@ begin
 
     call internal_create_resource (folder, filename, __resource_id__);
     
-    insert into level (lvl_name, lvl_shortname, lvl_description, lvl_icon)
+    insert into priority (pr_name, pr_shortname, pr_description, pr_icon)
     select name, shortname, description, re_id
     from resource
     where re_id = __resource_id__;
 end; //
 
-create procedure internal_create_type
+create procedure internal_create_tracker
 (in name varchar(100),
  in shortname varchar(25),
  in description text,
@@ -62,7 +62,7 @@ begin
 
     call internal_create_resource (folder, filename, __resource_id__);
     
-    insert into type (tp_name, tp_shortname, tp_description, tp_icon)
+    insert into tracker (tr_name, tr_shortname, tr_description, tr_icon)
     select name, shortname, description, re_id
     from resource
     where re_id = __resource_id__;
@@ -161,8 +161,8 @@ create procedure create_ticket
  in description text,
  in color char(6),
  in region_id int,
- in type_id int,
- in level_id int,
+ in tracker_id int,
+ in priority_id int,
  in status_id int,
  in user_id int)
 begin
@@ -176,8 +176,8 @@ begin
         set __status_id__ = status_id;
     end if;
 
-    insert into ticket (tk_region, tk_summary, tk_description, tk_color, tk_type, tk_level, tk_status, tk_reporter)
-    values (region_id, summary, compress (description), color, type_id, level_id, __status_id__, user_id);
+    insert into ticket (tk_region, tk_summary, tk_description, tk_color, tk_tracker, tk_priority, tk_status, tk_reporter)
+    values (region_id, summary, compress (description), color, tracker_id, priority_id, __status_id__, user_id);
 end; //
 
 create procedure assign_user_to_ticket
@@ -229,11 +229,11 @@ create procedure assign_item_to_category
 (in label varchar(255),
  in select_field text,
  in update_field text,
- in type_id int,
+ in tracker_id int,
  in universal_id int)
 begin
-    insert into item (it_label, it_select_field, it_update_field, it_sorting, it_type, it_universal)
-    values (label, select_field, update_field, 1, type_id, universal_id); -- maybe compress select_field and update_field later
+    insert into item (it_label, it_select_field, it_update_field, it_sorting, it_tracker, it_universal)
+    values (label, select_field, update_field, 1, tracker_id, universal_id); -- maybe compress select_field and update_field later
 end; //
 -- debug
 
@@ -251,16 +251,16 @@ begin
         rg_postal,
         rg_capital,
         rg_nccenr,
-        tp_id,
-        tp_name,
-        tp_shortname,
-        tp_description,
-        concat (type_resource.re_folder, type_resource.re_filename) as "tp_resource",
-        lvl_id,
-        lvl_name,
-        lvl_shortname,
-        lvl_description,
-        concat (level_resource.re_folder, level_resource.re_filename) as "lvl_resource",
+        tr_id,
+        tr_name,
+        tr_shortname,
+        tr_description,
+        concat (tracker_resource.re_folder, tracker_resource.re_filename) as "tr_resource",
+        pr_id,
+        pr_name,
+        pr_shortname,
+        pr_description,
+        concat (priority_resource.re_folder, priority_resource.re_filename) as "pr_resource",
         st_id,
         st_name,
         st_shortname,
@@ -278,10 +278,10 @@ begin
         concat (reporter_resource.re_folder, reporter_resource.re_filename) as "reporter_usr_resource"
     from ticket
     join region on rg_id = tk_region
-    join type on tp_id = tk_type
-    join resource as type_resource on type_resource.re_id = tp_icon
-    join level on lvl_id = tk_level
-    join resource as level_resource on level_resource.re_id = lvl_icon
+    join tracker on tr_id = tk_tracker
+    join resource as tracker_resource on tracker_resource.re_id = tr_icon
+    join priority on pr_id = tk_priority
+    join resource as priority_resource on priority_resource.re_id = pr_icon
     join status on status.st_id = tk_status
     join category on ca_id = st_category
     left outer join user as assignee on assignee.usr_id = tk_assignee

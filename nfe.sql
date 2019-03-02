@@ -44,17 +44,17 @@ call internal_create_link ("précède", "suit");
 call internal_create_link ("copier vers", "copier depuis");
 call internal_create_link ("tâche parente", "sous-tâche");
 
-call internal_create_level ("Simple", "trivial", "Problème d'ordre cosmétique, comme une faute d'orthographe ou du texte mal aligné", "/assets/icons/", "trivial.png");
-call internal_create_level ("Mineur", "minor", "Perte de fonctionnalité mineure, ou autre problème pouvant être contourné facilement", "/assets/icons/", "minor.png");
-call internal_create_level ("Important", "major", "Perte de fonctionnalité importante", "/assets/icons/", "major.png");
-call internal_create_level ("Critique", "critical", "Plantage, perte de mémoire ou fuite de mémoire grave", "/assets/icons/", "critical.png");
-call internal_create_level ("Blocage", "blocker", "Bloque le fonctionnement et/ou le travail de test, de telle sorte que la production n'a pu s'exécuter", "/assets/icons/", "blocker.png");
+call internal_create_priority ("Simple", "trivial", "Problème d'ordre cosmétique, comme une faute d'orthographe ou du texte mal aligné", "/assets/icons/", "trivial.png");
+call internal_create_priority ("Mineur", "minor", "Perte de fonctionnalité mineure, ou autre problème pouvant être contourné facilement", "/assets/icons/", "minor.png");
+call internal_create_priority ("Important", "major", "Perte de fonctionnalité importante", "/assets/icons/", "major.png");
+call internal_create_priority ("Critique", "critical", "Plantage, perte de mémoire ou fuite de mémoire grave", "/assets/icons/", "critical.png");
+call internal_create_priority ("Blocage", "blocker", "Bloque le fonctionnement et/ou le travail de test, de telle sorte que la production n'a pu s'exécuter", "/assets/icons/", "blocker.png");
 
-call internal_create_type ("Incident", "incident", "Problème altérant ou compromettant les infrastructures", "/assets/icons/", "bug.png");
-call internal_create_type ("Analyse", "defect", "Tâche pour analyser techniquement un sujet", "/assets/icons/", "defect.png"); -- undefined.png
-call internal_create_type ("Intervention", "intervention", "Demande d'intervention sur le terrain", "/assets/icons/", "improvement.png");
-call internal_create_type ("Congé maladie", "sickness_leave", "Demande de congés maladies", "/assets/icons/", "sickness.png"); -- newfeature.png
-call internal_create_type ("Congé payé", "paid_leave", "Demande de congés payés", "/assets/icons/", "paid.png"); -- story.png
+call internal_create_tracker ("Incident", "incident", "Problème altérant ou compromettant les infrastructures", "/assets/icons/", "bug.png");
+call internal_create_tracker ("Analyse", "defect", "Tâche pour analyser techniquement un sujet", "/assets/icons/", "defect.png"); -- undefined.png
+call internal_create_tracker ("Intervention", "intervention", "Demande d'intervention sur le terrain", "/assets/icons/", "improvement.png");
+call internal_create_tracker ("Congé maladie", "sickness_leave", "Demande de congés maladies", "/assets/icons/", "sickness.png"); -- newfeature.png
+call internal_create_tracker ("Congé payé", "paid_leave", "Demande de congés payés", "/assets/icons/", "paid.png"); -- story.png
 
 call internal_create_category ("New", "new");
 call internal_create_category ("In progress", "wip");

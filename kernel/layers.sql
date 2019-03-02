@@ -8,8 +8,8 @@ drop table if exists commentary;
 drop table if exists ticket;
 drop table if exists status;
 drop table if exists category;
-drop table if exists level;
-drop table if exists type;
+drop table if exists priority;
+drop table if exists tracker;
 drop table if exists region;
 drop table if exists user;
 drop table if exists role;
@@ -72,30 +72,30 @@ engine=InnoDB
 default charset="utf8" collate="utf8_general_ci"
 row_format=compressed;
 
-create table type (
-    tp_id int unsigned primary key auto_increment,
-    tp_name varchar(100) not null,
-    tp_shortname varchar(25) not null,
-    tp_description text,
-    tp_icon int unsigned not null,
-    unique (tp_shortname),
-    constraint type_icon_key
-        foreign key (tp_icon)
+create table tracker (
+    tr_id int unsigned primary key auto_increment,
+    tr_name varchar(100) not null,
+    tr_shortname varchar(25) not null,
+    tr_description text,
+    tr_icon int unsigned not null,
+    unique (tr_shortname),
+    constraint tracker_icon_key
+        foreign key (tr_icon)
         references resource(re_id)
 )
 engine=InnoDB
 default charset="utf8" collate="utf8_general_ci"
 row_format=compressed;
 
-create table level (
-    lvl_id int unsigned primary key auto_increment,
-    lvl_name varchar(100) not null,
-    lvl_shortname varchar(25) not null,
-    lvl_description text,
-    lvl_icon int unsigned not null,
-    unique (lvl_shortname),
-    constraint level_icon_key
-        foreign key (lvl_icon)
+create table priority (
+    pr_id int unsigned primary key auto_increment,
+    pr_name varchar(100) not null,
+    pr_shortname varchar(25) not null,
+    pr_description text,
+    pr_icon int unsigned not null,
+    unique (pr_shortname),
+    constraint priority_icon_key
+        foreign key (pr_icon)
         references resource(re_id)
 )
 engine=InnoDB
@@ -134,8 +134,8 @@ create table ticket (
     tk_summary varchar(255),
     tk_description blob,
     tk_color char(6),
-    tk_type int unsigned not null,
-    tk_level int unsigned not null,
+    tk_tracker int unsigned not null,
+    tk_priority int unsigned not null,
     tk_status int unsigned not null,
     tk_assignee int unsigned,
     tk_reporter int unsigned not null,
@@ -146,12 +146,12 @@ create table ticket (
     constraint ticket_region_key
         foreign key (tk_region)
         references region(rg_id),
-    constraint ticket_type_key
-        foreign key (tk_type)
-        references type(tp_id),
-    constraint ticket_level_key
-        foreign key (tk_level)
-        references level(lvl_id),
+    constraint ticket_tracker_key
+        foreign key (tk_tracker)
+        references tracker(tr_id),
+    constraint ticket_priority_key
+        foreign key (tk_priority)
+        references priority(pr_id),
     constraint ticket_status_key
         foreign key (tk_status)
         references status(st_id),
@@ -259,12 +259,12 @@ create table item (
     it_select_field text not null,
     it_update_field text,
     it_sorting int unsigned not null,
-    it_type int unsigned not null,
+    it_tracker int unsigned not null,
     it_universal int unsigned not null,
-    unique (it_label, it_type),
-    constraint item_type_key
-        foreign key (it_type)
-        references type(tp_id),
+    unique (it_label, it_tracker),
+    constraint item_tracker_key
+        foreign key (it_tracker)
+        references tracker(tr_id),
     constraint item_universal_key
         foreign key (it_universal)
         references universal(ul_id)
