@@ -97,6 +97,9 @@ call internal_create_status ("Incomplet", "incomplete", "Le problème n'est pas 
 call internal_create_status ("Impossible à reproduire", "no_reproduce", "Toutes les tentatives de reproduction de cette demande ont échoué, ou il n'y a pas suffisamment d'informations pour reproduire la demande. En lisant le code, aucun indice sur la cause de ce comportement n'apparaît. Si d'autres informations apparaissent ultérieurement, veuillez rouvrir la demande", 4);
 call internal_create_status ("Fini", "over", null, 4);
 
+call internal_create_universal ("text");
+call internal_create_universal ("select");
+
 -- test
 
 call create_user ("root", "Vm6MJXw6hc", "8b631b4d6bed1ce02f89d0afe7d5a1d86b2e7961fa18ba7bd55fe88a521eae02", "m7dPtXzSJsTuma4V24hA", 200, null, null, 5); -- 1secret,
@@ -104,4 +107,7 @@ call create_user ("root", "Vm6MJXw6hc", "8b631b4d6bed1ce02f89d0afe7d5a1d86b2e796
 call create_ticket (null, null, "abcdef", 1, 1, 2, null, 1);
 call assign_user_to_ticket (1, 1);
 call assign_commentary_to_ticket ("Ceci un commentaire", 1, 1);
-call assign_tag_to_ticket ("wifi", null, 1, 1)
+call assign_tag_to_ticket ("wifi", null, 1, 1);
+
+call assign_item_to_category ("Assigné à", "select it_dt_value from item_data where it_dt_ticket = £item_id and it_dt_ticket = £ticket_id", "replace into item_data (it_dt_value, it_dt_item, it_dt_ticket) values (£ticket_id, £item_id, £ticket_id)", 1, 1);
+call assign_item_to_category ("Collègues", "select it_dt_value from item_data where it_dt_ticket = £item_id and it_dt_ticket = £ticket_id", "replace into item_data (it_dt_value, it_dt_item, it_dt_ticket) values ('ok', £item_id, £ticket_id), ('nok', £item_id, £ticket_id)", 1, 2);

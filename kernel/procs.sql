@@ -2,6 +2,7 @@ source kernel/functions.sql;
 
 -- Internal stored procedure
 
+drop procedure if exists internal_create_universal;
 drop procedure if exists internal_create_status;
 drop procedure if exists internal_create_category;
 drop procedure if exists internal_create_type;
@@ -85,6 +86,15 @@ begin
     values (name, shortname, description, category_id);
 end; //
 
+-- debug
+create procedure internal_create_universal
+(in label varchar(255))
+begin
+    insert into universal (ul_label)
+    values (label);
+end; //
+-- debug
+
 delimiter ;
 
 -- Stored procedure
@@ -93,6 +103,7 @@ drop procedure if exists get_links;
 drop procedure if exists get_tags;
 drop procedure if exists get_commentaries;
 drop procedure if exists get_ticket;
+drop procedure if exists assign_item_to_category;
 drop procedure if exists assign_link_to_ticket;
 drop procedure if exists assign_tag_to_ticket;
 drop procedure if exists assign_commentary_to_ticket;
@@ -212,6 +223,19 @@ begin
     insert into link_ticket (lk_tk_link, lk_tk_outward_ticket, lk_tk_inward_ticket)
     values (link_id, from_ticket_id, to_ticket_id);
 end; //
+
+-- debug
+create procedure assign_item_to_category
+(in label varchar(255),
+ in select_field text,
+ in update_field text,
+ in type_id int,
+ in universal_id int)
+begin
+    insert into item (it_label, it_select_field, it_update_field, it_sorting, it_type, it_universal)
+    values (label, select_field, update_field, 1, type_id, universal_id); -- maybe compress select_field and update_field later
+end; //
+-- debug
 
 create procedure get_ticket
 (in ticket_id int)

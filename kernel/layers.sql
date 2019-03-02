@@ -1,3 +1,6 @@
+drop table if exists item_data;
+drop table if exists item;
+drop table if exists universal;
 drop table if exists link_ticket;
 drop table if exists link;
 drop table if exists tag;
@@ -233,6 +236,54 @@ create table link_ticket (
         references ticket(tk_id),
     constraint link_ticket_inward_ticket_key
         foreign key (lk_tk_inward_ticket)
+        references ticket(tk_id)
+)
+engine=InnoDB
+default charset="utf8" collate="utf8_general_ci"
+row_format=compressed;
+
+-- Item and Universal
+
+create table universal (
+    ul_id int unsigned primary key auto_increment,
+    ul_label varchar(255) not null,
+    unique (ul_label)
+)
+engine=InnoDB
+default charset="utf8" collate="utf8_general_ci"
+row_format=compressed;
+
+create table item (
+    it_id int unsigned primary key auto_increment,
+    it_label varchar(255) not null,
+    it_select_field text not null,
+    it_update_field text,
+    it_sorting int unsigned not null,
+    it_type int unsigned not null,
+    it_universal int unsigned not null,
+    unique (it_label, it_type),
+    constraint item_type_key
+        foreign key (it_type)
+        references type(tp_id),
+    constraint item_universal_key
+        foreign key (it_universal)
+        references universal(ul_id)
+)
+engine=InnoDB
+default charset="utf8" collate="utf8_general_ci"
+row_format=compressed;
+
+create table item_data (
+    it_dt_id int unsigned primary key auto_increment,
+    it_dt_value varchar(255) not null, -- maybe null later
+    it_dt_item int unsigned not null,
+    it_dt_ticket int unsigned not null,
+    unique (it_dt_id, it_dt_item, it_dt_ticket),
+    constraint item_data_item_key
+        foreign key (it_dt_item)
+        references item(it_id),
+    constraint item_data_ticket_key
+        foreign key (it_dt_ticket)
         references ticket(tk_id)
 )
 engine=InnoDB
