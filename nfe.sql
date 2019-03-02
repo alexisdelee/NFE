@@ -105,9 +105,14 @@ call internal_create_universal ("select");
 call create_user ("root", "Vm6MJXw6hc", "8b631b4d6bed1ce02f89d0afe7d5a1d86b2e7961fa18ba7bd55fe88a521eae02", "m7dPtXzSJsTuma4V24hA", 200, null, null, 5); -- 1secret,
 
 call create_ticket (null, null, "abcdef", 1, 1, 2, null, 1);
+
 call assign_user_to_ticket (1, 1);
 call assign_commentary_to_ticket ("Ceci un commentaire", 1, 1);
 call assign_tag_to_ticket ("wifi", null, 1, 1);
+
+call create_ticket (null, null, "abcdef", 1, 1, 2, null, 1);
+
+call assign_link_to_ticket (2, 1, 2);
 
 call assign_item_to_category ("Assigné à", "select it_dt_value from item_data where it_dt_ticket = £item_id and it_dt_ticket = £ticket_id", "replace into item_data (it_dt_value, it_dt_item, it_dt_ticket) values (£ticket_id, £item_id, £ticket_id)", 1, 1);
 call assign_item_to_category ("Collègues", "select it_dt_value from item_data where it_dt_ticket = £item_id and it_dt_ticket = £ticket_id", "replace into item_data (it_dt_value, it_dt_item, it_dt_ticket) values ('ok', £item_id, £ticket_id), ('nok', £item_id, £ticket_id)", 1, 2);

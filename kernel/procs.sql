@@ -345,7 +345,7 @@ begin
         lk_outward_description,
         lk_tk_inward_ticket
     from link_ticket
-    join link on lk_id = lk_tk_id
+    join link on lk_id = lk_tk_link
     -- join ticket on tk_id = lk_tk_inward_ticket -- get_minimal_ticket
     where lk_tk_outward_ticket = ticket_id
 
@@ -356,7 +356,7 @@ begin
         lk_inward_description,
         lk_tk_outward_ticket
     from link_ticket
-    join link on lk_id = lk_tk_id
+    join link on lk_id = lk_tk_link
     where lk_tk_inward_ticket = ticket_id;
 end; //
 
