@@ -19,7 +19,7 @@ export class UserRepository extends ABaseRepository<User> {
     }
 
     @makecoffee
-    public *delete(id: number): IterableIterator<any> { // use any because of this.findOne
+    public *delete(id: number): IterableIterator<any> {
         const user: User = yield this.findOne(id);
         if (user.isDeleted) {
             return false;
@@ -37,7 +37,6 @@ export class UserRepository extends ABaseRepository<User> {
     @makecoffee
     public *findOne(id: number): IterableIterator<any> {
         const row: any = yield this.queryOne("select * from " + this.collection + " where usr_id = ?", [ id ]);
-
         return <User>{
             id: row["usr_id"],
             pseudo: row["usr_pseudo"],
