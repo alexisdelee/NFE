@@ -9,7 +9,7 @@ export class UserRepository extends ABaseRepository<User> {
 
     @makecoffee
     public *create(user: User): IterableIterator<any> {
-        yield this.queryOne("call create_user (?, ?, ?, ?, ?, null, null, 1)", [ user.pseudo, user.nfeid, user.password, user.salt, user.iterations ]);
+        yield this.queryOne("call create_user (?, ?, ?, ?, ?, null, null, 1, true)", [ user.pseudo, user.nfeid, user.password, user.salt, user.iterations ]);
         return true;
     }
 

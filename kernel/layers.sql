@@ -45,6 +45,7 @@ create table user (
     usr_iterations int not null, -- for hmac
     usr_avatar int unsigned,
     usr_role int unsigned not null,
+    usr_rgpd boolean,
     usr_deleted boolean not null default false,
     usr_created datetime default current_timestamp,
     usr_updated datetime on update current_timestamp,
