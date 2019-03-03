@@ -1,6 +1,6 @@
 export interface IWrite<T> {
-    create(item: T): IterableIterator<Promise<boolean>>;
-    update(id: number, item: T): IterableIterator<Promise<boolean>>;
-    delete(id: number): IterableIterator<Promise<boolean>>;
-    erase(id: number): IterableIterator<Promise<boolean>>;
+    create(item: T): IterableIterator<any>;
+    update(id: number, item: T): IterableIterator<any>;
+    delete(id: number): IterableIterator<any>;
+    erase(id: number): IterableIterator<any>;
 }

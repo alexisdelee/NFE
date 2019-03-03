@@ -2,53 +2,52 @@ import { makecoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { User } from "../entities/User";
 
-import { MysqlError, FieldInfo } from "mysql";
-
 export class UserRepository extends ABaseRepository<User> {
     constructor() {
         super("user");
     }
 
     @makecoffee
-    public *create(user: User): IterableIterator<Promise<boolean>> {
-        return Promise.resolve(false);
+    public *create(user: User): IterableIterator<any> {
+        yield this.queryOne("call create_user (?, ?, ?, ?, ?, null, null, 1)", [ user.pseudo, user.nfeid, user.password, user.salt, user.iterations ]);
+        return true;
     }
 
     @makecoffee
-    public *update(id: number, user: User): IterableIterator<Promise<boolean>> {
-        return Promise.resolve(false);
+    public *update(id: number, user: User): IterableIterator<any> {
+        throw new Error("not implemented");
     }
 
     @makecoffee
-    public *erase(id: number): IterableIterator<Promise<boolean>> {
-        return Promise.resolve(false);
+    public *delete(id: number): IterableIterator<any> { // use any because of this.findOne
+        const user: User = yield this.findOne(id);
+        if (user.isDeleted) {
+            return false;
+        }
+
+        yield this.queryOne("update " + this.collection + " set usr_deleted = true where usr_id = ?", [ id ]);
+        return true;
     }
 
     @makecoffee
-    public *findOne(id: number): IterableIterator<Promise<User>> {
-        const self = this;
+    public *erase(id: number): IterableIterator<any> {
+        throw new Error("not implemented");
+    }
 
-        return new Promise(function(resolve, reject) {
-            ABaseRepository.getSharedConnection().query("select * from " + self.collection + " where usr_id = ?", [ id ], function(err: MysqlError, rows: any, fields: Array<FieldInfo>) {
-                try {
-                    if (err) {
-                        throw err;
-                    } else if (rows.length != 1) {
-                        throw new Error("too many results are returned to be stored in this entity");
-                    }
-    
-                    resolve(<User>{
-                        id: rows[0]["usr_id"],
-                        pseudo: rows[0]["usr_pseudo"],
-                        nfeid: rows[0]["usr_nfeid"],
-                        password: rows[0]["usr_password"],
-                        salt: rows[0]["usr_salt"],
-                        iterations: rows[0]["usr_iterations"]
-                    });
-                } catch(err) {
-                    reject(err);
-                }
-            });
-        });
+    @makecoffee
+    public *findOne(id: number): IterableIterator<any> {
+        const row: any = yield this.queryOne("select * from " + this.collection + " where usr_id = ?", [ id ]);
+
+        return <User>{
+            id: row["usr_id"],
+            pseudo: row["usr_pseudo"],
+            nfeid: row["usr_nfeid"],
+            password: row["usr_password"],
+            salt: row["usr_salt"],
+            iterations: row["usr_iterations"],
+            isDeleted: row["usr_deleted"],
+            created: row["usr_created"],
+            updated: row["usr_updated"]
+        };
     }
 }
