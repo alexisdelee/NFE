@@ -1,6 +1,7 @@
 import { makecoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { User } from "../entities/User";
+import { NotImplemented } from "../utils/HttpWrapper";
 
 export class UserRepository extends ABaseRepository<User> {
     constructor() {
@@ -15,7 +16,7 @@ export class UserRepository extends ABaseRepository<User> {
 
     @makecoffee
     public *update(id: number, user: User): IterableIterator<any> {
-        throw new Error("not implemented");
+        throw new NotImplemented("not implemented");
     }
 
     @makecoffee
@@ -31,12 +32,12 @@ export class UserRepository extends ABaseRepository<User> {
 
     @makecoffee
     public *erase(id: number): IterableIterator<any> {
-        throw new Error("not implemented");
+        throw new NotImplemented("not implemented");
     }
 
     @makecoffee
     public *findOne(id: number): IterableIterator<any> {
-        const row: any = yield this.queryOne("select * from " + this.collection + " where usr_id = ?", [ id ]);
+        const row: any = yield this.queryOne("select * from " + this.collection + " where usr_id = ? limit 1", [ id ]);
         return <User>{
             id: row["usr_id"],
             pseudo: row["usr_pseudo"],

@@ -1,6 +1,7 @@
 import { makecoffee } from "../../decorators/wrapper";
 import { IWrite } from "../interfaces/IWrite";
 import { IRead } from "../interfaces/IRead";
+import { NotImplemented, InternalServerError } from "../../utils/HttpWrapper";
 
 import webconfig from "../../../webconfig";
 
@@ -18,14 +19,14 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
 
     @makecoffee
     public *delete(id: number): IterableIterator<any> {
-        throw new Error("not implemented");
+        throw new NotImplemented("ABaseRepository<T>.delete");
     }
 
     public abstract erase(id: number): IterableIterator<any>;
 
     @makecoffee
     public *find(item: T): IterableIterator<any> {
-        throw new Error("not implemented");
+        throw new NotImplemented("ABaseRepository<T>.find");
     }
 
     public abstract findOne(id: number): IterableIterator<any>;
@@ -51,7 +52,7 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
     protected *queryOne(options: string, values: Array<any> = []): IterableIterator<any> {
         const rows: any = yield this.query(options, values);
         if (rows.length != 1) {
-            throw new Error("too many results are returned to be stored in this entity");
+            throw new InternalServerError("too many results are returned to be stored in this entity");
         }
 
         return rows[0];
