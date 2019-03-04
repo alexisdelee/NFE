@@ -1,17 +1,25 @@
-import { UserRepository } from "./repositories/UserRepository";
 import { ABaseRepository } from "./repositories/base/ABaseRepository";
+import { UserRepository } from "./repositories/UserRepository";
+import { CommentaryRepository } from "./repositories/CommentaryRepository";
 import { User } from "./entities/User";
+import { Commentary } from "./entities/Commentary";
 
 import * as Q from "q";
 
 (Q as any).spawn(function *() {
     try {
-        const repository: UserRepository = new UserRepository();
+        // CommentaryRepository
+        const commentaryRepository: CommentaryRepository = new CommentaryRepository();
+        const commentary: Commentary = yield commentaryRepository.findOne(1);
+        console.log(commentary);
 
-        const user: User = yield repository.findOne(1);
+        // UserRepository
+        const userRepository: UserRepository = new UserRepository();
+
+        const user: User = yield userRepository.findOne(1);
         console.log(user);
 
-        const status: boolean = yield repository.create(user);
+        const status: boolean = yield userRepository.create(user);
         console.log(status);
     } catch(err) {
         console.log("error");

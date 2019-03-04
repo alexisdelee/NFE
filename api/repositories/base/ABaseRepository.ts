@@ -2,6 +2,7 @@ import { makecoffee } from "../../decorators/wrapper";
 import { IWrite } from "../interfaces/IWrite";
 import { IRead } from "../interfaces/IRead";
 import { NotImplemented, InternalServerError } from "../../utils/HttpWrapper";
+import { RowDataPacket, Query } from "../../utils/QueryWrapper";
 
 import webconfig from "../../../webconfig";
 
@@ -34,13 +35,13 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
     @makecoffee
     protected *query(options: string, values: Array<any> = []): IterableIterator<any> {
         return new Promise(function(resolve, reject) {
-            ABaseRepository.getSharedConnection().query(options, values, function(err: MysqlError, rows: any, fields: Array<FieldInfo>) {
+            ABaseRepository.getSharedConnection().query(options, values, function(err: MysqlError, rows: Array<RowDataPacket>, fields: Array<FieldInfo>) {
                 try {
                     if (err) {
                         throw err;
                     }
     
-                    resolve(rows);
+                    resolve(new Query(rows, fields));
                 } catch(err) {
                     reject(err);
                 }
@@ -49,14 +50,23 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
     }
 
     @makecoffee
-    protected *queryOne(options: string, values: Array<any> = []): IterableIterator<any> {
-        const rows: any = yield this.query(options, values);
-        if (rows.length != 1) {
-            throw new InternalServerError("too many results are returned to be stored in this entity");
-        }
+    protected *call(options: string, values: Array<any> = []): IterableIterator<any> {
+        return new Promise(function(resolve, reject) {
+            ABaseRepository.getSharedConnection().query("call " + options, values, function(err: MysqlError, rows: Array<any>, fields: Array<FieldInfo>) {
+                try {
+                    if (err) {
+                        throw err;
+                    }
 
-        return rows[0];
+                    resolve(new Query(rows[0], fields));
+                } catch(err) {
+                    reject(err);
+                }
+            });
+        });
     }
+
+    public abstract accessToSQL(row: RowDataPacket): IterableIterator<any>;
 
     private static getSharedConnection(): Connection {
         if(!ABaseRepository.__shared_connection__) {

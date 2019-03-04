@@ -99,9 +99,9 @@ delimiter ;
 
 -- Stored procedure
 
-drop procedure if exists get_links;
-drop procedure if exists get_tags;
-drop procedure if exists get_commentaries;
+drop procedure if exists get_link;
+drop procedure if exists get_tag;
+drop procedure if exists get_commentary;
 drop procedure if exists get_ticket;
 drop procedure if exists assign_item_to_category;
 drop procedure if exists assign_link_to_ticket;
@@ -252,16 +252,20 @@ begin
         rg_postal,
         rg_capital,
         rg_nccenr,
-        tr_id,
-        tr_name,
-        tr_shortname,
-        tr_description,
-        concat (tracker_resource.re_folder, tracker_resource.re_filename) as "tr_resource",
-        pr_id,
-        pr_name,
-        pr_shortname,
-        pr_description,
-        concat (priority_resource.re_folder, priority_resource.re_filename) as "pr_resource",
+        tr_id as "tracker_tr_id",
+        tr_name as "tracker_tr_name",
+        tr_shortname as "tracker_tr_shortname",
+        tr_description as "tracker_tr_description",
+        tracker_resource.re_id as "tracker_re_id",
+        tracker_resource.re_folder as "tracker_re_folder",
+        tracker_resource.re_filename as "tracker_re_filename",
+        pr_id as "priority_pr_id",
+        pr_name as "priority_pr_name",
+        pr_shortname as "priority_pr_shortname",
+        pr_description as "priority_pr_description",
+        priority_resource.re_id as "priority_re_id",
+        priority_resource.re_folder as "priority_re_folder",
+        priority_resource.re_filename as "priority_re_filename",
         st_id,
         st_name,
         st_shortname,
@@ -272,11 +276,25 @@ begin
         assignee.usr_id as "assignee_usr_id",
         assignee.usr_pseudo as "assignee_usr_pseudo",
         assignee.usr_nfeid as "assignee_usr_nfeid",
-        concat (assignee_resource.re_folder, assignee_resource.re_filename) as "assignee_usr_resource",
+        assignee_resource.re_id as "assignee_re_id",
+        assignee_resource.re_folder as "assignee_re_folder",
+        assignee_resource.re_filename as "assignee_re_filename",
+        assignee_role.ro_id as "assignee_ro_id",
+        assignee_role.ro_shortname as "assignee_ro_shortname",
+        assignee.usr_rgpd as "assignee_usr_rgpd",
+        assignee.usr_created as "assignee_usr_created",
+        assignee.usr_updated as "assignee_usr_updated",
         reporter.usr_id as "reporter_usr_id",
         reporter.usr_pseudo as "reporter_usr_pseudo",
         reporter.usr_nfeid as "reporter_usr_nfeid",
-        concat (reporter_resource.re_folder, reporter_resource.re_filename) as "reporter_usr_resource"
+        reporter_resource.re_id as "reporter_re_id",
+        reporter_resource.re_folder as "reporter_re_folder",
+        reporter_resource.re_filename as "reporter_re_filename",
+        reporter_role.ro_id as "reporter_ro_id",
+        reporter_role.ro_shortname as "reporter_ro_shortname",
+        reporter.usr_rgpd as "reporter_usr_rgpd",
+        reporter.usr_created as "reporter_usr_created",
+        reporter.usr_updated as "reporter_usr_updated"
     from ticket
     join region on rg_id = tk_region
     join tracker on tr_id = tk_tracker
@@ -288,32 +306,29 @@ begin
     left outer join user as assignee on assignee.usr_id = tk_assignee
         and assignee.usr_deleted = false
     left outer join resource as assignee_resource on assignee_resource.re_id = assignee.usr_avatar
+    join role as assignee_role on assignee_role.ro_id = assignee.usr_role
     join user as reporter on reporter.usr_id = tk_reporter
     left outer join resource as reporter_resource on reporter_resource.re_id = reporter.usr_avatar
+    join role as reporter_role on reporter_role.ro_id = reporter.usr_role
     where tk_deleted = false
         and tk_id = ticket_id;
 end; //
 
-create procedure get_commentaries
+create procedure get_commentary
 (in ticket_id int)
 begin
     select cm_id,
         uncompress (cm_description) as "cm_description",
-        cm_created,
-        cm_updated,
         cm_ticket,
-        usr_id,
-        usr_pseudo,
-        usr_nfeid,
-        concat (re_folder, re_filename) as "usr_resource"
+        cm_user,
+        cm_created,
+        cm_updated
     from commentary
-    join user on usr_id = cm_user
-    left outer join resource on re_id = usr_avatar
     where cm_deleted = false
         and cm_ticket = ticket_id;
 end; //
 
-create procedure get_tags
+create procedure get_tag
 (in ticket_id int,
  in user_id int)
 begin
@@ -323,7 +338,8 @@ begin
         usr_id,
         usr_pseudo,
         usr_nfeid,
-        concat (re_folder, re_filename) as "usr_resource"
+        re_folder,
+        re_filename
     from tag
     join user on usr_id = tg_user
     left outer join resource on re_id = usr_avatar
@@ -338,7 +354,7 @@ begin
         );
 end; //
 
-create procedure get_links
+create procedure get_link
 (in ticket_id int)
 begin
     select lk_tk_id,
