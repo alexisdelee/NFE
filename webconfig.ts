@@ -1,11 +1,11 @@
 export default {
-    application: {
-        port: process.env["nfe_application_port"] || 3001
+    api: {
+        port: process.env["NFE_API_PORT"] || 3001
     },
     database: {
-        host: process.env["nfe_database_host"] || "localhost",
-        user: process.env["nfe_database_user"] || "root",
-        password: process.env["nfe_database_password"] || "",
-        name: process.env["nfe_database_name"] || "nfe"
+        host: process.env["NFE_DATABASE_HOST"] || "localhost",
+        user: process.env["NFE_DATABASE_USER"] || "root",
+        password: process.env["NFE_DATABASE_PASSWORD"] || "",
+        name: process.env["NFE_DATABASE_NAME"] || "nfe"
     }
 }
