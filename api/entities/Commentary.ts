@@ -6,5 +6,4 @@ export class Commentary extends Query {
     public description: string;
     public ticket: Ticket;
     public user: User;
-    public isDeleted: boolean;
 }

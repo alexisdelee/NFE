@@ -13,24 +13,45 @@ export class TagRepository extends ABaseRepository<Tag> {
 
     @makecoffee
     public *create(tag: Tag): IterableIterator<any> {
-        yield this.call("assign_tag_to_ticket (?, ?, ?, ?)", [ tag.name, tag.privateUser.id, tag.ticket.id, tag.user.id ]);
+        yield this.call("assign_tag_to_ticket (?, ?, ?, ?)", [ tag.name, tag.private, tag.ticket.id, tag.user.id ]);
         return true;
     }
 
     @makecoffee
-    public *update(id: number, tag: Tag): IterableIterator<any> {
-        throw new NotImplemented("TagRepository.update");
+    public *update(id: number, tag: Tag): IterableIterator<any> { // work with assign_tag_to_ticket 
+        yield this.query(`
+            update ${this.collection} 
+            set tg_name = ?, 
+                tg_private = ?, 
+                tg_ticket = ?, 
+                tg_user = ? 
+            where tg_id = ? 
+                and tg_deleted = false 
+                and ( 
+                    tg_private = false 
+                    or ( 
+                        tg_private = true 
+                        and tg_user = ? 
+                    )
+                ) 
+        `, [ tag.name, tag.private, tag.ticket.id, tag.user.id, id ]);
+        return true;
     }
 
     @makecoffee
     public *delete(id: number): IterableIterator<any> {
-        yield this.findOne(id);
         yield this.query(`
             update ${this.collection} 
             set tg_deleted = true 
-            where tg_id = ?
-        `, [ id ]);
-
+            where tg_id = ? 
+                and ( 
+                    tg_private = false 
+                    or ( 
+                        tg_private = true 
+                        and tg_user = ? 
+                    )
+                ) 
+        `, [ id, id ]);
         return true;
     }
 
@@ -50,7 +71,7 @@ export class TagRepository extends ABaseRepository<Tag> {
             from ${this.collection} 
             where tg_id = ? 
                 and tg_deleted = false 
-            limit 1
+            limit 1 
         `, [ id ]);
         return this.accessToSQL(query.getOneRow());
     }
@@ -60,6 +81,7 @@ export class TagRepository extends ABaseRepository<Tag> {
         return <Tag>{
             id: row["tg_id"],
             name: row["tg_name"],
+            private: Boolean(row["tg_private"]),
             ticket: yield new TicketRepository().findOne(row["tg_ticket"]),
             user: yield new UserRepository().findOne(row["tg_user"]),
             created: row["cm_created"],

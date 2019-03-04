@@ -206,14 +206,8 @@ create procedure assign_tag_to_ticket
  in ticket_id int,
  in user_id int)
 begin
-    declare __user_id__ int;
-
-    if (is_private is true) then
-        select tg_user into __user_id__;
-    end if;
-
-    insert into tag (tg_name, tg_user_private, tg_ticket, tg_user)
-    values (name, __user_id__, ticket_id, user_id);
+    insert into tag (tg_name, tg_private, tg_ticket, tg_user)
+    values (name, is_private, ticket_id, user_id);
 end; //
 
 create procedure assign_link_to_ticket
@@ -346,10 +340,10 @@ begin
     where tg_deleted = false
         and tg_ticket = ticket_id
         and (
-            tg_user_private is null 
+            tg_private = false 
             or (
-                tg_user_private is not null 
-                and tg_user_private = user_id
+                tg_private = true 
+                and tg_user = user_id
             )
         );
 end; //

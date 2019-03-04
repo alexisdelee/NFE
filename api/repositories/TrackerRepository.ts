@@ -41,7 +41,7 @@ export class TrackerRepository extends ABaseRepository<Tracker> implements ICons
             select * 
             from ${this.collection} 
             where tr_id = ? 
-            limit 1
+            limit 1 
         `, [ id ]);
         return this.accessToSQL(query.getOneRow());
     }
@@ -52,7 +52,7 @@ export class TrackerRepository extends ABaseRepository<Tracker> implements ICons
             select * 
             from ${this.collection} 
             where tr_shortname = ? 
-            limit 1
+            limit 1 
         `, [ label ]);
         return this.accessToSQL(query.getOneRow());
     }

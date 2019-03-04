@@ -4,7 +4,7 @@ import { Ticket } from "./Ticket";
 
 export class Tag extends Query {
     public name: string;
-    public privateUser: User;
+    public private: boolean;
     public ticket: Ticket;
     public user: User;
 }

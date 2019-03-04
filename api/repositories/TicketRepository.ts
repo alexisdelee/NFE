@@ -22,19 +22,34 @@ export class TicketRepository extends ABaseRepository<Ticket> {
     }
 
     @makecoffee
-    public *update(id: number, ticket: Ticket): IterableIterator<any> {
-        throw new NotImplemented("TicketRepository.update");
+    public *update(id: number, ticket: Ticket): IterableIterator<any> { // work with assign_user_to_ticket
+        yield this.query(`
+            update ${this.collection} 
+            set tk_region = ?, 
+                tk_shortid = ?, 
+                tk_summary = ?, 
+                tk_description = compress (?), 
+                tk_color = ?, 
+                tk_tracker = ?, 
+                tk_priority = ?, 
+                tk_status = ?, 
+                tk_category = ?, 
+                tk_assignee = ?, 
+                tk_reporter = ?, 
+                tk_resolved = ? 
+            where tk_id = ? 
+                and tk_deleted = false 
+        `, [ ticket.region.id, ticket.shortid, ticket.summary, ticket.description, ticket.color, ticket.tracker.id, ticket.priority.id, ticket.status.id, ticket.category.id, ticket.assignee.id, ticket.reporter.id, ticket.resolved, id ]);
+        return true;
     }
 
     @makecoffee
     public *delete(id: number): IterableIterator<any> {
-        yield this.findOne(id);
         yield this.query(`
             update ${this.collection} 
-            set cm_deleted = true 
-            where cm_id = ?
+            set tk_deleted = true 
+            where tk_id = ? 
         `, [ id ]);
-        
         return true;
     }
 

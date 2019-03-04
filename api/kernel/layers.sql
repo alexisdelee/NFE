@@ -190,7 +190,7 @@ row_format=compressed;
 create table tag (
     tg_id int unsigned primary key auto_increment,
     tg_name varchar(255) not null,
-    tg_user_private int unsigned,
+    tg_private boolean not null,
     tg_ticket int unsigned not null,
     tg_user int unsigned not null,
     tg_deleted boolean not null default false,

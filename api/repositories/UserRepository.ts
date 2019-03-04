@@ -24,13 +24,11 @@ export class UserRepository extends ABaseRepository<User> {
 
     @makecoffee
     public *delete(id: number): IterableIterator<any> {
-        yield this.findOne(id);
         yield this.query(`
             update ${this.collection} 
             set usr_deleted = true 
-            where usr_id = ?
+            where usr_id = ? 
         `, [ id ]);
-
         return true;
     }
 
@@ -50,7 +48,7 @@ export class UserRepository extends ABaseRepository<User> {
             from ${this.collection} 
             where usr_id = ? 
                 and usr_deleted = false 
-            limit 1
+            limit 1 
         `, [ id ]);
         return this.accessToSQL(query.getOneRow());
     }

@@ -18,8 +18,15 @@ export class LinkTicketRepository extends ABaseRepository<LinkTicket> {
     }
 
     @makecoffee
-    public *update(id: number, linkTicket: LinkTicket): IterableIterator<any> {
-        throw new NotImplemented("LinkTicketRepository.update");
+    public *update(id: number, linkTicket: LinkTicket): IterableIterator<any> { // work with assign_link_to_ticket
+        yield this.query(`
+            update ${this.collection} 
+            set lk_tk_link = ?, 
+                lk_tk_outward_ticket = ?, 
+                lk_tk_inward_ticket = ? 
+            where lk_tk_id = ? 
+        `, [ linkTicket.link.id, linkTicket.outward.id, linkTicket.inward.id, id ]);
+        return true;
     }
 
     @makecoffee

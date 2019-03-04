@@ -20,18 +20,24 @@ export class CommentaryRepository extends ABaseRepository<Commentary> {
 
     @makecoffee
     public *update(id: number, commentary: Commentary): IterableIterator<any> {
-        throw new NotImplemented("CommentaryRepository.update");
+        yield this.query(`
+            update ${this.collection} 
+            set cm_description = compress (?), 
+                cm_ticket = ?, 
+                cm_user = ? 
+            where cm_id = ? 
+                and cm_deleted = false 
+        `, [ commentary.description, commentary.ticket.id, commentary.user.id, id ]);
+        return true;
     }
 
     @makecoffee
     public *delete(id: number): IterableIterator<any> {
-        yield this.findOne(id);
         yield this.query(`
             update ${this.collection} 
             set cm_deleted = true 
             where cm_id = ?
         `, [ id ]);
-
         return true;
     }
 

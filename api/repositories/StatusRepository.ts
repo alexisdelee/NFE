@@ -41,7 +41,7 @@ export class StatusRepository extends ABaseRepository<Status> implements IConsta
             select * 
             from ${this.collection} 
             where st_id = ? 
-            limit 1
+            limit 1 
         `, [ id ]);
         return this.accessToSQL(query.getOneRow());
     }
@@ -52,7 +52,7 @@ export class StatusRepository extends ABaseRepository<Status> implements IConsta
             select * 
             from ${this.collection} 
             where st_shortname = ? 
-            limit 1
+            limit 1 
         `, [ label ]);
         return this.accessToSQL(query.getOneRow());
     }

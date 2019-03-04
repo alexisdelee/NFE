@@ -40,7 +40,7 @@ export class RoleRepository extends ABaseRepository<Role> implements IConstant {
             select * 
             from ${this.collection} 
             where ro_id = ? 
-            limit 1
+            limit 1 
         `, [ id ]);
         return this.accessToSQL(query.getOneRow());
     }
@@ -51,7 +51,7 @@ export class RoleRepository extends ABaseRepository<Role> implements IConstant {
             select * 
             from ${this.collection} 
             where ro_shortname = ? 
-            limit 1
+            limit 1 
         `, [ label ]);
         return this.accessToSQL(query.getOneRow());
     }

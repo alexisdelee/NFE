@@ -11,7 +11,8 @@ export class ResourceRepository extends ABaseRepository<Resource> {
 
     @makecoffee
     public *create(resource: Resource): IterableIterator<any> {
-        throw new NotImplemented("ResourceRepository.create");
+        yield this.call("internal_create_resource (?, ?, ?)", [ resource.folder, resource.filename, resource.id ]);
+        return true;
     }
 
     @makecoffee
@@ -28,9 +29,8 @@ export class ResourceRepository extends ABaseRepository<Resource> {
     public *erase(id: number): IterableIterator<any> {
         yield this.query(`
             delete from ${this.collection} 
-            where re_id = ?
+            where re_id = ? 
         `, [ id ]);
-
         return true;
     }
 
@@ -44,7 +44,7 @@ export class ResourceRepository extends ABaseRepository<Resource> {
             select * 
             from ${this.collection} 
             where re_id = ? 
-            limit 1
+            limit 1 
         `, [ id ]);
         return this.accessToSQL(query.getOneRow());
     }
