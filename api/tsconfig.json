@@ -4,6 +4,13 @@
         "experimentalDecorators": true,
         "lib": [
             "es6"
-        ]
+        ],
+        "baseUrl": ".",
+        "paths": {
+            "*": [
+                "node_modules/*",
+                "src/types/*"
+            ]
+        }
     }
 }

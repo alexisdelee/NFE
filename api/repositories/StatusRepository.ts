@@ -58,7 +58,7 @@ export class StatusRepository extends ABaseRepository<Status> implements IConsta
     }
 
     @makecoffee
-    public *accessToSQL(row: RowDataPacket): IterableIterator<any> {        
+    public *accessToSQL(row: RowDataPacket): IterableIterator<any> {
         return <Status>{
             id: row["st_id"],
             name: row["st_name"],

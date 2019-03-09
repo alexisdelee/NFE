@@ -1,3 +1,5 @@
+import { GlobalData } from "./data/GlobalData";
+
 import { ABaseRepository } from "./repositories/base/ABaseRepository";
 import { UserRepository } from "./repositories/UserRepository";
 import { CommentaryRepository } from "./repositories/CommentaryRepository";
@@ -8,6 +10,9 @@ import * as Q from "q";
 
 (Q as any).spawn(function *() {
     try {
+        yield GlobalData.boot();
+        console.log(global.nfe.category.done.id);
+
         // CommentaryRepository
         const commentaryRepository: CommentaryRepository = new CommentaryRepository();
         const commentary: Commentary = yield commentaryRepository.findOne(1);
