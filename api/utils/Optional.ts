@@ -44,6 +44,20 @@ export class Optional<T> {
         }
     }
 
+    // if a value is present, performs the given action with the value, otherwise performs the given empty-based action
+    public ifPresentOrElse(action: Function.Consumer<T>, emptyAction: Function.Supplier<any>): void {
+        if (this.isPresent()) {
+            action(this.value);
+        } else {
+            emptyAction();
+        }
+    }
+
+    // if a value is present, returns an Optional describing the value, otherwise returns an Optional produced by the supplying function
+    public or(supplier: Function.Supplier<Optional<T>>): Optional<T> {
+        return this.isPresent() ? this : supplier();
+    }
+
     // return the value if present, otherwise return other
     public orElse(other: T): T {
         return this.isPresent() ? this.value : other;
@@ -52,6 +66,15 @@ export class Optional<T> {
     // return the value if present, otherwise invoke other and return the result of that invocation
     public orElseGet(other: Function.Supplier<T>): T {
         return this.isPresent() ? this.value : other();
+    }
+
+    // return the contained value, if present, otherwise throw an exception to be created by the provided supplier
+    public orElseThrow(exceptionSupplier: Function.Supplier<T>): T {
+        if (this.isPresent()) {
+            return this.value;
+        }
+
+        throw exceptionSupplier();
     }
 
     // returns a non-empty string representation of this Optional suitable for debugging

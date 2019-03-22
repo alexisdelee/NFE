@@ -27,6 +27,10 @@ export namespace Function {
 
     // represents a supplier of results
     export type Supplier<R> = () => R;
+
+    // represents an operation on a single operand that produces a result of the same type as its operand
+    // export type UnaryOperator<T> = (value: T) => T;
+    export type UnaryOperator<T> = Function<T, T>;
 }
 
 export function bound(min, max, value) {
