@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>NFE - Déclaration d'incidents</title>
+    <link rel="stylesheet" href="../css/index.css"/>
+</head>
+
+<header id="header"></header>
+
+<body>
+    <h1 class="title">Déclaration d'incident</h1>
+
+    <label for="incident_place">Lieu de l'incident :</label>
+    <input id="incident_place" type="text" /><br>
+
+    <label for="incident_date">Date d'apparition :</label>
+    <input id="incident_date" type="date" value="" /><br>
+
+    <label for="client_name">Nom du client :</label>
+    <input id="client_name" type="text" /><br>
+
+    <label for="degradation_type">Type de dégradation :</label>
+    <select id="degradation_type"></select><br>
+
+    <label for="phone_number">Numéro de téléphone :</label>
+    <input id="phone_number" type="text" /><br>
+
+    <label for="mail_address">Adresse mail :</label>
+    <input id="mail_address" type="email" /><br>
+
+    <label for="comment">Commentaire :</label>
+    <textarea id="comment"></textarea>
+
+    <button id="report_incident_button" value="Déclarer l'incident" />
+
+</body>
+
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="js/index.js"></script>
+
+</html>
