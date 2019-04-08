@@ -1,7 +1,7 @@
 import { makecoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Resource } from "../entities/Resource";
-import { NotImplemented } from "../utils/HttpWrapper";
+import { HttpError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query } from "../utils/QueryWrapper";
 
 export class ResourceRepository extends ABaseRepository<Resource> {
@@ -17,12 +17,12 @@ export class ResourceRepository extends ABaseRepository<Resource> {
 
     @makecoffee
     public *update(id: number, resource: Resource): IterableIterator<any> {
-        throw new NotImplemented("ResourceRepository.update");
+        throw new HttpError(ServerError.NotImplemented, "ResourceRepository.update");
     }
 
     @makecoffee
     public *delete(id: number): IterableIterator<any> {
-        throw new NotImplemented("ResourceRepository.delete");
+        throw new HttpError(ServerError.NotImplemented, "ResourceRepository.delete");
     }
 
     @makecoffee

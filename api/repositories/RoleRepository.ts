@@ -2,7 +2,7 @@ import { makecoffee } from "../decorators/wrapper";
 import { IConstant } from "./interfaces/IConstant";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Role } from "../entities/Role";
-import { NotImplemented } from "../utils/HttpWrapper";
+import { HttpError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query } from "../utils/QueryWrapper";
 
 export class RoleRepository extends ABaseRepository<Role> implements IConstant {
@@ -12,22 +12,22 @@ export class RoleRepository extends ABaseRepository<Role> implements IConstant {
 
     @makecoffee
     public *create(role: Role): IterableIterator<any> {
-        throw new NotImplemented("RoleRepository.create");
+        throw new HttpError(ServerError.NotImplemented, "RoleRepository.create");
     }
 
     @makecoffee
     public *update(id: number, role: Role): IterableIterator<any> {
-        throw new NotImplemented("RoleRepository.update");
+        throw new HttpError(ServerError.NotImplemented, "RoleRepository.update");
     }
 
     @makecoffee
     public *delete(id: number): IterableIterator<any> {
-        throw new NotImplemented("RoleRepository.delete");
+        throw new HttpError(ServerError.NotImplemented, "RoleRepository.delete");
     }
 
     @makecoffee
     public *erase(id: number): IterableIterator<any> {
-        throw new NotImplemented("RoleRepository.erase");
+        throw new HttpError(ServerError.NotImplemented, "RoleRepository.erase");
     }
 
     @makecoffee

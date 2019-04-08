@@ -59,7 +59,7 @@ call internal_create_tracker ("Congé payé", "paid_leave", "Demande de congés 
 call internal_create_category ("New", "new");
 call internal_create_category ("In progress", "wip");
 call internal_create_category ("Complete", "done");
-call internal_create_category ("Résolution", "solution");
+call internal_create_category ("Résolution", "solution")
 
 -- new
 

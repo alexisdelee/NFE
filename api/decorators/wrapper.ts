@@ -15,7 +15,7 @@ export function unicornStuff(target, property: string, descriptor: PropertyDescr
 
     descriptor.value = function() {
         return Q.async(function(request, response, next) {
-            (Q as any).spawn(function *() {
+            Q.spawn(function *() {
                 yield Q.async(method).call(this, request, response, next).catch(next);
             });
         }).apply(this, arguments);

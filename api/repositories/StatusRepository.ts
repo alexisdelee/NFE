@@ -3,7 +3,7 @@ import { IConstant } from "./interfaces/IConstant";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { CategoryRepository } from "./CategoryRepository";
 import { Status } from "../entities/Status";
-import { NotImplemented } from "../utils/HttpWrapper";
+import { HttpError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query } from "../utils/QueryWrapper";
 
 export class StatusRepository extends ABaseRepository<Status> implements IConstant {
@@ -13,22 +13,22 @@ export class StatusRepository extends ABaseRepository<Status> implements IConsta
 
     @makecoffee
     public *create(status: Status): IterableIterator<any> {
-        throw new NotImplemented("StatusRepository.create");
+        throw new HttpError(ServerError.NotImplemented, "StatusRepository.create");
     }
 
     @makecoffee
     public *update(id: number, status: Status): IterableIterator<any> {
-        throw new NotImplemented("StatusRepository.update");
+        throw new HttpError(ServerError.NotImplemented, "StatusRepository.update");
     }
 
     @makecoffee
     public *delete(id: number): IterableIterator<any> {
-        throw new NotImplemented("StatusRepository.delete");
+        throw new HttpError(ServerError.NotImplemented, "StatusRepository.delete");
     }
 
     @makecoffee
     public *erase(id: number): IterableIterator<any> {
-        throw new NotImplemented("StatusRepository.erase");
+        throw new HttpError(ServerError.NotImplemented, "StatusRepository.erase");
     }
 
     @makecoffee

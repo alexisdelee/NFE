@@ -3,7 +3,7 @@ import { IConstant } from "./interfaces/IConstant";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { ResourceRepository } from "./ResourceRepository";
 import { Tracker } from "../entities/Tracker";
-import { NotImplemented } from "../utils/HttpWrapper";
+import { HttpError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query } from "../utils/QueryWrapper";
 
 export class TrackerRepository extends ABaseRepository<Tracker> implements IConstant {
@@ -13,22 +13,22 @@ export class TrackerRepository extends ABaseRepository<Tracker> implements ICons
 
     @makecoffee
     public *create(tracker: Tracker): IterableIterator<any> {
-        throw new NotImplemented("TrackerRepository.create");
+        throw new HttpError(ServerError.NotImplemented, "TrackerRepository.create");
     }
 
     @makecoffee
     public *update(id: number, tracker: Tracker): IterableIterator<any> {
-        throw new NotImplemented("TrackerRepository.update");
+        throw new HttpError(ServerError.NotImplemented, "TrackerRepository.update");
     }
 
     @makecoffee
     public *delete(id: number): IterableIterator<any> {
-        throw new NotImplemented("TrackerRepository.delete");
+        throw new HttpError(ServerError.NotImplemented, "TrackerRepository.delete");
     }
 
     @makecoffee
     public *erase(id: number): IterableIterator<any> {
-        throw new NotImplemented("TrackerRepository.erase");
+        throw new HttpError(ServerError.NotImplemented, "TrackerRepository.erase");
     }
 
     @makecoffee

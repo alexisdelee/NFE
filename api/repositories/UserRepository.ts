@@ -19,6 +19,16 @@ export class UserRepository extends ABaseRepository<User> {
 
     @makecoffee
     public *update(id: number, user: User): IterableIterator<any> {
+        /* yield this.query(`
+            update ${this.collection} 
+            set usr_pseudo = ${user.pseudo}, 
+                usr_nfeid = ${user.nfeid}, 
+                usr_password = ${user.password}, 
+                usr_salt = ${user.salt}, 
+                usr_iterations = ${user.iterations} 
+            where usr_id = ? 
+                and usr_deleted = false 
+        `, [ id ]); */
         throw new NotImplemented("UserRepository.update");
     }
 

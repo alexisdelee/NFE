@@ -3,7 +3,7 @@ import { IConstant } from "./interfaces/IConstant";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { ResourceRepository } from "./ResourceRepository";
 import { Priority } from "../entities/Priority";
-import { NotImplemented } from "../utils/HttpWrapper";
+import { HttpError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query } from "../utils/QueryWrapper";
 
 export class PriorityRepository extends ABaseRepository<Priority> implements IConstant {
@@ -13,22 +13,22 @@ export class PriorityRepository extends ABaseRepository<Priority> implements ICo
 
     @makecoffee
     public *create(priority: Priority): IterableIterator<any> {
-        throw new NotImplemented("PriorityRepository.create");
+        throw new HttpError(ServerError.NotImplemented, "PriorityRepository.create");
     }
 
     @makecoffee
     public *update(id: number, priority: Priority): IterableIterator<any> {
-        throw new NotImplemented("PriorityRepository.update");
+        throw new HttpError(ServerError.NotImplemented, "PriorityRepository.update");
     }
 
     @makecoffee
     public *delete(id: number): IterableIterator<any> {
-        throw new NotImplemented("PriorityRepository.delete");
+        throw new HttpError(ServerError.NotImplemented, "PriorityRepository.delete");
     }
 
     @makecoffee
     public *erase(id: number): IterableIterator<any> {
-        throw new NotImplemented("PriorityRepository.erase");
+        throw new HttpError(ServerError.NotImplemented, "PriorityRepository.erase");
     }
 
     @makecoffee

@@ -1,7 +1,7 @@
 import { makecoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Link } from "../entities/Link";
-import { NotImplemented } from "../utils/HttpWrapper";
+import { HttpError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query } from "../utils/QueryWrapper";
 
 export class LinkRepository extends ABaseRepository<Link> {
@@ -11,22 +11,22 @@ export class LinkRepository extends ABaseRepository<Link> {
 
     @makecoffee
     public *create(link: Link): IterableIterator<any> {
-        throw new NotImplemented("LinkRepository.create");
+        throw new HttpError(ServerError.NotImplemented, "LinkRepository.create");
     }
 
     @makecoffee
     public *update(id: number, link: Link): IterableIterator<any> {
-        throw new NotImplemented("LinkRepository.update");
+        throw new HttpError(ServerError.NotImplemented, "LinkRepository.update");
     }
 
     @makecoffee
     public *delete(id: number): IterableIterator<any> {
-        throw new NotImplemented("LinkRepository.delete");
+        throw new HttpError(ServerError.NotImplemented, "LinkRepository.delete");
     }
 
     @makecoffee
     public *erase(id: number): IterableIterator<any> {
-        throw new NotImplemented("LinkRepository.erase");
+        throw new HttpError(ServerError.NotImplemented, "LinkRepository.erase");
     }
 
     @makecoffee

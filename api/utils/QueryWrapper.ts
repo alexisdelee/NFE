@@ -1,18 +1,35 @@
-import { InternalServerError } from "./HttpWrapper";
+import { HttpError, ServerError } from "./HttpWrapper";
+import { Optional } from "../utils/Optional";
+
 import { FieldInfo } from "mysql";
 
 export class RowDataPacket {
 }
 
 export class Query {
-    constructor(public rows: Array<RowDataPacket>, public fields: Array<FieldInfo>){
+    constructor(public readonly rows: Array<RowDataPacket>, public readonly fields: Array<FieldInfo>){
     }
 
     public getOneRow(): RowDataPacket {
         if (this.rows.length < 1) {
-            throw new InternalServerError("no results are returned to be stored in this entity");
+            throw new HttpError(ServerError.InternalServerError, "no results are returned to be stored in this entity");
         }
 
         return this.rows[0];
+    }
+}
+
+export namespace Request {
+    export enum FetchType {
+        // this does not load the relationships
+        Lazy,
+    
+        // this loads all the relationships
+        Eager
+    }
+
+    export enum Direction {
+        ASC = "asc",
+        DESC = "desc"
     }
 }

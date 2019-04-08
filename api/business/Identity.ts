@@ -1,6 +1,11 @@
-import { AUser, Agent } from "./User";
+import {} from "./Credential";
+import { AUser } from "./User";
 
-export class IdentityInfo {
+export abstract class ACredential {
+    public abstract store(password: string): string;
+}
+
+export class UserInfo {
     public userId: number;
     public authToken: string;
 }

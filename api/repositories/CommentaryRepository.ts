@@ -3,8 +3,7 @@ import { ABaseRepository } from "./base/ABaseRepository";
 import { Commentary } from "../entities/Commentary";
 import { TicketRepository } from "./TicketRepository";
 import { UserRepository } from "./UserRepository";
-import { RoleRepository } from "./RoleRepository";
-import { NotImplemented } from "../utils/HttpWrapper";
+import { HttpError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query } from "../utils/QueryWrapper";
 
 export class CommentaryRepository extends ABaseRepository<Commentary> {
@@ -43,7 +42,7 @@ export class CommentaryRepository extends ABaseRepository<Commentary> {
 
     @makecoffee
     public *erase(id: number): IterableIterator<any> {
-        throw new NotImplemented("CommentaryRepository.erase");
+        throw new HttpError(ServerError.NotImplemented, "CommentaryRepository.erase");
     }
 
     @makecoffee

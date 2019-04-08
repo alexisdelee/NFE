@@ -1,7 +1,8 @@
 import { makecoffee } from "../../decorators/wrapper";
 import { IWrite } from "../interfaces/IWrite";
 import { IRead } from "../interfaces/IRead";
-import { NotImplemented, InternalServerError } from "../../utils/HttpWrapper";
+import { Datatype } from "../../utils/Utils";
+import { HttpError, ServerError } from "../../utils/HttpWrapper";
 import { RowDataPacket, Query } from "../../utils/QueryWrapper";
 
 import webconfig from "../../../webconfig";
@@ -14,27 +15,27 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
     constructor(public readonly collection: string){
     }
 
-    public abstract create(item: T): IterableIterator<any>;
+    public abstract create(item: T): Datatype.Iterator.BiIterator<Query>;
 
-    public abstract update(id: number, item: T): IterableIterator<any>;
+    public abstract update(id: number, item: T): Datatype.Iterator.BiIterator<Query>;
 
     @makecoffee
-    public *delete(id: number): IterableIterator<any> {
-        throw new NotImplemented("ABaseRepository<T>.delete");
+    public *delete(id: number): Datatype.Iterator.BiIterator<Query> {
+        throw new HttpError(ServerError.NotImplemented, "ABaseRepository<T>.delete");
     }
 
-    public abstract erase(id: number): IterableIterator<any>;
+    public abstract erase(id: number): Datatype.Iterator.BiIterator<Query>;
 
     @makecoffee
-    public *find(item: T): IterableIterator<any> {
-        throw new NotImplemented("ABaseRepository<T>.find");
+    public *find(item: T): Datatype.Iterator.BiIterator<Query> {
+        throw new HttpError(ServerError.NotImplemented, "ABaseRepository<T>.find");
     }
 
-    public abstract findOne(id: number): IterableIterator<any>;
+    public abstract findOne(id: number): Datatype.Iterator.BiIterator<Query>;
 
     @makecoffee
-    protected *query(options: string, values: Array<any> = []): IterableIterator<any> {
-        return new Promise(function(resolve, reject) {
+    protected *query(options: string, values: Array<Datatype.Primitive> = new Array()): Datatype.Iterator.Iterator<Query> {
+        return new Promise<Query>(function(resolve, reject) {
             ABaseRepository.getSharedConnection().query(options, values, function(err: MysqlError, rows: Array<RowDataPacket>, fields: Array<FieldInfo>) {
                 try {
                     if (err) {
@@ -50,8 +51,8 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
     }
 
     @makecoffee
-    protected *call(options: string, values: Array<any> = []): IterableIterator<any> {
-        return new Promise(function(resolve, reject) {
+    protected *call(options: string, values: Array<Datatype.Primitive> = new Array()): Datatype.Iterator.Iterator<Query> {
+        return new Promise<Query>(function(resolve, reject) {
             ABaseRepository.getSharedConnection().query("call " + options, values, function(err: MysqlError, rows: Array<any>, fields: Array<FieldInfo>) {
                 try {
                     if (err) {
@@ -66,7 +67,7 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
         });
     }
 
-    public abstract accessToSQL(row: RowDataPacket): IterableIterator<any>;
+    public abstract accessToSQL(row: RowDataPacket): Datatype.Iterator.BiIterator<Query>;
 
     private static getSharedConnection(): Connection {
         if(!ABaseRepository.__shared_connection__) {

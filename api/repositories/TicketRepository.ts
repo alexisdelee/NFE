@@ -7,7 +7,7 @@ import { PriorityRepository } from "./PriorityRepository";
 import { StatusRepository } from "./StatusRepository";
 import { CategoryRepository } from "./CategoryRepository";
 import { UserRepository } from "./UserRepository";
-import { NotImplemented } from "../utils/HttpWrapper";
+import { HttpError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query } from "../utils/QueryWrapper";
 
 export class TicketRepository extends ABaseRepository<Ticket> {
@@ -55,7 +55,7 @@ export class TicketRepository extends ABaseRepository<Ticket> {
 
     @makecoffee
     public *erase(id: number): IterableIterator<any> {
-        throw new NotImplemented("TicketRepository.erase");
+        throw new HttpError(ServerError.NotImplemented, "TicketRepository.erase");
     }
 
     @makecoffee

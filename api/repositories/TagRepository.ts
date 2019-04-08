@@ -3,7 +3,7 @@ import { ABaseRepository } from "./base/ABaseRepository";
 import { Tag } from "../entities/Tag";
 import { TicketRepository } from "./TicketRepository";
 import { UserRepository } from "./UserRepository";
-import { NotImplemented } from "../utils/HttpWrapper";
+import { HttpError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query } from "../utils/QueryWrapper";
 
 export class TagRepository extends ABaseRepository<Tag> {
@@ -57,7 +57,7 @@ export class TagRepository extends ABaseRepository<Tag> {
 
     @makecoffee
     public *erase(id: number): IterableIterator<any> {
-        throw new NotImplemented("TagRepository.erase");
+        throw new HttpError(ServerError.NotImplemented, "TagRepository.erase");
     }
 
     @makecoffee

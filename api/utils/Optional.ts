@@ -1,16 +1,16 @@
-import { Function } from "./Utils";
+import { Datatype } from "./Utils";
 
 export class Optional<T> {
     constructor(public readonly value: T) {
     }
 
     // if a value is present, and the value matches the given predicate, return an Optional describing the value, otherwise return an empty Optional
-    public filter(predicate: Function.Predicate<T>): Optional<T> {
+    public filter(predicate: Datatype.Function.Predicate<T>): Optional<T> {
         return predicate(this.value) ? Optional.of(this.value) : Optional.empty();
     }
 
     // if a value is present, apply the provided mapping function to it, and if the result is non-null, return an Optional describing the result
-    public map<R>(mapper: Function.Function<T, R>): Optional<R> {
+    public map<R>(mapper: Datatype.Function.Function<T, R>): Optional<R> {
         if (this.isPresent()) {
             return Optional.of(mapper(this.value));
         } else {
@@ -19,7 +19,7 @@ export class Optional<T> {
     }
 
     // if a value is present, apply the provided Optional-bearing mapping function to it, return that result, otherwise return an empty Optional
-    public flatMap<R>(mapper: Function.Function<T, Optional<R>>): Optional<R> {
+    public flatMap<R>(mapper: Datatype.Function.Function<T, Optional<R>>): Optional<R> {
         if (this.isPresent()) {
             return mapper(this.value);
         } else {
@@ -38,14 +38,14 @@ export class Optional<T> {
     }
 
     // if a value is present, invoke the specified consumer with the value, otherwise do nothing
-    public ifPresent(consumer: Function.Consumer<T>): void {
+    public ifPresent(consumer: Datatype.Function.Consumer<T>): void {
         if (this.isPresent()) {
             consumer(this.value);
         }
     }
 
     // if a value is present, performs the given action with the value, otherwise performs the given empty-based action
-    public ifPresentOrElse(action: Function.Consumer<T>, emptyAction: Function.Supplier<any>): void {
+    public ifPresentOrElse(action: Datatype.Function.Consumer<T>, emptyAction: Datatype.Function.Supplier<any>): void {
         if (this.isPresent()) {
             action(this.value);
         } else {
@@ -54,7 +54,7 @@ export class Optional<T> {
     }
 
     // if a value is present, returns an Optional describing the value, otherwise returns an Optional produced by the supplying function
-    public or(supplier: Function.Supplier<Optional<T>>): Optional<T> {
+    public or(supplier: Datatype.Function.Supplier<Optional<T>>): Optional<T> {
         return this.isPresent() ? this : supplier();
     }
 
@@ -64,12 +64,12 @@ export class Optional<T> {
     }
 
     // return the value if present, otherwise invoke other and return the result of that invocation
-    public orElseGet(other: Function.Supplier<T>): T {
+    public orElseGet(other: Datatype.Function.Supplier<T>): T {
         return this.isPresent() ? this.value : other();
     }
 
     // return the contained value, if present, otherwise throw an exception to be created by the provided supplier
-    public orElseThrow(exceptionSupplier: Function.Supplier<T>): T {
+    public orElseThrow<R>(exceptionSupplier: Datatype.Function.Supplier<R>): T {
         if (this.isPresent()) {
             return this.value;
         }

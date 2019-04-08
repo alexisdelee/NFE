@@ -1,7 +1,7 @@
 import { makecoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Region } from "../entities/Region";
-import { NotImplemented } from "../utils/HttpWrapper";
+import { HttpError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query } from "../utils/QueryWrapper";
 
 export class RegionRepository extends ABaseRepository<Region> {
@@ -11,22 +11,22 @@ export class RegionRepository extends ABaseRepository<Region> {
 
     @makecoffee
     public *create(region: Region): IterableIterator<any> {
-        throw new NotImplemented("RegionRepository.create");
+        throw new HttpError(ServerError.NotImplemented, "RegionRepository.create");
     }
 
     @makecoffee
     public *update(id: number, region: Region): IterableIterator<any> {
-        throw new NotImplemented("RegionRepository.update");
+        throw new HttpError(ServerError.NotImplemented, "RegionRepository.update");
     }
 
     @makecoffee
     public *delete(id: number): IterableIterator<any> {
-        throw new NotImplemented("RegionRepository.delete");
+        throw new HttpError(ServerError.NotImplemented, "RegionRepository.delete");
     }
 
     @makecoffee
     public *erase(id: number): IterableIterator<any> {
-        throw new NotImplemented("RegionRepository.erase");
+        throw new HttpError(ServerError.NotImplemented, "RegionRepository.erase");
     }
 
     @makecoffee

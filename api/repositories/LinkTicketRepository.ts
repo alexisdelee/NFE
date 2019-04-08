@@ -3,7 +3,7 @@ import { ABaseRepository } from "./base/ABaseRepository";
 import { LinkRepository } from "./LinkRepository";
 import { TicketRepository } from "./TicketRepository";
 import { LinkTicket } from "../entities/LinkTicket";
-import { NotImplemented } from "../utils/HttpWrapper";
+import { HttpError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query } from "../utils/QueryWrapper";
 
 export class LinkTicketRepository extends ABaseRepository<LinkTicket> {
@@ -31,7 +31,7 @@ export class LinkTicketRepository extends ABaseRepository<LinkTicket> {
 
     @makecoffee
     public *delete(id: number): IterableIterator<any> {
-        throw new NotImplemented("LinkTicketRepository.delete");
+        throw new HttpError(ServerError.NotImplemented, "LinkTicketRepository.delete");
     }
 
     @makecoffee
