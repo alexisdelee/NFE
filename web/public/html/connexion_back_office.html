@@ -1,29 +1,42 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>NFE - Connexion au back office</title>
-    </head>
 
-<header id="header"></header>
+<head>
+    <title>NFE - Connexion au back office</title>
+    <link rel="stylesheet" href="../css/index.css" />
+</head>
 
-    <body>
+<header>
+    <a href="/">
+        <img src="images/logo.png" alt="Logo NFE" width="auto" height="auto"/>
+    </a>
+</header>
 
-<h1 class="title">Connexion back office</h1>
+<body>
+    <h1 class="title">Connexion back office</h1>
 
-<label for="email_nfe">Adresse mail NFE :</label>
-<input id="email_nfe" type="email" /><br>
+    <div class="connection_form">
+        <div class="form_line">
+            <label class="form_label" for="email_nfe">Adresse mail NFE :</label>
+            <input class="form_input" id="email_nfe" type="email" /><br>
+        </div>
 
-<label for="nfeid">Identifiant NFEID :</label>
-<input id="nfeid" type="text" /><br>
+        <div class="form_line">
+            <label class="form_label" for="nfeid">Identifiant NFEID :</label>
+            <input class="form_input" id="nfeid" type="text" /><br>
+        </div>
 
-<label for="password">Mot de passe :</label>
-<input id="password" type="password" /><br>
+        <div class="form_line">
+            <label class="form_label" for="password">Mot de passe :</label>
+            <input class="form_input" id="password" type="password" /><br>
+        </div>
 
-<button id="connection_button" value="Se connecter" />
-
+        <button id="connection_button" v-on:click="connect">Se connecter</button>
+    </div>
 </body>
 
-<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://fr.vuejs.org/js/vue.js"></script>
 <script src="js/index.js"></script>
 
 </html>
