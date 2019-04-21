@@ -1,4 +1,4 @@
-import { makecoffee } from "../decorators/wrapper";
+import { makeCoffee } from "../decorators/wrapper";
 import { IConstant } from "./interfaces/IConstant";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { CategoryRepository } from "./CategoryRepository";
@@ -12,27 +12,27 @@ export class StatusRepository extends ABaseRepository<Status> implements IConsta
         super("status");
     }
 
-    @makecoffee
+    @makeCoffee
     public *create(status: Status): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "StatusRepository.create");
     }
 
-    @makecoffee
+    @makeCoffee
     public *update(id: number, status: Status): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "StatusRepository.update");
     }
 
-    @makecoffee
+    @makeCoffee
     public *delete(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "StatusRepository.delete");
     }
 
-    @makecoffee
+    @makeCoffee
     public *erase(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "StatusRepository.erase");
     }
 
-    @makecoffee
+    @makeCoffee
     public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
@@ -47,7 +47,7 @@ export class StatusRepository extends ABaseRepository<Status> implements IConsta
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *findBySynchro(label: string, fetchType: Request.FetchType): IterableIterator<any> {
         const query: Query = yield this.query(`
             select * 
@@ -58,7 +58,7 @@ export class StatusRepository extends ABaseRepository<Status> implements IConsta
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {
         return <Status>{
             id: row["st_id"],

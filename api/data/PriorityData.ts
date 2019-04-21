@@ -1,6 +1,7 @@
-import { makecoffee } from "../decorators/wrapper";
+import { makeCoffee } from "../decorators/wrapper";
 import { PriorityRepository } from "../repositories/PriorityRepository";
 import { Priority } from "../entities/Priority";
+import { Request } from "../utils/QueryWrapper";
 
 export class PriorityData {
     constructor(
@@ -12,14 +13,14 @@ export class PriorityData {
     ) {
     }
 
-    @makecoffee
+    @makeCoffee
     public static *create(): IterableIterator<any> {
         return new PriorityData(
-            <Priority>(yield new PriorityRepository().findBySynchro("trivial")),
-            <Priority>(yield new PriorityRepository().findBySynchro("minor")),
-            <Priority>(yield new PriorityRepository().findBySynchro("major")),
-            <Priority>(yield new PriorityRepository().findBySynchro("critical")),
-            <Priority>(yield new PriorityRepository().findBySynchro("blocker"))
+            <Priority>(yield new PriorityRepository().findBySynchro("trivial", Request.FetchType.Eager)),
+            <Priority>(yield new PriorityRepository().findBySynchro("minor", Request.FetchType.Eager)),
+            <Priority>(yield new PriorityRepository().findBySynchro("major", Request.FetchType.Eager)),
+            <Priority>(yield new PriorityRepository().findBySynchro("critical", Request.FetchType.Eager)),
+            <Priority>(yield new PriorityRepository().findBySynchro("blocker", Request.FetchType.Eager))
         );
     }
 }

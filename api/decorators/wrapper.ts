@@ -1,6 +1,6 @@
 import * as Q from "q";
 
-export function makecoffee(target, property: string, descriptor: PropertyDescriptor): PropertyDescriptor {
+export function makeCoffee(target, property: string, descriptor: PropertyDescriptor): PropertyDescriptor {
     const method = descriptor.value;
 
     descriptor.value = function() {

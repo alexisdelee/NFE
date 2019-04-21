@@ -1,4 +1,4 @@
-import { makecoffee } from "../decorators/wrapper";
+import { makeCoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Resource } from "../entities/Resource";
 import { HttpError, ServerError } from "../utils/HttpWrapper";
@@ -9,23 +9,23 @@ export class ResourceRepository extends ABaseRepository<Resource> {
         super("resource");
     }
 
-    @makecoffee
+    @makeCoffee
     public *create(resource: Resource): IterableIterator<any> {
         yield this.call("internal_create_resource (?, ?, ?)", [ resource.folder, resource.filename, resource.id ]);
         return true;
     }
 
-    @makecoffee
+    @makeCoffee
     public *update(id: number, resource: Resource): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "ResourceRepository.update");
     }
 
-    @makecoffee
+    @makeCoffee
     public *delete(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "ResourceRepository.delete");
     }
 
-    @makecoffee
+    @makeCoffee
     public *erase(id: number): IterableIterator<any> {
         yield this.query(`
             delete from ${this.collection} 
@@ -34,7 +34,7 @@ export class ResourceRepository extends ABaseRepository<Resource> {
         return true;
     }
 
-    @makecoffee
+    @makeCoffee
     public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
@@ -49,7 +49,7 @@ export class ResourceRepository extends ABaseRepository<Resource> {
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
         return <Resource>{
             id: row["re_id"],

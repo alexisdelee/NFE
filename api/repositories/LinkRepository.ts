@@ -1,4 +1,4 @@
-import { makecoffee } from "../decorators/wrapper";
+import { makeCoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Link } from "../entities/Link";
 import { HttpError, ServerError } from "../utils/HttpWrapper";
@@ -9,27 +9,27 @@ export class LinkRepository extends ABaseRepository<Link> {
         super("link");
     }
 
-    @makecoffee
+    @makeCoffee
     public *create(link: Link): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "LinkRepository.create");
     }
 
-    @makecoffee
+    @makeCoffee
     public *update(id: number, link: Link): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "LinkRepository.update");
     }
 
-    @makecoffee
+    @makeCoffee
     public *delete(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "LinkRepository.delete");
     }
 
-    @makecoffee
+    @makeCoffee
     public *erase(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "LinkRepository.erase");
     }
 
-    @makecoffee
+    @makeCoffee
     public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
@@ -44,7 +44,7 @@ export class LinkRepository extends ABaseRepository<Link> {
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
         return <Link>{
             id: row["lk_id"],

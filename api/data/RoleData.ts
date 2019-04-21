@@ -1,6 +1,7 @@
-import { makecoffee } from "../decorators/wrapper";
+import { makeCoffee } from "../decorators/wrapper";
 import { RoleRepository } from "../repositories/RoleRepository";
 import { Role } from "../entities/Role";
+import { Request } from "../utils/QueryWrapper";
 
 export class RoleData {
     constructor(
@@ -12,14 +13,14 @@ export class RoleData {
     ) {
     }
 
-    @makecoffee
+    @makeCoffee
     public static *create(): IterableIterator<any> {
         return new RoleData(
-            <Role>(yield new RoleRepository().findBySynchro("anonymous")),
-            <Role>(yield new RoleRepository().findBySynchro("agent")),
-            <Role>(yield new RoleRepository().findBySynchro("operator")),
-            <Role>(yield new RoleRepository().findBySynchro("administrator")),
-            <Role>(yield new RoleRepository().findBySynchro("root"))
+            <Role>(yield new RoleRepository().findBySynchro("anonymous", Request.FetchType.Eager)),
+            <Role>(yield new RoleRepository().findBySynchro("agent", Request.FetchType.Eager)),
+            <Role>(yield new RoleRepository().findBySynchro("operator", Request.FetchType.Eager)),
+            <Role>(yield new RoleRepository().findBySynchro("administrator", Request.FetchType.Eager)),
+            <Role>(yield new RoleRepository().findBySynchro("root", Request.FetchType.Eager))
         );
     }
 }

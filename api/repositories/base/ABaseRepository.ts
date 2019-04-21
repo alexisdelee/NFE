@@ -1,4 +1,4 @@
-import { makecoffee } from "../../decorators/wrapper";
+import { makeCoffee } from "../../decorators/wrapper";
 import { IWrite } from "../interfaces/IWrite";
 import { IRead } from "../interfaces/IRead";
 import { Datatype } from "../../utils/Utils";
@@ -19,21 +19,21 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
 
     public abstract update(id: number, item: T): Datatype.Iterator.BiIterator<Query>;
 
-    @makecoffee
+    @makeCoffee
     public *delete(id: number): Datatype.Iterator.BiIterator<Query> {
         throw new HttpError(ServerError.NotImplemented, "ABaseRepository<T>.delete");
     }
 
     public abstract erase(id: number): Datatype.Iterator.BiIterator<Query>;
 
-    @makecoffee
+    @makeCoffee
     public *find(item: T, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query> {
         throw new HttpError(ServerError.NotImplemented, "ABaseRepository<T>.find");
     }
 
     public abstract findOne(id: number, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query>;
 
-    @makecoffee
+    @makeCoffee
     protected *query(options: string, values: Array<Datatype.Primitive | Date> = new Array()): Datatype.Iterator.Iterator<Query> {
         return new Promise<Query>(function(resolve, reject) {
             ABaseRepository.getSharedConnection().query(options, values, function(err: MysqlError, rows: Array<RowDataPacket>, fields: Array<FieldInfo>) {
@@ -50,7 +50,7 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
         });
     }
 
-    @makecoffee
+    @makeCoffee
     protected *call(options: string, values: Array<Datatype.Primitive | Date> = new Array()): Datatype.Iterator.Iterator<Query> {
         return new Promise<Query>(function(resolve, reject) {
             ABaseRepository.getSharedConnection().query("call " + options, values, function(err: MysqlError, rows: Array<any>, fields: Array<FieldInfo>) {
@@ -67,7 +67,7 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
         });
     }
 
-    @makecoffee
+    @makeCoffee
     protected *fetch<U extends ABaseRepository<V>, V>(id: number, type: { new(): U; }, fetchType: Request.FetchType) {
         if (fetchType === Request.FetchType.Lazy) {
             return yield id;

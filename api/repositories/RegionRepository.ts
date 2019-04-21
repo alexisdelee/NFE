@@ -1,4 +1,4 @@
-import { makecoffee } from "../decorators/wrapper";
+import { makeCoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Region } from "../entities/Region";
 import { HttpError, ServerError } from "../utils/HttpWrapper";
@@ -9,27 +9,27 @@ export class RegionRepository extends ABaseRepository<Region> {
         super("region");
     }
 
-    @makecoffee
+    @makeCoffee
     public *create(region: Region): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "RegionRepository.create");
     }
 
-    @makecoffee
+    @makeCoffee
     public *update(id: number, region: Region): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "RegionRepository.update");
     }
 
-    @makecoffee
+    @makeCoffee
     public *delete(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "RegionRepository.delete");
     }
 
-    @makecoffee
+    @makeCoffee
     public *erase(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "RegionRepository.erase");
     }
 
-    @makecoffee
+    @makeCoffee
     public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
@@ -44,7 +44,7 @@ export class RegionRepository extends ABaseRepository<Region> {
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
         return <Region>{
             id: row[ "rg_id"],

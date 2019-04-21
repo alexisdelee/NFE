@@ -1,4 +1,4 @@
-import { makecoffee } from "../decorators/wrapper";
+import { makeCoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Tag } from "../entities/Tag";
 import { Ticket } from "../entities/Ticket";
@@ -13,13 +13,13 @@ export class TagRepository extends ABaseRepository<Tag> {
         super("tag");
     }
 
-    @makecoffee
+    @makeCoffee
     public *create(tag: Tag): IterableIterator<any> {
         yield this.call("assign_tag_to_ticket (?, ?, ?, ?)", [ tag.name, tag.private, tag.ticket.id, tag.user.id ]);
         return true;
     }
 
-    @makecoffee
+    @makeCoffee
     public *update(id: number, tag: Tag): IterableIterator<any> { // work with assign_tag_to_ticket 
         yield this.query(`
             update ${this.collection} 
@@ -40,7 +40,7 @@ export class TagRepository extends ABaseRepository<Tag> {
         return true;
     }
 
-    @makecoffee
+    @makeCoffee
     public *delete(id: number): IterableIterator<any> {
         yield this.query(`
             update ${this.collection} 
@@ -57,12 +57,12 @@ export class TagRepository extends ABaseRepository<Tag> {
         return true;
     }
 
-    @makecoffee
+    @makeCoffee
     public *erase(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "TagRepository.erase");
     }
 
-    @makecoffee
+    @makeCoffee
     public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
@@ -78,7 +78,7 @@ export class TagRepository extends ABaseRepository<Tag> {
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
         return <Tag>{
             id: row["tg_id"],

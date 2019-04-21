@@ -1,4 +1,4 @@
-import { makecoffee } from "../decorators/wrapper";
+import { makeCoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Commentary } from "../entities/Commentary";
 import { Ticket } from "../entities/Ticket";
@@ -13,13 +13,13 @@ export class CommentaryRepository extends ABaseRepository<Commentary> {
         super("commentary");
     }
 
-    @makecoffee
+    @makeCoffee
     public *create(commentary: Commentary): IterableIterator<any> {
         yield this.call("assign_commentary_to_ticket (?, ?, ?)", [ commentary.description, commentary.ticket.id, commentary.user.id ]);
         return true;
     }
 
-    @makecoffee
+    @makeCoffee
     public *update(id: number, commentary: Commentary): IterableIterator<any> {
         yield this.query(`
             update ${this.collection} 
@@ -32,7 +32,7 @@ export class CommentaryRepository extends ABaseRepository<Commentary> {
         return true;
     }
 
-    @makecoffee
+    @makeCoffee
     public *delete(id: number): IterableIterator<any> {
         yield this.query(`
             update ${this.collection} 
@@ -42,12 +42,12 @@ export class CommentaryRepository extends ABaseRepository<Commentary> {
         return true;
     }
 
-    @makecoffee
+    @makeCoffee
     public *erase(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "CommentaryRepository.erase");
     }
 
-    @makecoffee
+    @makeCoffee
     public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
@@ -63,7 +63,7 @@ export class CommentaryRepository extends ABaseRepository<Commentary> {
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
         return <Commentary>{
             id: row["cm_id"],

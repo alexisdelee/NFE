@@ -1,4 +1,4 @@
-import { makecoffee } from "../decorators/wrapper";
+import { makeCoffee } from "../decorators/wrapper";
 import { IConstant } from "./interfaces/IConstant";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Category } from "../entities/Category";
@@ -11,27 +11,27 @@ export class CategoryRepository extends ABaseRepository<Category> implements ICo
         super("category");
     }
 
-    @makecoffee
+    @makeCoffee
     public *create(category: Category): Datatype.Iterator.BiIterator<Query> {
         throw new HttpError(ServerError.NotImplemented, "CategoryRepository.create");
     }
 
-    @makecoffee
+    @makeCoffee
     public *update(id: number, category: Category): Datatype.Iterator.BiIterator<Query> {
         throw new HttpError(ServerError.NotImplemented, "CategoryRepository.update");
     }
 
-    @makecoffee
+    @makeCoffee
     public *delete(id: number): Datatype.Iterator.BiIterator<Query> {
         throw new HttpError(ServerError.NotImplemented, "CategoryRepository.delete");
     }
 
-    @makecoffee
+    @makeCoffee
     public *erase(id: number): Datatype.Iterator.BiIterator<Query> {
         throw new HttpError(ServerError.NotImplemented, "CategoryRepository.erase");
     }
 
-    @makecoffee
+    @makeCoffee
     public *findOne(id: number, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query> {
         if (!id) {
             return null;
@@ -46,7 +46,7 @@ export class CategoryRepository extends ABaseRepository<Category> implements ICo
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *findBySynchro(label: string, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query> {
         const query: Query = yield this.query(`
             select * 
@@ -57,7 +57,7 @@ export class CategoryRepository extends ABaseRepository<Category> implements ICo
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query> {        
         return <Category>{
             id: row["ca_id"],

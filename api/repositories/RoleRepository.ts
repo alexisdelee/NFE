@@ -1,4 +1,4 @@
-import { makecoffee } from "../decorators/wrapper";
+import { makeCoffee } from "../decorators/wrapper";
 import { IConstant } from "./interfaces/IConstant";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Role } from "../entities/Role";
@@ -10,27 +10,27 @@ export class RoleRepository extends ABaseRepository<Role> implements IConstant {
         super("role");
     }
 
-    @makecoffee
+    @makeCoffee
     public *create(role: Role): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "RoleRepository.create");
     }
 
-    @makecoffee
+    @makeCoffee
     public *update(id: number, role: Role): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "RoleRepository.update");
     }
 
-    @makecoffee
+    @makeCoffee
     public *delete(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "RoleRepository.delete");
     }
 
-    @makecoffee
+    @makeCoffee
     public *erase(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "RoleRepository.erase");
     }
 
-    @makecoffee
+    @makeCoffee
     public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
@@ -45,7 +45,7 @@ export class RoleRepository extends ABaseRepository<Role> implements IConstant {
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *findBySynchro(label: string, fetchType: Request.FetchType): IterableIterator<any> {
         const query: Query = yield this.query(`
             select * 
@@ -56,7 +56,7 @@ export class RoleRepository extends ABaseRepository<Role> implements IConstant {
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
         return <Role>{
             id: row["ro_id"],

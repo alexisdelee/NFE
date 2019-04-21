@@ -1,6 +1,7 @@
-import { makecoffee } from "../decorators/wrapper";
+import { makeCoffee } from "../decorators/wrapper";
 import { StatusRepository } from "../repositories/StatusRepository";
 import { Status } from "../entities/Status";
+import { Request } from "../utils/QueryWrapper";
 
 export class StatusData {
     constructor(
@@ -31,33 +32,33 @@ export class StatusData {
     ) {
     }
 
-    @makecoffee
+    @makeCoffee
     public static *create(): IterableIterator<any> {
         return new StatusData(
-            <Status>(yield new StatusRepository().findBySynchro("open")),
-            <Status>(yield new StatusRepository().findBySynchro("reopen")),
-            <Status>(yield new StatusRepository().findBySynchro("do")),
-            <Status>(yield new StatusRepository().findBySynchro("detail")),
-            <Status>(yield new StatusRepository().findBySynchro("assigned")),
-            <Status>(yield new StatusRepository().findBySynchro("being")),
-            <Status>(yield new StatusRepository().findBySynchro("selected_for_intervention")),
-            <Status>(yield new StatusRepository().findBySynchro("waiting_client")),
-            <Status>(yield new StatusRepository().findBySynchro("waiting_appointment")),
-            <Status>(yield new StatusRepository().findBySynchro("waiting")),
-            <Status>(yield new StatusRepository().findBySynchro("billing")),
-            <Status>(yield new StatusRepository().findBySynchro("document")),
-            <Status>(yield new StatusRepository().findBySynchro("test")),
-            <Status>(yield new StatusRepository().findBySynchro("in_test")),
-            <Status>(yield new StatusRepository().findBySynchro("in_validation")),
-            <Status>(yield new StatusRepository().findBySynchro("resolved")),
-            <Status>(yield new StatusRepository().findBySynchro("closed")),
-            <Status>(yield new StatusRepository().findBySynchro("finish")),
-            <Status>(yield new StatusRepository().findBySynchro("corrected")),
-            <Status>(yield new StatusRepository().findBySynchro("no_intervention_planned")),
-            <Status>(yield new StatusRepository().findBySynchro("duplicate")),
-            <Status>(yield new StatusRepository().findBySynchro("incomplete")),
-            <Status>(yield new StatusRepository().findBySynchro("no_reproduce")),
-            <Status>(yield new StatusRepository().findBySynchro("over"))
+            <Status>(yield new StatusRepository().findBySynchro("open", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("reopen", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("do", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("detail", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("assigned", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("being", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("selected_for_intervention", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("waiting_client", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("waiting_appointment", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("waiting", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("billing", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("document", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("test", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("in_test", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("in_validation", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("resolved", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("closed", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("finish", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("corrected", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("no_intervention_planned", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("duplicate", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("incomplete", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("no_reproduce", Request.FetchType.Eager)),
+            <Status>(yield new StatusRepository().findBySynchro("over", Request.FetchType.Eager))
         );
     }
 }

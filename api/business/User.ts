@@ -1,4 +1,4 @@
-import { makecoffee } from "../decorators/wrapper";
+import { makeCoffee } from "../decorators/wrapper";
 import { UserRepository } from "../repositories/UserRepository";
 import { User } from "../entities/User";
 
@@ -8,7 +8,7 @@ export abstract class AUser {
     constructor(public user: User, protected dependOn: symbol) {
     }
 
-    @makecoffee
+    @makeCoffee
     public *update(): IterableIterator<any> {
         yield new UserRepository().update(this.user.id, this.user);
     }

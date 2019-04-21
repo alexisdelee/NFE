@@ -1,4 +1,4 @@
-import { makecoffee } from "../decorators/wrapper";
+import { makeCoffee } from "../decorators/wrapper";
 import { IConstant } from "./interfaces/IConstant";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { ResourceRepository } from "./ResourceRepository";
@@ -12,27 +12,27 @@ export class PriorityRepository extends ABaseRepository<Priority> implements ICo
         super("priority");
     }
 
-    @makecoffee
+    @makeCoffee
     public *create(priority: Priority): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "PriorityRepository.create");
     }
 
-    @makecoffee
+    @makeCoffee
     public *update(id: number, priority: Priority): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "PriorityRepository.update");
     }
 
-    @makecoffee
+    @makeCoffee
     public *delete(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "PriorityRepository.delete");
     }
 
-    @makecoffee
+    @makeCoffee
     public *erase(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "PriorityRepository.erase");
     }
 
-    @makecoffee
+    @makeCoffee
     public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
@@ -47,7 +47,7 @@ export class PriorityRepository extends ABaseRepository<Priority> implements ICo
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *findBySynchro(label: string, fetchType: Request.FetchType): IterableIterator<any> {
         const query: Query = yield this.query(`
             select * 
@@ -58,7 +58,7 @@ export class PriorityRepository extends ABaseRepository<Priority> implements ICo
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
         return <Priority>{
             id: row["pr_id"],

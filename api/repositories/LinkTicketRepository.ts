@@ -1,4 +1,4 @@
-import { makecoffee } from "../decorators/wrapper";
+import { makeCoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { LinkRepository } from "./LinkRepository";
 import { LinkTicket } from "../entities/LinkTicket";
@@ -11,13 +11,13 @@ export class LinkTicketRepository extends ABaseRepository<LinkTicket> {
         super("link_ticket");
     }
 
-    @makecoffee
+    @makeCoffee
     public *create(linkTicket: LinkTicket): IterableIterator<any> {
         yield this.call("assign_link_to_ticket (?, ?, ?)", [ linkTicket.link.id, linkTicket.outward.id, linkTicket.inward.id ]);
         return true;
     }
 
-    @makecoffee
+    @makeCoffee
     public *update(id: number, linkTicket: LinkTicket): IterableIterator<any> { // work with assign_link_to_ticket
         yield this.query(`
             update ${this.collection} 
@@ -29,12 +29,12 @@ export class LinkTicketRepository extends ABaseRepository<LinkTicket> {
         return true;
     }
 
-    @makecoffee
+    @makeCoffee
     public *delete(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "LinkTicketRepository.delete");
     }
 
-    @makecoffee
+    @makeCoffee
     public *erase(id: number): IterableIterator<any> {
         yield this.query(`
             delete from ${this.collection} 
@@ -44,7 +44,7 @@ export class LinkTicketRepository extends ABaseRepository<LinkTicket> {
         return true;
     }
 
-    @makecoffee
+    @makeCoffee
     public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
@@ -59,7 +59,7 @@ export class LinkTicketRepository extends ABaseRepository<LinkTicket> {
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
         return <LinkTicket>{
             id: row["lk_tk_id"],

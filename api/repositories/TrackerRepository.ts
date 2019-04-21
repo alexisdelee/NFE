@@ -1,4 +1,4 @@
-import { makecoffee } from "../decorators/wrapper";
+import { makeCoffee } from "../decorators/wrapper";
 import { IConstant } from "./interfaces/IConstant";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { ResourceRepository } from "./ResourceRepository";
@@ -12,27 +12,27 @@ export class TrackerRepository extends ABaseRepository<Tracker> implements ICons
         super("tracker");
     }
 
-    @makecoffee
+    @makeCoffee
     public *create(tracker: Tracker): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "TrackerRepository.create");
     }
 
-    @makecoffee
+    @makeCoffee
     public *update(id: number, tracker: Tracker): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "TrackerRepository.update");
     }
 
-    @makecoffee
+    @makeCoffee
     public *delete(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "TrackerRepository.delete");
     }
 
-    @makecoffee
+    @makeCoffee
     public *erase(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "TrackerRepository.erase");
     }
 
-    @makecoffee
+    @makeCoffee
     public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
@@ -47,7 +47,7 @@ export class TrackerRepository extends ABaseRepository<Tracker> implements ICons
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *findBySynchro(label: string, fetchType: Request.FetchType): IterableIterator<any> {
         const query: Query = yield this.query(`
             select * 
@@ -58,7 +58,7 @@ export class TrackerRepository extends ABaseRepository<Tracker> implements ICons
         return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
-    @makecoffee
+    @makeCoffee
     public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
         return <Tracker>{
             id: row["tr_id"],
