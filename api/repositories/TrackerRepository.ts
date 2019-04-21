@@ -3,8 +3,9 @@ import { IConstant } from "./interfaces/IConstant";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { ResourceRepository } from "./ResourceRepository";
 import { Tracker } from "../entities/Tracker";
+import { Resource } from "../entities/Resource";
 import { HttpError, ServerError } from "../utils/HttpWrapper";
-import { RowDataPacket, Query } from "../utils/QueryWrapper";
+import { RowDataPacket, Query, Request } from "../utils/QueryWrapper";
 
 export class TrackerRepository extends ABaseRepository<Tracker> implements IConstant {
     constructor() {
@@ -32,7 +33,7 @@ export class TrackerRepository extends ABaseRepository<Tracker> implements ICons
     }
 
     @makecoffee
-    public *findOne(id: number): IterableIterator<any> {
+    public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
         }
@@ -43,28 +44,28 @@ export class TrackerRepository extends ABaseRepository<Tracker> implements ICons
             where tr_id = ? 
             limit 1 
         `, [ id ]);
-        return this.accessToSQL(query.getOneRow());
+        return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
     @makecoffee
-    public *findBySynchro(label: string): IterableIterator<any> {
+    public *findBySynchro(label: string, fetchType: Request.FetchType): IterableIterator<any> {
         const query: Query = yield this.query(`
             select * 
             from ${this.collection} 
             where tr_shortname = ? 
             limit 1 
         `, [ label ]);
-        return this.accessToSQL(query.getOneRow());
+        return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
     @makecoffee
-    public *accessToSQL(row: RowDataPacket): IterableIterator<any> {        
+    public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
         return <Tracker>{
             id: row["tr_id"],
             name: row["tr_name"],
             shortname: row["tr_shortname"],
             description: row["tr_description"],
-            icon: yield new ResourceRepository().findOne(row["tr_icon"]),
+            icon: yield this.fetch<ResourceRepository, Resource>(row["tr_icon"], ResourceRepository, fetchType), // yield new ResourceRepository().findOne(row["tr_icon"]),
             created: null,
             updated: null
         };

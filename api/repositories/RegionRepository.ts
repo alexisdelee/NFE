@@ -2,7 +2,7 @@ import { makecoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Region } from "../entities/Region";
 import { HttpError, ServerError } from "../utils/HttpWrapper";
-import { RowDataPacket, Query } from "../utils/QueryWrapper";
+import { RowDataPacket, Query, Request } from "../utils/QueryWrapper";
 
 export class RegionRepository extends ABaseRepository<Region> {
     constructor() {
@@ -30,7 +30,7 @@ export class RegionRepository extends ABaseRepository<Region> {
     }
 
     @makecoffee
-    public *findOne(id: number): IterableIterator<any> {
+    public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
         }
@@ -41,11 +41,11 @@ export class RegionRepository extends ABaseRepository<Region> {
             where rg_id = ? 
             limit 1
         `, [ id ]);
-        return this.accessToSQL(query.getOneRow());
+        return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
     @makecoffee
-    public *accessToSQL(row: RowDataPacket): IterableIterator<any> {        
+    public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
         return <Region>{
             id: row[ "rg_id"],
             postal: row[ "rg_postal"],

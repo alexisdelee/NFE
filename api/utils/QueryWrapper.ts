@@ -1,5 +1,4 @@
 import { HttpError, ServerError } from "./HttpWrapper";
-import { Optional } from "../utils/Optional";
 
 import { FieldInfo } from "mysql";
 

@@ -2,7 +2,7 @@ import { makecoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Link } from "../entities/Link";
 import { HttpError, ServerError } from "../utils/HttpWrapper";
-import { RowDataPacket, Query } from "../utils/QueryWrapper";
+import { RowDataPacket, Query, Request } from "../utils/QueryWrapper";
 
 export class LinkRepository extends ABaseRepository<Link> {
     constructor() {
@@ -30,7 +30,7 @@ export class LinkRepository extends ABaseRepository<Link> {
     }
 
     @makecoffee
-    public *findOne(id: number): IterableIterator<any> {
+    public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
         }
@@ -41,11 +41,11 @@ export class LinkRepository extends ABaseRepository<Link> {
             where lk_id = ? 
             limit 1
         `, [ id ]);
-        return this.accessToSQL(query.getOneRow());
+        return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
     @makecoffee
-    public *accessToSQL(row: RowDataPacket): IterableIterator<any> {        
+    public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
         return <Link>{
             id: row["lk_id"],
             outward: row["lk_outward_description"],

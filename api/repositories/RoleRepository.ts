@@ -3,7 +3,7 @@ import { IConstant } from "./interfaces/IConstant";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Role } from "../entities/Role";
 import { HttpError, ServerError } from "../utils/HttpWrapper";
-import { RowDataPacket, Query } from "../utils/QueryWrapper";
+import { RowDataPacket, Query, Request } from "../utils/QueryWrapper";
 
 export class RoleRepository extends ABaseRepository<Role> implements IConstant {
     constructor() {
@@ -31,7 +31,7 @@ export class RoleRepository extends ABaseRepository<Role> implements IConstant {
     }
 
     @makecoffee
-    public *findOne(id: number): IterableIterator<any> {
+    public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
         }
@@ -42,22 +42,22 @@ export class RoleRepository extends ABaseRepository<Role> implements IConstant {
             where ro_id = ? 
             limit 1 
         `, [ id ]);
-        return this.accessToSQL(query.getOneRow());
+        return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
     @makecoffee
-    public *findBySynchro(label: string): IterableIterator<any> {
+    public *findBySynchro(label: string, fetchType: Request.FetchType): IterableIterator<any> {
         const query: Query = yield this.query(`
             select * 
             from ${this.collection} 
             where ro_shortname = ? 
             limit 1 
         `, [ label ]);
-        return this.accessToSQL(query.getOneRow());
+        return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
     @makecoffee
-    public *accessToSQL(row: RowDataPacket): IterableIterator<any> {        
+    public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
         return <Role>{
             id: row["ro_id"],
             shortname: row["ro_shortname"],

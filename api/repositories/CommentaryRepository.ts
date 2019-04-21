@@ -1,10 +1,12 @@
 import { makecoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Commentary } from "../entities/Commentary";
+import { Ticket } from "../entities/Ticket";
+import { User } from "../entities/User";
 import { TicketRepository } from "./TicketRepository";
 import { UserRepository } from "./UserRepository";
 import { HttpError, ServerError } from "../utils/HttpWrapper";
-import { RowDataPacket, Query } from "../utils/QueryWrapper";
+import { RowDataPacket, Query, Request } from "../utils/QueryWrapper";
 
 export class CommentaryRepository extends ABaseRepository<Commentary> {
     constructor() {
@@ -46,7 +48,7 @@ export class CommentaryRepository extends ABaseRepository<Commentary> {
     }
 
     @makecoffee
-    public *findOne(id: number): IterableIterator<any> {
+    public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
         }
@@ -58,16 +60,16 @@ export class CommentaryRepository extends ABaseRepository<Commentary> {
                 and cm_deleted = false 
             limit 1
         `, [ id ]);
-        return this.accessToSQL(query.getOneRow());
+        return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
     @makecoffee
-    public *accessToSQL(row: RowDataPacket): IterableIterator<any> {        
+    public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
         return <Commentary>{
             id: row["cm_id"],
             description: row["cm_description"] === null ? null : row["cm_description"].toString("utf8"), // because of uncompress method, convert buffer to utf8
-            ticket: yield new TicketRepository().findOne(row["cm_ticket"]),
-            user: yield new UserRepository().findOne(row["cm_user"]),
+            ticket: yield this.fetch<TicketRepository, Ticket>(row["cm_ticket"], TicketRepository, fetchType), // fetchType === Request.FetchType.Lazy ? row["cm_ticket"] : yield new TicketRepository().findOne(row["cm_ticket"]),
+            user: yield this.fetch<UserRepository, User>(row["cm_user"], UserRepository, fetchType), // yield new UserRepository().findOne(row["cm_user"]),
             created: row["cm_created"],
             updated: row["cm_updated"]
         };

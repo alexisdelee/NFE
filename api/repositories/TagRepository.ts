@@ -1,10 +1,12 @@
 import { makecoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Tag } from "../entities/Tag";
+import { Ticket } from "../entities/Ticket";
+import { User } from "../entities/User";
 import { TicketRepository } from "./TicketRepository";
 import { UserRepository } from "./UserRepository";
 import { HttpError, ServerError } from "../utils/HttpWrapper";
-import { RowDataPacket, Query } from "../utils/QueryWrapper";
+import { RowDataPacket, Query, Request } from "../utils/QueryWrapper";
 
 export class TagRepository extends ABaseRepository<Tag> {
     constructor() {
@@ -61,7 +63,7 @@ export class TagRepository extends ABaseRepository<Tag> {
     }
 
     @makecoffee
-    public *findOne(id: number): IterableIterator<any> {
+    public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
         }
@@ -73,17 +75,17 @@ export class TagRepository extends ABaseRepository<Tag> {
                 and tg_deleted = false 
             limit 1 
         `, [ id ]);
-        return this.accessToSQL(query.getOneRow());
+        return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
     @makecoffee
-    public *accessToSQL(row: RowDataPacket): IterableIterator<any> {        
+    public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
         return <Tag>{
             id: row["tg_id"],
             name: row["tg_name"],
             private: Boolean(row["tg_private"]),
-            ticket: yield new TicketRepository().findOne(row["tg_ticket"]),
-            user: yield new UserRepository().findOne(row["tg_user"]),
+            ticket: yield this.fetch<TicketRepository, Ticket>(row["tg_ticket"], TicketRepository, fetchType), // yield new TicketRepository().findOne(row["tg_ticket"]),
+            user: yield this.fetch<UserRepository, User>(row["tg_user"], UserRepository, fetchType), // yield new UserRepository().findOne(row["tg_user"]),
             created: row["cm_created"],
             updated: row["cm_updated"]
         };

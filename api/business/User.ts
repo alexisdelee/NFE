@@ -3,7 +3,9 @@ import { UserRepository } from "../repositories/UserRepository";
 import { User } from "../entities/User";
 
 export abstract class AUser {
-    constructor(public user: User) {
+    public static artefact: symbol = Symbol();
+
+    constructor(public user: User, protected dependOn: symbol) {
     }
 
     @makecoffee
@@ -12,31 +14,49 @@ export abstract class AUser {
     }
 }
 
+/**
+ * Root
+ *  |-- Administrator
+ *      |-- Operator
+ *          |-- Agent
+ *              |-- Anonymous
+ */
+
 export class Anonymous extends AUser {
-    constructor(user: User) {
-        super(user);
+    public static artefact: symbol = Symbol();
+
+    constructor(user: User, dependOn: symbol = Agent.artefact) {
+        super(user, dependOn);
     }
 }
 
 export class Agent extends Anonymous {
-    constructor(user: User) {
-        super(user);
+    public static artefact: symbol = Symbol();
+
+    constructor(user: User, dependOn: symbol = Operator.artefact) {
+        super(user, dependOn);
     }
 }
 
 export class Operator extends Agent {
-    constructor(user: User) {
-        super(user);
+    public static artefact: symbol = Symbol();
+
+    constructor(user: User, dependOn = Administrator.artefact) {
+        super(user, dependOn);
     }
 }
 
 export class Administrator extends Operator {
-    constructor(user: User) {
-        super(user);
+    public static artefact: symbol = Symbol();
+
+    constructor(user: User, dependOn = Root.artefact) {
+        super(user, dependOn);
     }
 }
 
 export class Root extends Administrator {
+    public static artefact: symbol = Symbol();
+
     constructor(user: User) {
         super(user);
     }

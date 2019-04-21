@@ -3,8 +3,9 @@ import { IConstant } from "./interfaces/IConstant";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { CategoryRepository } from "./CategoryRepository";
 import { Status } from "../entities/Status";
+import { Category } from "../entities/Category";
 import { HttpError, ServerError } from "../utils/HttpWrapper";
-import { RowDataPacket, Query } from "../utils/QueryWrapper";
+import { RowDataPacket, Query, Request } from "../utils/QueryWrapper";
 
 export class StatusRepository extends ABaseRepository<Status> implements IConstant {
     constructor() {
@@ -32,7 +33,7 @@ export class StatusRepository extends ABaseRepository<Status> implements IConsta
     }
 
     @makecoffee
-    public *findOne(id: number): IterableIterator<any> {
+    public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
         }
@@ -43,28 +44,28 @@ export class StatusRepository extends ABaseRepository<Status> implements IConsta
             where st_id = ? 
             limit 1 
         `, [ id ]);
-        return this.accessToSQL(query.getOneRow());
+        return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
     @makecoffee
-    public *findBySynchro(label: string): IterableIterator<any> {
+    public *findBySynchro(label: string, fetchType: Request.FetchType): IterableIterator<any> {
         const query: Query = yield this.query(`
             select * 
             from ${this.collection} 
             where st_shortname = ? 
             limit 1 
         `, [ label ]);
-        return this.accessToSQL(query.getOneRow());
+        return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
     @makecoffee
-    public *accessToSQL(row: RowDataPacket): IterableIterator<any> {
+    public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {
         return <Status>{
             id: row["st_id"],
             name: row["st_name"],
             shortname: row["st_shortname"],
             description: row["st_description"],
-            category: yield new CategoryRepository().findOne(row["st_category"]),
+            category: yield this.fetch<CategoryRepository, Category>(row["st_category"], CategoryRepository, fetchType), // yield new CategoryRepository().findOne(row["st_category"]),
             created: null,
             updated: null
         };

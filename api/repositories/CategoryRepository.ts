@@ -4,7 +4,7 @@ import { ABaseRepository } from "./base/ABaseRepository";
 import { Category } from "../entities/Category";
 import { Datatype } from "../utils/Utils";
 import { HttpError, ServerError } from "../utils/HttpWrapper";
-import { RowDataPacket, Query } from "../utils/QueryWrapper";
+import { RowDataPacket, Query, Request } from "../utils/QueryWrapper";
 
 export class CategoryRepository extends ABaseRepository<Category> implements IConstant {
     constructor() {
@@ -32,7 +32,7 @@ export class CategoryRepository extends ABaseRepository<Category> implements ICo
     }
 
     @makecoffee
-    public *findOne(id: number): Datatype.Iterator.BiIterator<Query> {
+    public *findOne(id: number, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query> {
         if (!id) {
             return null;
         }
@@ -43,22 +43,22 @@ export class CategoryRepository extends ABaseRepository<Category> implements ICo
             where ca_id = ? 
             limit 1
         `, [ id ]);
-        return this.accessToSQL(query.getOneRow());
+        return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
     @makecoffee
-    public *findBySynchro(label: string): Datatype.Iterator.BiIterator<Query> {
+    public *findBySynchro(label: string, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query> {
         const query: Query = yield this.query(`
             select * 
             from ${this.collection} 
             where ca_shortname = ?
             limit 1
         `, [ label ]);
-        return this.accessToSQL(query.getOneRow());
+        return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
     @makecoffee
-    public *accessToSQL(row: RowDataPacket): Datatype.Iterator.BiIterator<Query> {        
+    public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query> {        
         return <Category>{
             id: row["ca_id"],
             name: row["ca_name"],

@@ -3,7 +3,7 @@ import { IWrite } from "../interfaces/IWrite";
 import { IRead } from "../interfaces/IRead";
 import { Datatype } from "../../utils/Utils";
 import { HttpError, ServerError } from "../../utils/HttpWrapper";
-import { RowDataPacket, Query } from "../../utils/QueryWrapper";
+import { RowDataPacket, Query, Request } from "../../utils/QueryWrapper";
 
 import webconfig from "../../../webconfig";
 
@@ -27,14 +27,14 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
     public abstract erase(id: number): Datatype.Iterator.BiIterator<Query>;
 
     @makecoffee
-    public *find(item: T): Datatype.Iterator.BiIterator<Query> {
+    public *find(item: T, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query> {
         throw new HttpError(ServerError.NotImplemented, "ABaseRepository<T>.find");
     }
 
-    public abstract findOne(id: number): Datatype.Iterator.BiIterator<Query>;
+    public abstract findOne(id: number, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query>;
 
     @makecoffee
-    protected *query(options: string, values: Array<Datatype.Primitive> = new Array()): Datatype.Iterator.Iterator<Query> {
+    protected *query(options: string, values: Array<Datatype.Primitive | Date> = new Array()): Datatype.Iterator.Iterator<Query> {
         return new Promise<Query>(function(resolve, reject) {
             ABaseRepository.getSharedConnection().query(options, values, function(err: MysqlError, rows: Array<RowDataPacket>, fields: Array<FieldInfo>) {
                 try {
@@ -51,7 +51,7 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
     }
 
     @makecoffee
-    protected *call(options: string, values: Array<Datatype.Primitive> = new Array()): Datatype.Iterator.Iterator<Query> {
+    protected *call(options: string, values: Array<Datatype.Primitive | Date> = new Array()): Datatype.Iterator.Iterator<Query> {
         return new Promise<Query>(function(resolve, reject) {
             ABaseRepository.getSharedConnection().query("call " + options, values, function(err: MysqlError, rows: Array<any>, fields: Array<FieldInfo>) {
                 try {
@@ -67,7 +67,18 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
         });
     }
 
-    public abstract accessToSQL(row: RowDataPacket): Datatype.Iterator.BiIterator<Query>;
+    @makecoffee
+    protected *fetch<U extends ABaseRepository<V>, V>(id: number, type: { new(): U; }, fetchType: Request.FetchType) {
+        if (fetchType === Request.FetchType.Lazy) {
+            return yield id;
+        } else if (fetchType === Request.FetchType.Eager) {
+            return yield (new type()).findOne(id, fetchType);
+        } else {
+            throw new HttpError(ServerError.NotImplemented, "ABaseRepository<T>.fetch<U, V>");
+        }
+    }
+
+    public abstract accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query>;
 
     private static getSharedConnection(): Connection {
         if(!ABaseRepository.__shared_connection__) {

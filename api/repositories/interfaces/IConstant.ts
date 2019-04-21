@@ -1,6 +1,6 @@
-import { Query } from "../../utils/QueryWrapper";
+import { Query, Request } from "../../utils/QueryWrapper";
 import { Datatype } from "../../utils/Utils";
 
 export interface IConstant {
-    findBySynchro(label: string): Datatype.Iterator.BiIterator<Query>;
+    findBySynchro(label: string, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query>;
 }

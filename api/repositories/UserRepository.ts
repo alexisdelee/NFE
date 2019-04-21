@@ -1,10 +1,12 @@
 import { makecoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { User } from "../entities/User";
+import { Resource } from "../entities/Resource";
+import { Role } from "../entities/Role";
 import { ResourceRepository } from "./ResourceRepository";
 import { RoleRepository } from "./RoleRepository";
-import { NotImplemented } from "../utils/HttpWrapper";
-import { RowDataPacket, Query } from "../utils/QueryWrapper";
+import { HttpError, ServerError } from "../utils/HttpWrapper";
+import { RowDataPacket, Query, Request } from "../utils/QueryWrapper";
 
 export class UserRepository extends ABaseRepository<User> {
     constructor() {
@@ -29,7 +31,7 @@ export class UserRepository extends ABaseRepository<User> {
             where usr_id = ? 
                 and usr_deleted = false 
         `, [ id ]); */
-        throw new NotImplemented("UserRepository.update");
+        throw new HttpError(ServerError.NotImplemented, "UserRepository.update");
     }
 
     @makecoffee
@@ -44,11 +46,11 @@ export class UserRepository extends ABaseRepository<User> {
 
     @makecoffee
     public *erase(id: number): IterableIterator<any> {
-        throw new NotImplemented("UserRepository.erase");
+        throw new HttpError(ServerError.NotImplemented, "UserRepository.erase");
     }
 
     @makecoffee
-    public *findOne(id: number): IterableIterator<any> {
+    public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
         if (!id) {
             return null;
         }
@@ -60,11 +62,11 @@ export class UserRepository extends ABaseRepository<User> {
                 and usr_deleted = false 
             limit 1 
         `, [ id ]);
-        return this.accessToSQL(query.getOneRow());
+        return this.accessToSQL(query.getOneRow(), fetchType);
     }
 
     @makecoffee
-    public *accessToSQL(row: RowDataPacket): IterableIterator<any> {
+    public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {
         return <User>{
             id: row["usr_id"],
             pseudo: row["usr_pseudo"],
@@ -72,8 +74,8 @@ export class UserRepository extends ABaseRepository<User> {
             password: row["usr_password"],
             salt: row["usr_salt"],
             iterations: row["usr_iterations"],
-            avatar: yield new ResourceRepository().findOne(row["usr_avatar"]),
-            role: yield new RoleRepository().findOne(row["usr_role"]),
+            avatar: yield this.fetch<ResourceRepository, Resource>(row["usr_avatar"], ResourceRepository, fetchType), // yield new ResourceRepository().findOne(row["usr_avatar"]),
+            role: yield this.fetch<RoleRepository, Role>(row["usr_role"], RoleRepository, fetchType), // yield new RoleRepository().findOne(row["usr_role"]),
             rgpd: Boolean(row["usr_rgpd"]),
             created: row["usr_created"],
             updated: row["usr_updated"]
