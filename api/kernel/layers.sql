@@ -196,9 +196,6 @@ create table tag (
     tg_deleted boolean not null default false,
     tg_created datetime default current_timestamp,
     tg_updated datetime on update current_timestamp,
-    constraint tag_user_private
-        foreign key (tg_user_private)
-        references user(usr_id),
     constraint tag_ticket_key
         foreign key (tg_ticket)
         references ticket(tk_id),
@@ -300,7 +297,7 @@ create table preference ( -- for rgpd and other preferences
     pf_updated datetime on update current_timestamp,
     unique(pf_user, pf_key),
     constraint preference_user_key
-        foreign key (pf_value)
+        foreign key (pf_user)
         references user(usr_id)
 )
 engine=InnoDB
