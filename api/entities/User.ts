@@ -10,5 +10,4 @@ export class User extends Query {
     public iterations: number;
     public avatar: Resource;
     public role: Role;
-    public rgpd: boolean;
 }

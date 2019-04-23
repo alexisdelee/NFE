@@ -15,7 +15,7 @@ export class UserRepository extends ABaseRepository<User> {
 
     @makeCoffee
     public *create(user: User): IterableIterator<any> {
-        yield this.call("create_user (?, ?, ?, ?, ?, ?, ?, ?, ?)", [ user.pseudo, user.nfeid, user.password, user.salt, user.iterations, user.avatar.folder, user.avatar.filename, user.role.id, user.rgpd ]);
+        yield this.call("create_user (?, ?, ?, ?, ?, ?, ?, ?, ?)", [ user.pseudo, user.nfeid, user.password, user.salt, user.iterations, user.avatar.folder, user.avatar.filename, user.role.id ]);
         return true;
     }
 
@@ -76,7 +76,6 @@ export class UserRepository extends ABaseRepository<User> {
             iterations: row["usr_iterations"],
             avatar: yield this.fetch<ResourceRepository, Resource>(row["usr_avatar"], ResourceRepository, fetchType), // yield new ResourceRepository().findOne(row["usr_avatar"]),
             role: yield this.fetch<RoleRepository, Role>(row["usr_role"], RoleRepository, fetchType), // yield new RoleRepository().findOne(row["usr_role"]),
-            rgpd: Boolean(row["usr_rgpd"]),
             created: row["usr_created"],
             updated: row["usr_updated"]
         };

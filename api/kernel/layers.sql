@@ -1,3 +1,4 @@
+drop table if exists preference;
 drop table if exists item_data;
 drop table if exists item;
 drop table if exists universal;
@@ -45,7 +46,6 @@ create table user (
     usr_iterations int not null, -- for hmac
     usr_avatar int unsigned,
     usr_role int unsigned not null,
-    usr_rgpd boolean,
     usr_deleted boolean not null default false,
     usr_created datetime default current_timestamp,
     usr_updated datetime on update current_timestamp,
@@ -286,6 +286,22 @@ create table item_data (
     constraint item_data_ticket_key
         foreign key (it_dt_ticket)
         references ticket(tk_id)
+)
+engine=InnoDB
+default charset="utf8" collate="utf8_general_ci"
+row_format=compressed;
+
+create table preference ( -- for rgpd and other preferences
+    pf_id int unsigned primary key auto_increment,
+    pf_user int unsigned not null,
+    pf_key varchar(255) not null,
+    pf_value varchar(255),
+    pf_created datetime default current_timestamp,
+    pf_updated datetime on update current_timestamp,
+    unique(pf_user, pf_key),
+    constraint preference_user_key
+        foreign key (pf_value)
+        references user(usr_id)
 )
 engine=InnoDB
 default charset="utf8" collate="utf8_general_ci"

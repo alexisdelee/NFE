@@ -139,21 +139,20 @@ create procedure create_user
  in iterations int,
  in folder varchar(255),
  in filename varchar(255),
- in role int,
- in rgpd boolean)
+ in role int)
 begin
     declare __resource_id__ int;
 
     if ((folder is not null) and (filename is not null)) then
         call internal_create_resource (folder, filename, __resource_id__);
         
-        insert into user (usr_pseudo, usr_nfeid, usr_password, usr_salt, usr_iterations, usr_avatar, usr_role, usr_rgpd)
-        select pseudo, nfeid, password, salt, iterations, re_id, role, rgpd
+        insert into user (usr_pseudo, usr_nfeid, usr_password, usr_salt, usr_iterations, usr_avatar, usr_role)
+        select pseudo, nfeid, password, salt, iterations, re_id, role
         from resource
         where re_id = __resource_id__;
     else
-        insert into user (usr_pseudo, usr_nfeid, usr_password, usr_salt, usr_iterations, usr_role, usr_rgpd)
-        values (pseudo, nfeid, password, salt, iterations, role, rgpd);
+        insert into user (usr_pseudo, usr_nfeid, usr_password, usr_salt, usr_iterations, usr_role)
+        values (pseudo, nfeid, password, salt, iterations, role);
     end if;
 end; //
 
