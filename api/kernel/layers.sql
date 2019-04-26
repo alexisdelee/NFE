@@ -132,7 +132,7 @@ create table ticket (
     tk_id int unsigned primary key auto_increment,
     tk_region int unsigned not null,
     tk_shortid int unsigned not null,
-    tk_summary varchar(255),
+    tk_summary varchar(255) not null,
     tk_description blob,
     tk_color char(6),
     tk_tracker int unsigned not null,

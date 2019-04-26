@@ -68,9 +68,10 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
     }
 
     @makeCoffee
-    protected *fetch<U extends ABaseRepository<V>, V>(id: number, type: { new(): U; }, fetchType: Request.FetchType) {
+    protected *fetch<U extends ABaseRepository<V>, V>(id: number, type: { new(): U; }, fetchType: Request.FetchType): IterableIterator<any> {
         if (fetchType === Request.FetchType.Lazy) {
-            return yield id;
+            // return yield id;
+            return yield Datatype.SafeCast<U>({ id });
         } else if (fetchType === Request.FetchType.Eager) {
             return yield (new type()).findOne(id, fetchType);
         } else {

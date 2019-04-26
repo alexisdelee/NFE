@@ -104,13 +104,13 @@ call internal_create_universal ("select");
 
 call create_user ("root", "4n5pxq24kpiob12og9", "19352e5b3d8994f1b03a6cd434ca19b726bc7807551d0641463c122d59274f27ccf4538d4c7b38b06599b02f178c7ff28134cfe6653844e32e4bee93af3172fa", "m7dPtXzSJsTuma4V24hA", 200, null, null, 5); -- 1secret,
 
-call create_ticket (null, null, "abcdef", 1, 1, 2, null, 1);
+call create_ticket ("ticket 1", null, "abcdef", 1, 1, 2, null, 1);
 
 call assign_user_to_ticket (1, 1);
 call assign_commentary_to_ticket ("Ceci un commentaire", 1, 1);
 call assign_tag_to_ticket ("wifi", false, 1, 1);
 
-call create_ticket (null, null, "abcdef", 1, 1, 2, null, 1);
+call create_ticket ("ticket 2", null, "abcdef", 1, 1, 2, null, 1);
 
 call assign_link_to_ticket (2, 1, 2);
 

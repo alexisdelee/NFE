@@ -16,6 +16,14 @@ export class Query {
 
         return this.rows[0];
     }
+
+    public getRows(): Array<RowDataPacket> {
+        if (this.rows.length < 1) {
+            throw new HttpError(ServerError.InternalServerError, "no results are returned to be stored in this entity");
+        }
+
+        return this.rows;
+    }
 }
 
 export namespace Request {

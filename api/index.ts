@@ -1,35 +1,30 @@
 import { GlobalData } from "./data/GlobalData";
 import { Request } from "./utils/QueryWrapper";
 
+import { TicketBusiness } from "./business/TicketBusiness";
 import { ABaseRepository } from "./repositories/base/ABaseRepository";
-import { CategoryRepository } from "./repositories/CategoryRepository";
-import { Category } from "./entities/Category";
 import { CommentaryRepository } from "./repositories/CommentaryRepository";
+import { RegionRepository } from "./repositories/RegionRepository";
 import { Commentary } from "./entities/Commentary";
-
-import { User } from "./entities/User";
-import { Operator } from "./business/User";
+import { Ticket } from "./entities/Ticket";
+import { Region } from "./entities/Region";
 
 import * as Q from "q";
 
 Q.spawn(function *() {
     try {
         yield GlobalData.boot();
-        // console.log(global.nfe.category.latest);
-
-        // const category: Category = yield new CategoryRepository().findOne(1);
-        // console.log(category);
 
         const commentary: Commentary = yield new CommentaryRepository().findOne(1, Request.FetchType.Lazy);
         console.log(commentary);
 
-        /* yield new Operator(<User>{
-            pseudo: "toto",
-            password: "toto"
-        }).create(); */
+        const ticket: Ticket = yield TicketBusiness.find(1);
+        const region: Region = yield new RegionRepository().findOne(2, Request.FetchType.Lazy);
 
-        const status: boolean = yield Operator.sign("ccsf2gdzojuxtyz74", "toto");
-        console.log(status);
+        yield new TicketBusiness(ticket).modifyResource<Region>(region, "region");
+
+        const tickets: Array<Ticket> = yield TicketBusiness.findByResource(3, "region");
+        console.log(tickets.length);
     } catch(err) {
         console.log("error");
         console.log(err);

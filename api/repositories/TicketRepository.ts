@@ -13,7 +13,7 @@ import { PriorityRepository } from "./PriorityRepository";
 import { StatusRepository } from "./StatusRepository";
 import { CategoryRepository } from "./CategoryRepository";
 import { UserRepository } from "./UserRepository";
-import { HttpError, ServerError } from "../utils/HttpWrapper";
+import { HttpError, ClientError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query, Request } from "../utils/QueryWrapper";
 
 export class TicketRepository extends ABaseRepository<Ticket> {
@@ -23,7 +23,16 @@ export class TicketRepository extends ABaseRepository<Ticket> {
 
     @makeCoffee
     public *create(ticket: Ticket): IterableIterator<any> {
-        yield this.call("create_ticket (?, ?, ?, ?, ?, ?, ?, ?)", [ ticket.summary, ticket.description, ticket.color, ticket.region.id, ticket.tracker.id, ticket.priority.id, ticket.status.id, ticket.assignee.id ]);
+        yield this.call("create_ticket (?, ?, ?, ?, ?, ?, ?, ?)", [
+            ticket.summary,
+            ticket.description,
+            ticket.color,
+            ticket.region.id,
+            ticket.tracker.id,
+            ticket.priority.id,
+            ticket.status.id,
+            ticket.assignee.id
+        ]);
         return true;
     }
 
@@ -38,14 +47,26 @@ export class TicketRepository extends ABaseRepository<Ticket> {
                 tk_color = ?, 
                 tk_tracker = ?, 
                 tk_priority = ?, 
-                tk_status = ?, 
-                tk_category = ?, 
+                tk_status = ?,  
                 tk_assignee = ?, 
                 tk_reporter = ?, 
                 tk_resolved = ? 
             where tk_id = ? 
                 and tk_deleted = false 
-        `, [ ticket.region.id, ticket.shortid, ticket.summary, ticket.description, ticket.color, ticket.tracker.id, ticket.priority.id, ticket.status.id, ticket.category.id, ticket.assignee.id, ticket.reporter.id, ticket.resolved, id ]);
+        `, [
+            ticket.region.id, 
+            ticket.shortid, 
+            ticket.summary, 
+            ticket.description, 
+            ticket.color, 
+            ticket.tracker.id, 
+            ticket.priority.id, 
+            ticket.status.id,  
+            ticket.assignee.id, 
+            ticket.reporter.id, 
+            ticket.resolved,
+            id
+        ]);
         return true;
     }
 
@@ -78,6 +99,44 @@ export class TicketRepository extends ABaseRepository<Ticket> {
             limit 1
         `, [ id ]);
         return this.accessToSQL(query.getOneRow(), fetchType);
+    }
+
+    @makeCoffee
+    public *findOneByResource(id: number, resource: string, fetchType: Request.FetchType): IterableIterator<any> {
+        if (!id) {
+            return null;
+        }
+
+        let raw: string = `
+            select ${this.collection}.*, uncompress (${this.collection}.tk_description) as "tk_description" 
+            from ${this.collection} 
+        `;
+
+        switch(resource) {
+            case "region":
+                raw += ` where tk_region = ${id} `;
+                break;
+            case "tracker":
+                raw += ` where tk_tracker = ${id} `;
+                break;
+            case "priority":
+                raw += ` where tk_priority = ${id} `;
+                break;
+            case "status":
+                raw += ` where tk_status = ${id} `;
+                break;
+            default:
+                throw new HttpError(ClientError.MethodNotAllowed, "thoses modifications are not allowed");
+        }
+        
+        const query: Query = yield this.query(raw, [ id ]);
+        const rows: Array<Ticket> = [];
+        
+        for (const row of query.getRows()) {
+            rows.push(yield this.accessToSQL(row, fetchType));
+        }
+
+        return rows;
     }
 
     @makeCoffee
