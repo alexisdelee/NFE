@@ -133,8 +133,8 @@ end; //
 
 create procedure create_user
 (in pseudo varchar(100),
- in nfeid char(10),
- in password char(64),
+ in nfeid char(18),
+ in password char(128),
  in salt char(32),
  in iterations int,
  in folder varchar(255),

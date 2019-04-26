@@ -1,5 +1,6 @@
 export default {
     api: {
+        env: process.env["NFE_API_ENV"] || "developement",
         port: process.env["NFE_API_PORT"] || 3001
     },
     database: {

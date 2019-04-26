@@ -1,3 +1,5 @@
+import * as crypto from "crypto";
+
 export namespace Datatype {
     export namespace Function {
         // represents an operation that accepts two input arguments and returns no result
@@ -42,6 +44,10 @@ export namespace Datatype {
     }
 
     export type Primitive = string | number | boolean | null | undefined;
+
+    export function SafeCast<T>(value: any): T {
+        return <T>(<unknown>value);
+    }
 }
 
 export function bound(min, max, value) {
@@ -56,5 +62,48 @@ export function *Iterator(object: Object): IterableIterator<any> {
     const entries = Object.entries(object);
     for (let entry of entries) {
         yield entry;
+    }
+}
+
+export namespace Crypto {
+    export type HashInfo = {
+        name: string,
+        keylen: number,
+        iterations: number
+    };
+
+    export function getDefaultHashInfo(): HashInfo {
+        return {
+            name: "sha512",
+            keylen: 64,
+            iterations: 100000
+        };
+    }
+
+    export function createHash(data: string, algo: string): string {
+        if (!crypto.getHashes().includes(algo)) {
+            throw new Error("the hash algorithm is not recognized");
+        }
+
+        return crypto.createHash(algo).update(data).digest("hex");
+    }
+
+    export function createPbkdf2(data: string, salt: string, algo: string, keylen: number, iterations: number): string {
+        if (!crypto.getHashes().includes(algo)) {
+            throw new Error("the hash algorithm is not recognized");
+        }
+
+        return crypto.pbkdf2Sync(data, salt, iterations, keylen, algo).toString("hex");
+    }
+}
+
+export namespace Format {
+    export enum Time {
+        millisecond = "ms",
+        second      = "s",
+        minute      = "m",
+        hour        = "h",
+        day         = "d",
+        year        = "y"
     }
 }

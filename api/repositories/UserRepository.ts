@@ -15,7 +15,17 @@ export class UserRepository extends ABaseRepository<User> {
 
     @makeCoffee
     public *create(user: User): IterableIterator<any> {
-        yield this.call("create_user (?, ?, ?, ?, ?, ?, ?, ?, ?)", [ user.pseudo, user.nfeid, user.password, user.salt, user.iterations, user.avatar.folder, user.avatar.filename, user.role.id ]);
+        yield this.call("create_user (?, ?, ?, ?, ?, ?, ?, ?)", [
+            user.pseudo,
+            user.nfeid,
+            user.password,
+            user.salt,
+            user.iterations,
+            user.avatar == null ? null : user.avatar.folder,
+            user.avatar == null ? null :  user.avatar.filename,
+            user.role.id
+        ]);
+
         return true;
     }
 
@@ -63,6 +73,18 @@ export class UserRepository extends ABaseRepository<User> {
             limit 1 
         `, [ id ]);
         return this.accessToSQL(query.getOneRow(), fetchType);
+    }
+    
+    @makeCoffee
+    public *findByNfeid(nfeid: string): IterableIterator<any> {
+        const query: Query = yield this.query(`
+            select *
+            from ${this.collection}
+            where usr_nfeid = ?
+                and usr_deleted = false
+            limit 1
+        `, [ nfeid ]);
+        return this.accessToSQL(query.getOneRow(), Request.FetchType.Eager);
     }
 
     @makeCoffee

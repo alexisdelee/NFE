@@ -10,7 +10,7 @@ export class Query {
     }
 
     public getOneRow(): RowDataPacket {
-        if (this.rows.length < 1) {
+        if (this.rows.length < 1) {            
             throw new HttpError(ServerError.InternalServerError, "no results are returned to be stored in this entity");
         }
 

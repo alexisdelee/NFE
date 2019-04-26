@@ -40,8 +40,8 @@ row_format=compressed;
 create table user (
     usr_id int unsigned primary key auto_increment,
     usr_pseudo varchar(100) not null,
-    usr_nfeid char(10) not null,
-    usr_password char(64), -- sha256 or null for no password
+    usr_nfeid char(18) not null,
+    usr_password char(128), -- sha512 or null for no password
     usr_salt char(32), -- 128 bits @random
     usr_iterations int not null, -- for hmac
     usr_avatar int unsigned,
