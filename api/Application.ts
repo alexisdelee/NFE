@@ -2,6 +2,12 @@ import * as express from "express";
 import { json, urlencoded } from "body-parser";
 import * as helmet from "helmet";
 
+import { Ticket } from "./routes/Ticket";
+import { Category } from "./routes/Category";
+import { Region } from "./routes/Region";
+import { Tracker } from "./routes/Tracker";
+import { Priority } from "./routes/Priority";
+import { Status } from "./routes/Status";
 import { HttpError, ServerError } from "./utils/HttpWrapper";
 
 class Application {
@@ -46,6 +52,12 @@ class Application {
 
     private routes(): void {
         // use router middleware
+        this.application.use("/tickets", new Ticket().router);
+        this.application.use("/categories", new Category().router);
+        this.application.use("/regions", new Region().router);
+        this.application.use("/trackers", new Tracker().router);
+        this.application.use("/priorities", new Priority().router);
+        this.application.use("/status", new Status().router);
     }
 }
 

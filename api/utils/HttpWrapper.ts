@@ -54,3 +54,10 @@ export class HttpError extends Error {
         super(message);
     }
 }
+
+export function cover<T extends Object>(data: T | Array<T> = null, errors: Array<string> = []) {
+    return {
+        data: data === null ? {} : data,
+        errors
+    };
+}

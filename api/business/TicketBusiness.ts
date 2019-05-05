@@ -10,6 +10,8 @@ import { HttpError, ClientError, ServerError } from "../utils/HttpWrapper";
 import { Request } from "../utils/QueryWrapper";
 
 export class TicketBusiness {
+    public static readonly allowModifyResources: Array<string> = ["region", "tracker", "priority", "status"];
+
     constructor(public ticket: Ticket) {
     }
 
@@ -20,7 +22,7 @@ export class TicketBusiness {
 
     @makeCoffee
     public *modifyResource<T extends Region | Tracker | Priority | Status>(item: T, resource: string): IterableIterator<any> {
-        if (!["region", "tracker", "priority", "status"].includes(resource)) {
+        if (!TicketBusiness.allowModifyResources.includes(resource)) {
             throw new HttpError(ClientError.MethodNotAllowed, "thoses modifications are not allowed");
         }
 
@@ -42,12 +44,12 @@ export class TicketBusiness {
     }
 
     @makeCoffee
-    static *find(ticketId: number): IterableIterator<any> {
+    public static *findOne(ticketId: number): IterableIterator<any> {
         return yield new TicketRepository().findOne(ticketId, Request.FetchType.Eager);
     }
 
     @makeCoffee
-    static *findByResource(itemId: number, resource: string): IterableIterator<any> {
+    public static *findByResource(itemId: number, resource: string): IterableIterator<any> {
         try {
             return yield new TicketRepository().findOneByResource(itemId, resource, Request.FetchType.Eager);
         } catch(err) {
@@ -57,5 +59,10 @@ export class TicketBusiness {
 
             throw err;
         }
+    }
+
+    @makeCoffee
+    public static *disable(ticketId: number): IterableIterator<any> {
+        yield new TicketRepository().delete(ticketId);
     }
 }

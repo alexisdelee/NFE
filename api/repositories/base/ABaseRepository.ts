@@ -52,13 +52,13 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
 
     @makeCoffee
     protected *call(options: string, values: Array<Datatype.Primitive | Date> = new Array()): Datatype.Iterator.Iterator<Query> {
-        return new Promise<Query>(function(resolve, reject) {
-            ABaseRepository.getSharedConnection().query("call " + options, values, function(err: MysqlError, rows: Array<any>, fields: Array<FieldInfo>) {
+        return new Promise(function(resolve, reject) {
+            ABaseRepository.getSharedConnection().query("call " + options, values, function(err: MysqlError, rows: Array<Array<RowDataPacket>>, fields: Array<FieldInfo>) {
                 try {
                     if (err) {
                         throw err;
                     }
-
+    
                     resolve(new Query(rows[0], fields));
                 } catch(err) {
                     reject(err);

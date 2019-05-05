@@ -99,6 +99,11 @@ delimiter ;
 
 -- Stored procedure
 
+drop procedure if exists get_status;
+drop procedure if exists get_priorities;
+drop procedure if exists get_trackers;
+drop procedure if exists get_regions;
+drop procedure if exists get_categories;
 drop procedure if exists get_link;
 drop procedure if exists get_tag;
 drop procedure if exists get_commentary;
@@ -368,6 +373,105 @@ begin
     from link_ticket
     join link on lk_id = lk_tk_link
     where lk_tk_inward_ticket = ticket_id;
+end; //
+
+create procedure get_categories
+(in name varchar(100),
+ in shortname varchar(25))
+begin
+    if (name is not null or shortname is not null) then
+        select ca_id,
+            ca_name,
+            ca_shortname
+        from category
+        where if (name is null, false, ca_name = name)
+            or if (shortname is null, false, ca_shortname = shortname);
+    else
+        select ca_id,
+            ca_name,
+            ca_shortname
+        from category;
+    end if;
+end; //
+
+create procedure get_regions
+(in postal char(2),
+ in capital char(5),
+ nccenr varchar(255))
+begin
+    if (postal is not null or capital is not null or nccenr is not null) then
+        select rg_id,
+            rg_postal,
+            rg_capital,
+            rg_nccenr
+        from region
+        where if (postal is null, false, rg_postal = postal)
+            or if (capital is null, false, rg_capital = capital)
+            or if (nccenr is null, false, rg_nccenr = nccenr);
+    else
+        select rg_id,
+            rg_postal,
+            rg_capital,
+            rg_nccenr
+        from region;
+    end if;
+end; //
+
+create procedure get_trackers
+(in name varchar(100),
+ in shortname varchar(25))
+begin
+    if (name is not null or shortname is not null) then
+        select tr_id,
+            tr_name,
+            tr_shortname
+        from tracker
+        where if (name is null, false, tr_name = name)
+            or if (shortname is null, false, tr_shortname = shortname);
+    else
+        select tr_id,
+            tr_name,
+            tr_shortname
+        from tracker;
+    end if;
+end; //
+
+create procedure get_priorities
+(in name varchar(100),
+ in shortname varchar(25))
+begin
+    if (name is not null or shortname is not null) then
+        select pr_id,
+            pr_name,
+            pr_shortname
+        from priority
+        where if (name is null, false, pr_name = name)
+            or if (shortname is null, false, pr_shortname = shortname);
+    else
+        select pr_id,
+            pr_name,
+            pr_shortname
+        from priority;
+    end if;
+end; //
+
+create procedure get_status
+(in name varchar(100),
+ in shortname varchar(25))
+begin
+    if (name is not null or shortname is not null) then
+        select st_id,
+            st_name,
+            st_shortname
+        from status
+        where if (name is null, false, st_name = name)
+            or if (shortname is null, false, st_shortname = shortname);
+    else
+        select st_id,
+            st_name,
+            st_shortname
+        from status;
+    end if;
 end; //
 
 delimiter ;

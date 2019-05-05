@@ -1,6 +1,7 @@
 import { makeCoffee } from "../decorators/wrapper";
 import { ABaseRepository } from "./base/ABaseRepository";
 import { Region } from "../entities/Region";
+import { Datatype } from "../utils/Utils";
 import { HttpError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query, Request } from "../utils/QueryWrapper";
 
@@ -10,27 +11,43 @@ export class RegionRepository extends ABaseRepository<Region> {
     }
 
     @makeCoffee
-    public *create(region: Region): IterableIterator<any> {
+    public *create(region: Region): Datatype.Iterator.BiIterator<Query> {
         throw new HttpError(ServerError.NotImplemented, "RegionRepository.create");
     }
 
     @makeCoffee
-    public *update(id: number, region: Region): IterableIterator<any> {
+    public *update(id: number, region: Region): Datatype.Iterator.BiIterator<Query> {
         throw new HttpError(ServerError.NotImplemented, "RegionRepository.update");
     }
 
     @makeCoffee
-    public *delete(id: number): IterableIterator<any> {
+    public *delete(id: number): Datatype.Iterator.BiIterator<Query> {
         throw new HttpError(ServerError.NotImplemented, "RegionRepository.delete");
     }
 
     @makeCoffee
-    public *erase(id: number): IterableIterator<any> {
+    public *erase(id: number): Datatype.Iterator.BiIterator<Query> {
         throw new HttpError(ServerError.NotImplemented, "RegionRepository.erase");
     }
 
     @makeCoffee
-    public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
+    public *find(item: Region, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<any> {
+        if (!item) {
+            item = new Region();
+        }
+
+        const query: Query = yield this.call("get_regions(?, ?, ?)", [ item.postal, item.capital, item.nccenr ]);
+
+        const rows: Array<Region> = [];
+        for (const row of query.getRows()) {
+            rows.push(yield this.accessToSQL(row, fetchType));
+        }
+
+        return rows;
+    }
+
+    @makeCoffee
+    public *findOne(id: number, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query> {
         if (!id) {
             return null;
         }

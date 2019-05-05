@@ -32,6 +32,22 @@ export class CategoryRepository extends ABaseRepository<Category> implements ICo
     }
 
     @makeCoffee
+    public *find(item: Category, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<any> {
+        if (!item) {
+            item = new Category();
+        }
+
+        const query: Query = yield this.call("get_categories(?, ?)", [ item.name, item.shortname ]);
+
+        const rows: Array<Category> = [];
+        for (const row of query.getRows()) {
+            rows.push(yield this.accessToSQL(row, fetchType));
+        }
+
+        return rows;
+    }
+
+    @makeCoffee
     public *findOne(id: number, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query> {
         if (!id) {
             return null;
@@ -58,7 +74,7 @@ export class CategoryRepository extends ABaseRepository<Category> implements ICo
     }
 
     @makeCoffee
-    public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query> {        
+    public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query> {            
         return <Category>{
             id: row["ca_id"],
             name: row["ca_name"],

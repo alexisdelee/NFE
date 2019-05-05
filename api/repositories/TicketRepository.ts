@@ -5,14 +5,13 @@ import { Region } from "../entities/Region";
 import { Tracker } from "../entities/Tracker";
 import { Priority } from "../entities/Priority";
 import { Status } from "../entities/Status";
-import { Category } from "../entities/Category";
 import { User } from "../entities/User";
 import { RegionRepository } from "./RegionRepository";
 import { TrackerRepository } from "./TrackerRepository";
 import { PriorityRepository } from "./PriorityRepository";
 import { StatusRepository } from "./StatusRepository";
-import { CategoryRepository } from "./CategoryRepository";
 import { UserRepository } from "./UserRepository";
+import { Datatype } from "../utils/Utils";
 import { HttpError, ClientError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query, Request } from "../utils/QueryWrapper";
 
@@ -22,7 +21,7 @@ export class TicketRepository extends ABaseRepository<Ticket> {
     }
 
     @makeCoffee
-    public *create(ticket: Ticket): IterableIterator<any> {
+    public *create(ticket: Ticket): Datatype.Iterator.BiIterator<Query> {
         yield this.call("create_ticket (?, ?, ?, ?, ?, ?, ?, ?)", [
             ticket.summary,
             ticket.description,
@@ -37,7 +36,7 @@ export class TicketRepository extends ABaseRepository<Ticket> {
     }
 
     @makeCoffee
-    public *update(id: number, ticket: Ticket): IterableIterator<any> { // work with assign_user_to_ticket
+    public *update(id: number, ticket: Ticket): Datatype.Iterator.BiIterator<Query> { // work with assign_user_to_ticket
         yield this.query(`
             update ${this.collection} 
             set tk_region = ?, 
@@ -71,7 +70,7 @@ export class TicketRepository extends ABaseRepository<Ticket> {
     }
 
     @makeCoffee
-    public *delete(id: number): IterableIterator<any> {
+    public *delete(id: number): Datatype.Iterator.BiIterator<Query> {
         yield this.query(`
             update ${this.collection} 
             set tk_deleted = true 
@@ -81,12 +80,12 @@ export class TicketRepository extends ABaseRepository<Ticket> {
     }
 
     @makeCoffee
-    public *erase(id: number): IterableIterator<any> {
+    public *erase(id: number): Datatype.Iterator.BiIterator<Query> {
         throw new HttpError(ServerError.NotImplemented, "TicketRepository.erase");
     }
 
     @makeCoffee
-    public *findOne(id: number, fetchType: Request.FetchType): IterableIterator<any> {
+    public *findOne(id: number, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query> {
         if (!id) {
             return null;
         }
@@ -102,32 +101,20 @@ export class TicketRepository extends ABaseRepository<Ticket> {
     }
 
     @makeCoffee
-    public *findOneByResource(id: number, resource: string, fetchType: Request.FetchType): IterableIterator<any> {
-        if (!id) {
-            return null;
-        }
-
+    public *findOneByResource(id: number, resource: string, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<any> {
         let raw: string = `
             select ${this.collection}.*, uncompress (${this.collection}.tk_description) as "tk_description" 
             from ${this.collection} 
         `;
 
-        switch(resource) {
-            case "region":
-                raw += ` where tk_region = ${id} `;
-                break;
-            case "tracker":
-                raw += ` where tk_tracker = ${id} `;
-                break;
-            case "priority":
-                raw += ` where tk_priority = ${id} `;
-                break;
-            case "status":
-                raw += ` where tk_status = ${id} `;
-                break;
-            default:
-                throw new HttpError(ClientError.MethodNotAllowed, "thoses modifications are not allowed");
+        const availableResources: Array<string> = ["region", "color", "tracker", "priority", "status", "reporter", "assignee"];
+        if (availableResources.includes(resource)) {
+            raw += ` where tk_${resource} `;
+        } else {
+            throw new HttpError(ClientError.MethodNotAllowed, "thoses modifications are not allowed");
         }
+
+        raw += id === null ? ` is not null ` : ` = ${id} `;
         
         const query: Query = yield this.query(raw, [ id ]);
         const rows: Array<Ticket> = [];
@@ -140,7 +127,7 @@ export class TicketRepository extends ABaseRepository<Ticket> {
     }
 
     @makeCoffee
-    public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): IterableIterator<any> {        
+    public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query> {        
         return <Ticket>{
             id: row["tk_id"],
             shortid: row["tk_shortid"],
@@ -153,7 +140,6 @@ export class TicketRepository extends ABaseRepository<Ticket> {
             tracker: yield this.fetch<TrackerRepository, Tracker>(row["tk_tracker"], TrackerRepository, fetchType), // yield new TrackerRepository().findOne(row["tk_tracker"]),
             priority: yield this.fetch<PriorityRepository, Priority>(row["tk_priority"], PriorityRepository, fetchType),// yield new PriorityRepository().findOne(row["tk_priority"]),
             status: yield this.fetch<StatusRepository, Status>(row["tk_status"], StatusRepository, fetchType),// yield new StatusRepository().findOne(row["tk_status"]),
-            category: yield this.fetch<CategoryRepository, Category>(row["tk_category"], CategoryRepository, fetchType),// yield new CategoryRepository().findOne(row["tk_category"]),
             assignee: yield this.fetch<UserRepository, User>(row["tk_assignee"], UserRepository, fetchType),// yield new UserRepository().findOne(row["tk_assignee"]),
             reporter: yield this.fetch<UserRepository, User>(row["tk_reporter"], UserRepository, fetchType) // yield new UserRepository().findOne(row["tk_reporter"])
         };

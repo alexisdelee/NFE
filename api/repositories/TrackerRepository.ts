@@ -4,6 +4,7 @@ import { ABaseRepository } from "./base/ABaseRepository";
 import { ResourceRepository } from "./ResourceRepository";
 import { Tracker } from "../entities/Tracker";
 import { Resource } from "../entities/Resource";
+import { Datatype } from "../utils/Utils";
 import { HttpError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query, Request } from "../utils/QueryWrapper";
 
@@ -30,6 +31,22 @@ export class TrackerRepository extends ABaseRepository<Tracker> implements ICons
     @makeCoffee
     public *erase(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "TrackerRepository.erase");
+    }
+
+    @makeCoffee
+    public *find(item: Tracker, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<any> {
+        if (!item) {
+            item = new Tracker();
+        }
+
+        const query: Query = yield this.call("get_trackers(?, ?)", [ item.name, item.shortname ]);
+
+        const rows: Array<Tracker> = [];
+        for (const row of query.getRows()) {
+            rows.push(yield this.accessToSQL(row, fetchType));
+        }
+
+        return rows;
     }
 
     @makeCoffee

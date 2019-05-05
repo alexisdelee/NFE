@@ -4,6 +4,7 @@ import { ABaseRepository } from "./base/ABaseRepository";
 import { CategoryRepository } from "./CategoryRepository";
 import { Status } from "../entities/Status";
 import { Category } from "../entities/Category";
+import { Datatype } from "../utils/Utils";
 import { HttpError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query, Request } from "../utils/QueryWrapper";
 
@@ -30,6 +31,22 @@ export class StatusRepository extends ABaseRepository<Status> implements IConsta
     @makeCoffee
     public *erase(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "StatusRepository.erase");
+    }
+
+    @makeCoffee
+    public *find(item: Status, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<any> {
+        if (!item) {
+            item = new Status();
+        }
+
+        const query: Query = yield this.call("get_status(?, ?)", [ item.name, item.shortname ]);
+
+        const rows: Array<Status> = [];
+        for (const row of query.getRows()) {
+            rows.push(yield this.accessToSQL(row, fetchType));
+        }
+
+        return rows;
     }
 
     @makeCoffee

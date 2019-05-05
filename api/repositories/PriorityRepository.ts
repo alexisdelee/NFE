@@ -4,6 +4,7 @@ import { ABaseRepository } from "./base/ABaseRepository";
 import { ResourceRepository } from "./ResourceRepository";
 import { Priority } from "../entities/Priority";
 import { Resource } from "../entities/Resource";
+import { Datatype } from "../utils/Utils";
 import { HttpError, ServerError } from "../utils/HttpWrapper";
 import { RowDataPacket, Query, Request } from "../utils/QueryWrapper";
 
@@ -30,6 +31,22 @@ export class PriorityRepository extends ABaseRepository<Priority> implements ICo
     @makeCoffee
     public *erase(id: number): IterableIterator<any> {
         throw new HttpError(ServerError.NotImplemented, "PriorityRepository.erase");
+    }
+
+    @makeCoffee
+    public *find(item: Priority, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<any> {
+        if (!item) {
+            item = new Priority();
+        }
+
+        const query: Query = yield this.call("get_priorities(?, ?)", [ item.name, item.shortname ]);
+
+        const rows: Array<Priority> = [];
+        for (const row of query.getRows()) {
+            rows.push(yield this.accessToSQL(row, fetchType));
+        }
+
+        return rows;
     }
 
     @makeCoffee
