@@ -42,4 +42,13 @@ Toutes les ressources possibles : __region, color, tracker, priority, status, re
 | Accès     | Méthode | Route                                | Explication                   |
 |-----------|---------|--------------------------------------|-------------------------------|
 | Anonymous | GET     | /categories/:categoryId([0-9]{1,20}) | Obtenir une catégorie         |
-| Anonymous | GET     | /categories                          | Obtenir toutes les catégories 
+| Anonymous | GET     | /categories                          | Obtenir toutes les catégories |
+
+### Routes pour les liens
+
+| Accès     | Méthode | Route                       | Explication                               |
+|-----------|---------|-----------------------------|-------------------------------------------|
+| Anonymous | GET     | /links/:linkId([0-9]{1,20}) | Obtenir un lien                           |
+| Anonymous | GET     | /links                      | Obtenir tous les liens                    |
+| Operator  | POST    | /links/:linkId([0-9]{1,20}) | Créer une relation entre deux tickets     |
+| Operator  | DELETE  | /links/:linkId([0-9]{1,20}) | Supprimer une relation entre deux tickets |

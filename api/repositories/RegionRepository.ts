@@ -36,7 +36,7 @@ export class RegionRepository extends ABaseRepository<Region> {
             item = new Region();
         }
 
-        const query: Query = yield this.call("get_regions(?, ?, ?)", [ item.postal, item.capital, item.nccenr ]);
+        const query: Query = yield this.call("get_regions(?, ?, ?)", [ item.postal, item.capital, item.name ]);
 
         const rows: Array<Region> = [];
         for (const row of query.getRows()) {
@@ -67,7 +67,7 @@ export class RegionRepository extends ABaseRepository<Region> {
             id: row[ "rg_id"],
             postal: row[ "rg_postal"],
             capital: row[ "rg_capital"],
-            nccenr: row[ "rg_nccenr"],
+            name: row[ "rg_name"],
             created: null,
             updated: null
         };

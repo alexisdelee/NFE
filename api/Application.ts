@@ -1,6 +1,7 @@
 import * as express from "express";
 import { json, urlencoded } from "body-parser";
 import * as helmet from "helmet";
+import * as cors from "cors";
 
 import { Ticket } from "./routes/Ticket";
 import { Category } from "./routes/Category";
@@ -8,6 +9,7 @@ import { Region } from "./routes/Region";
 import { Tracker } from "./routes/Tracker";
 import { Priority } from "./routes/Priority";
 import { Status } from "./routes/Status";
+import { Link } from "./routes/Link";
 import { HttpError, ServerError } from "./utils/HttpWrapper";
 
 class Application {
@@ -40,6 +42,8 @@ class Application {
     }
 
     private config(): void {
+        this.application.use(cors());
+
         // support application/json type post data
         this.application.use(json());
 
@@ -58,6 +62,7 @@ class Application {
         this.application.use("/trackers", new Tracker().router);
         this.application.use("/priorities", new Priority().router);
         this.application.use("/status", new Status().router);
+        this.application.use("/links", new Link().router);
     }
 }
 

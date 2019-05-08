@@ -3,6 +3,7 @@ import * as express from "express";
 import { unicornStuff } from "../decorators/wrapper";
 import { CategoryBusiness } from "../business/CategoryBusiness";
 import * as Model from "../entities/Category";
+import { Datatype } from "../utils/Utils";
 import { Success, cover } from "../utils/HttpWrapper";
 import { Routing } from "../utils/middlewares/routing";
 
@@ -17,9 +18,9 @@ export class Category {
     }
 
     @unicornStuff
-    public *find(request: express.Request, response: express.Response): IterableIterator<any> {
+    public *find(request: express.Request, response: express.Response): Datatype.Iterator.Iterator<any> {
         const model: Model.Category = new Model.Category();
-        model.name = request.query.name
+        model.name = request.query.name;
         model.shortname = request.query.shortname;
 
         const categories: Array<Model.Category> = yield CategoryBusiness.find(model);
@@ -28,7 +29,7 @@ export class Category {
     }
 
     @unicornStuff
-    public *findOne(request: express.Request, response: express.Response): IterableIterator<any> {
+    public *findOne(request: express.Request, response: express.Response): Datatype.Iterator.Iterator<any> {
         const category: Model.Category = yield CategoryBusiness.findOne(request.params.categoryId);
 
         response.status(Success.Ok).json(cover(category));

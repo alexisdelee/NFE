@@ -99,6 +99,7 @@ delimiter ;
 
 -- Stored procedure
 
+drop procedure if exists get_links;
 drop procedure if exists get_status;
 drop procedure if exists get_priorities;
 drop procedure if exists get_trackers;
@@ -123,10 +124,10 @@ delimiter //
 create procedure create_region
 (in postal char(2),
  in capital char(5),
- in nccenr varchar(255))
+ in name varchar(255))
 begin
-    insert into region (rg_postal, rg_capital, rg_nccenr)
-    values (postal, capital, nccenr);
+    insert into region (rg_postal, rg_capital, rg_name)
+    values (postal, capital, name);
 end; //
 
 create procedure create_role
@@ -249,7 +250,7 @@ begin
         rg_id,
         rg_postal,
         rg_capital,
-        rg_nccenr,
+        rg_name,
         tr_id as "tracker_tr_id",
         tr_name as "tracker_tr_name",
         tr_shortname as "tracker_tr_shortname",
@@ -397,22 +398,22 @@ end; //
 create procedure get_regions
 (in postal char(2),
  in capital char(5),
- nccenr varchar(255))
+ name varchar(255))
 begin
-    if (postal is not null or capital is not null or nccenr is not null) then
+    if (postal is not null or capital is not null or name is not null) then
         select rg_id,
             rg_postal,
             rg_capital,
-            rg_nccenr
+            rg_name
         from region
         where if (postal is null, false, rg_postal = postal)
             or if (capital is null, false, rg_capital = capital)
-            or if (nccenr is null, false, rg_nccenr = nccenr);
+            or if (name is null, false, rg_name = name);
     else
         select rg_id,
             rg_postal,
             rg_capital,
-            rg_nccenr
+            rg_name
         from region;
     end if;
 end; //
@@ -471,6 +472,25 @@ begin
             st_name,
             st_shortname
         from status;
+    end if;
+end; //
+
+create procedure get_links
+(in outward varchar(255),
+ in inward varchar(255))
+begin
+    if (outward is not null or inward is not null) then
+        select lk_id,
+            lk_outward_description,
+            lk_inward_description
+        from link
+        where if (outward is null, false, lk_outward_description = outward)
+            or if (inward is null, false, lk_inward_description = inward);
+    else
+        select lk_id,
+            lk_outward_description,
+            lk_inward_description
+        from link;
     end if;
 end; //
 

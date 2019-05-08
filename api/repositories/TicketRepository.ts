@@ -133,6 +133,7 @@ export class TicketRepository extends ABaseRepository<Ticket> {
             shortid: row["tk_shortid"],
             summary: row["tk_summary"],
             description: row["tk_description"] === null ? null : row["tk_description"].toString("utf8"), // because of uncompress method, convert buffer to utf8
+            color: row["tk_color"],
             created: row["tk_created"],
             updated: row["tk_updated"],
             resolved: row["tk_resolved"],

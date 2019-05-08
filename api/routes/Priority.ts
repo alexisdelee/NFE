@@ -3,6 +3,7 @@ import * as express from "express";
 import { unicornStuff } from "../decorators/wrapper";
 import { PriorityBusiness } from "../business/PriorityBusiness";
 import * as Model from "../entities/Priority";
+import { Datatype } from "../utils/Utils";
 import { Success, cover } from "../utils/HttpWrapper";
 import { Routing } from "../utils/middlewares/routing";
 
@@ -17,9 +18,9 @@ export class Priority {
     }
 
     @unicornStuff
-    public *find(request: express.Request, response: express.Response): IterableIterator<any> {
+    public *find(request: express.Request, response: express.Response): Datatype.Iterator.Iterator<any> {
         const model: Model.Priority = new Model.Priority();
-        model.name = request.query.name
+        model.name = request.query.name;
         model.shortname = request.query.shortname;
 
         const priorities: Array<Model.Priority> = yield PriorityBusiness.find(model);
@@ -28,7 +29,7 @@ export class Priority {
     }
 
     @unicornStuff
-    public *findOne(request: express.Request, response: express.Response): IterableIterator<any> {
+    public *findOne(request: express.Request, response: express.Response): Datatype.Iterator.Iterator<any> {
         const priority: Model.Priority = yield PriorityBusiness.findOne(request.params.priorityId);
 
         response.status(Success.Ok).json(cover(priority));

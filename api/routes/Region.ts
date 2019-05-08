@@ -3,6 +3,7 @@ import * as express from "express";
 import { unicornStuff } from "../decorators/wrapper";
 import { RegionBusiness } from "../business/RegionBusiness";
 import * as Model from "../entities/Region";
+import { Datatype } from "../utils/Utils";
 import { Success, cover } from "../utils/HttpWrapper";
 import { Routing } from "../utils/middlewares/routing";
 
@@ -17,11 +18,11 @@ export class Region {
     }
 
     @unicornStuff
-    public *find(request: express.Request, response: express.Response): IterableIterator<any> {
+    public *find(request: express.Request, response: express.Response): Datatype.Iterator.Iterator<any> {
         const model: Model.Region = new Model.Region();
-        model.postal = request.query.postal
+        model.postal = request.query.postal;
         model.capital = request.query.capital;
-        model.nccenr = request.query.nccenr;
+        model.name = request.query.name;
 
         const regions: Array<Model.Region> = yield RegionBusiness.find(model);
 
@@ -29,7 +30,7 @@ export class Region {
     }
 
     @unicornStuff
-    public *findOne(request: express.Request, response: express.Response): IterableIterator<any> {
+    public *findOne(request: express.Request, response: express.Response): Datatype.Iterator.Iterator<any> {
         const region: Model.Region = yield RegionBusiness.findOne(request.params.regionId);
 
         response.status(Success.Ok).json(cover(region));

@@ -3,6 +3,7 @@ import * as express from "express";
 import { unicornStuff } from "../decorators/wrapper";
 import { TrackerBusiness } from "../business/TrackerBusiness";
 import * as Model from "../entities/Tracker";
+import { Datatype } from "../utils/Utils";
 import { Success, cover } from "../utils/HttpWrapper";
 import { Routing } from "../utils/middlewares/routing";
 
@@ -17,9 +18,9 @@ export class Tracker {
     }
 
     @unicornStuff
-    public *find(request: express.Request, response: express.Response): IterableIterator<any> {
+    public *find(request: express.Request, response: express.Response): Datatype.Iterator.Iterator<any> {
         const model: Model.Tracker = new Model.Tracker();
-        model.name = request.query.name
+        model.name = request.query.name;
         model.shortname = request.query.shortname;
 
         const trackers: Array<Model.Tracker> = yield TrackerBusiness.find(model);
@@ -28,7 +29,7 @@ export class Tracker {
     }
 
     @unicornStuff
-    public *findOne(request: express.Request, response: express.Response): IterableIterator<any> {
+    public *findOne(request: express.Request, response: express.Response): Datatype.Iterator.Iterator<any> {
         const tracker: Model.Tracker = yield TrackerBusiness.findOne(request.params.trackerId);
 
         response.status(Success.Ok).json(cover(tracker));

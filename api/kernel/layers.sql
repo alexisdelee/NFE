@@ -65,9 +65,9 @@ create table region (
     rg_id int unsigned primary key auto_increment,
     rg_postal char(2) not null,
     rg_capital char(5) not null,
-    rg_nccenr varchar(255) not null,
+    rg_name varchar(255) not null,
     unique (rg_postal),
-    unique (rg_nccenr)
+    unique (rg_name)
 )
 engine=InnoDB
 default charset="utf8" collate="utf8_general_ci"

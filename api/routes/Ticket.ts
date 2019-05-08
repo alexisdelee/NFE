@@ -3,6 +3,7 @@ import * as express from "express";
 import { unicornStuff } from "../decorators/wrapper";
 import { TicketBusiness } from "../business/TicketBusiness";
 import * as Model from "../entities/Ticket";
+import { Datatype } from "../utils/Utils";
 import { Success, cover } from "../utils/HttpWrapper";
 import { Routing } from "../utils/middlewares/routing";
 
@@ -20,14 +21,14 @@ export class Ticket {
     }
 
     @unicornStuff
-    private *findOne(request: express.Request, response: express.Response): IterableIterator<any> {
+    private *findOne(request: express.Request, response: express.Response): Datatype.Iterator.Iterator<any> {
         const ticket: Model.Ticket = yield TicketBusiness.findOne(request.params.ticketId);
 
         response.status(Success.Ok).json(cover(ticket));
     }
 
     @unicornStuff
-    private *findByResource(request: express.Request, response: express.Response): IterableIterator<any> {
+    private *findByResource(request: express.Request, response: express.Response): Datatype.Iterator.Iterator<any> {
         const resourceId: number = request.params.resourceId === undefined ? null : request.params.resourceId;
         const tickets: Array<Model.Ticket> = yield TicketBusiness.findByResource(resourceId, request.params.resource);
 
@@ -35,7 +36,7 @@ export class Ticket {
     }
 
     @unicornStuff
-    private *disable(request: express.Request, response: express.Response): IterableIterator<any> {
+    private *disable(request: express.Request, response: express.Response): Datatype.Iterator.Iterator<any> {
         yield TicketBusiness.disable(request.params.ticketId);
 
         response.status(Success.Ok).json(cover());
