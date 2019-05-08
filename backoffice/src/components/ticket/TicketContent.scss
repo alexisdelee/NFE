@@ -1,0 +1,46 @@
+.ticket-content {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #d7d7d7;
+    background-color: #ffffdd;
+
+    thead {
+        /* font-family: "Verdana, sans-serif";
+        font-size: 12px; */
+
+        .ticket-content__gravatar {
+            &img {
+                max-width: 50px;
+                max-height: 50px;
+            }
+        }
+
+        img.ticket-content__gravatar, .ticket-content__subject {
+            float: left;
+        }
+
+        .ticket-content__subject {
+            margin-left: 10px;
+
+            h3 {
+                display: inline-block;
+                margin: 0;
+            }
+        }
+    }
+
+    .ticket-content__body {
+        .list-universal {
+            th {
+                width: 90px;
+                text-align: left;
+            }
+
+            td {
+                select {
+                    width: 145px;
+                }
+            }
+        }
+    }
+}
