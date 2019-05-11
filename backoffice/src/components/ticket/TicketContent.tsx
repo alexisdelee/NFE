@@ -63,6 +63,20 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
         }
     }
 
+    private fetchListUniversal(model: string): Promise<Array<IUniversal>> {
+        if (model == "status") {
+            return Api.Status.find();
+        } else if (model == "priority") {
+            return Api.Priority.find();
+        } else if (model == "tracker") {
+            return Api.Tracker.find();
+        } else if (model == "region") {
+            return Api.Region.find();
+        }
+
+        return Promise.reject("unknown model");
+    }
+
     private updateEditorUniversal(model: string, value: string, readonly: boolean): void {
         if (!readonly) {
             if (model == "ticket") {
@@ -100,6 +114,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 value={ this.state.ticket.status } 
                                 model="status" 
                                 onChange={ this.updateListUniversal.bind(this) } 
+                                onFetch={ this.fetchListUniversal.bind(this) } 
                                 readonly={ this.state.readonly } />
                             
                             <ListUniversal 
@@ -107,6 +122,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 value={ this.state.ticket.priority } 
                                 model="priority" 
                                 onChange={ this.updateListUniversal.bind(this) } 
+                                onFetch={ this.fetchListUniversal.bind(this) } 
                                 readonly={ this.state.readonly } />
                         </td>
                         <td>
@@ -115,6 +131,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 value={ this.state.ticket.tracker } 
                                 model="tracker" 
                                 onChange={ this.updateListUniversal.bind(this) } 
+                                onFetch={ this.fetchListUniversal.bind(this) } 
                                 readonly={ true } />
                             
                             <ListUniversal 
@@ -122,6 +139,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 value={ this.state.ticket.region } 
                                 model="region" 
                                 onChange={ this.updateListUniversal.bind(this) } 
+                                onFetch={ this.fetchListUniversal.bind(this) } 
                                 readonly={ true } />
                         </td>
                     </tr>

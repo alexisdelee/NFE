@@ -1,7 +1,6 @@
 import * as React from "react";
 
 import { IUniversal } from "../../models/IUniversal";
-import { Api } from "../../Api";
 
 import "./ListUniversal.scss";
 
@@ -11,6 +10,7 @@ interface IListUniversalUniversalProps {
     value: IUniversal;
     model: string;
     readonly: boolean;
+    onFetch: (model: string) => Promise<Array<IUniversal>>;
     onChange: (model: string, ref: IUniversal, readonly: boolean) => void;
 }
 
@@ -38,15 +38,7 @@ export class ListUniversal extends React.Component<IListUniversalUniversalProps,
 
     public async componentDidMount(): Promise<void> {
         try {
-            if (this.props.model == "status") {
-                this.setState({ items: await Api.Status.find() });
-            } else if (this.props.model == "priority") {
-                this.setState({ items: await Api.Priority.find() });
-            } else if (this.props.model == "tracker") {
-                this.setState({ items: await Api.Tracker.find() });
-            } else if (this.props.model == "region") {
-                this.setState({ items: await Api.Region.find() });
-            }
+            this.setState({ items: await this.props.onFetch(this.props.model) });
         } catch(err) {
             console.error(err);
         }
