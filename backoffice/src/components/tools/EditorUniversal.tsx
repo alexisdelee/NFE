@@ -3,20 +3,39 @@ import ReactMde from "react-mde";
 import * as Showdown from "showdown";
 
 import "react-mde/lib/styles/css/react-mde-all.css";
+import "./EditorUniversal.scss";
+
+type Mode = "write" | "preview";
+
+// Props
+interface IEditorUniversalProps {
+    value: string;
+    model: string;
+    readonly: boolean;
+    onChange: (model: string, data: string, readonly: boolean) => void;
+}
 
 // State
 interface IEditorUniversalState {
     value: string;
+    mode: Mode;
+    readonly: boolean;
 }
 
-export class EditorUniversal extends React.Component<Object, IEditorUniversalState> {
+export class EditorUniversal extends React.Component<IEditorUniversalProps, IEditorUniversalState> {
+    public static defaultProps = {
+        readonly: false
+    };
+
     private converter: Showdown.Converter;
     
-    constructor(props: Object) {
+    constructor(props: IEditorUniversalProps) {
         super(props);
 
         this.state = {
-            value: "**Hello world**"
+            value: props.value,
+            mode: "preview",
+            readonly: props.readonly
         };
 
         this.converter = new Showdown.Converter({
@@ -29,16 +48,31 @@ export class EditorUniversal extends React.Component<Object, IEditorUniversalSta
 
     private updateValue(value: string): void {
         this.setState({ value });
+        this.props.onChange(this.props.model, value, this.state.readonly);
+    }
+
+    private trick(mode: Mode): void {
+        if (!this.props.readonly) {
+            this.setState(state => {
+                return state.mode == mode ? null : { mode };
+            });
+        }
     }
 
     public render(): React.ReactNode {
-        return <div>
+        return <React.Fragment>
             <ReactMde
                 onChange={ this.updateValue.bind(this) }
                 value={ this.state.value }
+                readOnly={ this.props.readonly }
+                selectedTab={ this.state.mode }
+                onTabChange={ this.trick.bind(this) }
+                className={ "editor-universal" + (this.props.readonly ? " editor-universal__hide" : "") }
+                minPreviewHeight={ 0 }
+                minEditorHeight={ 270 }
                 generateMarkdownPreview={ markdown =>
                     Promise.resolve(this.converter.makeHtml(markdown))
                 } />
-        </div>;
+        </React.Fragment>;
     }
 }

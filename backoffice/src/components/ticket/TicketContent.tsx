@@ -3,7 +3,9 @@ import * as React from "react";
 import { DateTool } from "../tools/DateTool";
 import { ListUniversal } from "../tools/ListUniversal";
 import { EditorUniversal } from "../tools/EditorUniversal";
+import { CommentList } from "./CommentList";
 import { ITicket } from "../../models/ITicket";
+import { IUniversal } from "../../models/IUniversal";
 import { Api } from "../../Api";
 
 import "./TicketContent.scss";
@@ -12,23 +14,33 @@ import "./TicketContent.scss";
 interface ITicketContentProps {
     ticket: ITicket;
     ticketId: number;
+    readonly: boolean;
+    closed: boolean;
 }
 
 // State
 interface ITicketContentState {
     ticket: ITicket;
+    readonly: boolean;
+    closed: boolean;
 }
 
 export class TicketContent extends React.Component<ITicketContentProps, ITicketContentState> {
     public static defaultProps: ITicketContentProps = {
         ticket: null,
-        ticketId: 0
+        ticketId: 0,
+        readonly: false,
+        closed: false
     };
 
     constructor(props: ITicketContentProps) {
         super(props);
 
-        this.state = { ticket: props.ticket };
+        this.state = {
+            ticket: props.ticket,
+            readonly: props.readonly || props.closed,
+            closed: props.closed
+        };
     }
 
     public async componentDidMount(): Promise<void> {
@@ -42,9 +54,29 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
         }
     }
 
+    private updateListUniversal(model: string, ref: IUniversal, readonly: boolean): void {
+        if (!readonly) {
+            const ticket: ITicket = this.state.ticket;
+            ticket[model] = ref;
+
+            this.setState({ ticket });
+        }
+    }
+
+    private updateEditorUniversal(model: string, value: string, readonly: boolean): void {
+        if (!readonly) {
+            if (model == "ticket") {
+                const ticket: ITicket = this.state.ticket;
+                ticket.description = value ? btoa(value) : null;
+
+                this.setState({ ticket });
+            }
+        }
+    }
+
     public render(): React.ReactNode {
         if (this.state.ticket) {
-            return <table className="ticket-content">
+            return <table className={ "ticket-content" + (this.state.closed ? " ticket-content__closed" : "") }>
                 <thead>
                     <tr>
                         <td colSpan={ 2 }>
@@ -52,7 +84,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                             <div className="ticket-content__subject">
                                 <h3>{ this.state.ticket.summary }</h3>
                                 <br />
-                                <span>Ajouté par <a href={ "/tickets/" + this.state.ticket.reporter.id }>{ this.state.ticket.reporter.pseudo }</a> <DateTool datetime={ this.state.ticket.created } prefix="le " />. </span>
+                                <span>Ajouté par <a href={ "/tickets/reporter/" + this.state.ticket.reporter.id }>{ this.state.ticket.reporter.pseudo }</a> <DateTool datetime={ this.state.ticket.created } prefix="le " />. </span>
                                 {
                                     this.state.ticket.updated && <span>Mise à jour <DateTool datetime={ this.state.ticket.updated } prefix="le " />.</span>
                                 }
@@ -63,19 +95,50 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                 <tbody className="ticket-content__body">
                     <tr>
                         <td>
-                            <ListUniversal property="Statut" value={ this.state.ticket.status.name } model="status" universalId={ this.state.ticket.status.id } />
-                            <ListUniversal property="Priorité" value={ this.state.ticket.priority.name } model="priority" universalId={ this.state.ticket.priority.id } />
+                            <ListUniversal 
+                                property="Statut" 
+                                value={ this.state.ticket.status } 
+                                model="status" 
+                                onChange={ this.updateListUniversal.bind(this) } 
+                                readonly={ this.state.readonly } />
+                            
+                            <ListUniversal 
+                                property="Priorité" 
+                                value={ this.state.ticket.priority } 
+                                model="priority" 
+                                onChange={ this.updateListUniversal.bind(this) } 
+                                readonly={ this.state.readonly } />
                         </td>
                         <td>
-                            <ListUniversal property="Catégorie" value={ this.state.ticket.tracker.name } model="tracker" universalId={ this.state.ticket.tracker.id } readonly={ true } />
-                            <ListUniversal property="Région" value={ this.state.ticket.region.name } model="region" universalId={ this.state.ticket.region.id } readonly={ true } />
+                            <ListUniversal 
+                                property="Catégorie" 
+                                value={ this.state.ticket.tracker } 
+                                model="tracker" 
+                                onChange={ this.updateListUniversal.bind(this) } 
+                                readonly={ true } />
+                            
+                            <ListUniversal 
+                                property="Région" 
+                                value={ this.state.ticket.region } 
+                                model="region" 
+                                onChange={ this.updateListUniversal.bind(this) } 
+                                readonly={ true } />
                         </td>
                     </tr>
                     <tr className="ticket-content__description">
                         <td colSpan={ 2 }>
-                            <EditorUniversal />
+                            <EditorUniversal 
+                                value={ this.state.ticket.description ? atob(this.state.ticket.description) : "" } 
+                                model="ticket"
+                                onChange={ this.updateEditorUniversal.bind(this) } 
+                                readonly={ this.state.readonly } />
                         </td>
                     </tr>
+                    {
+                        /* <tr className="ticket-content__comments">
+                            <CommentList readonly={ this.state.readonly } />
+                        </tr> */
+                    }
                 </tbody>
             </table>;
         }

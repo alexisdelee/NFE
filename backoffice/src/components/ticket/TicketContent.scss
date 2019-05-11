@@ -4,15 +4,14 @@
     border: 1px solid #d7d7d7;
     background-color: #ffffdd;
 
-    thead {
-        /* font-family: "Verdana, sans-serif";
-        font-size: 12px; */
+    &.ticket-content__closed {
+        filter: grayscale(1);
+    }
 
+    thead {
         .ticket-content__gravatar {
-            &img {
-                max-width: 50px;
-                max-height: 50px;
-            }
+            max-width: 50px;
+            max-height: 50px;
         }
 
         img.ticket-content__gravatar, .ticket-content__subject {
@@ -40,6 +39,12 @@
                 select {
                     width: 145px;
                 }
+            }
+        }
+
+        .ticket-content__comments {
+            .editor-universal {
+                border: none;
             }
         }
     }

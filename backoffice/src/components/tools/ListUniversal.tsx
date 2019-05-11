@@ -3,17 +3,20 @@ import * as React from "react";
 import { IUniversal } from "../../models/IUniversal";
 import { Api } from "../../Api";
 
+import "./ListUniversal.scss";
+
 // Props
 interface IListUniversalUniversalProps {
     property: string;
-    value: any;
+    value: IUniversal;
     model: string;
-    universalId: number;
     readonly: boolean;
+    onChange: (model: string, ref: IUniversal, readonly: boolean) => void;
 }
 
 // State
 interface IListUniversalUniversalState {
+    readonly: boolean;
     items: Array<IUniversal>;
     itemId: number;
 }
@@ -27,8 +30,9 @@ export class ListUniversal extends React.Component<IListUniversalUniversalProps,
         super(props);
 
         this.state = {
+            readonly: props.readonly,
             items: null,
-            itemId: this.props.universalId
+            itemId: this.props.value.id
         };
     }
 
@@ -49,7 +53,11 @@ export class ListUniversal extends React.Component<IListUniversalUniversalProps,
     }
 
     private updateItem(event): void {
-        this.setState({ itemId: event.target.value });
+        const itemId: number = +event.target.value;
+        const item = this.state.items.find(item => item.id === itemId);
+
+        this.setState({ itemId });
+        this.props.onChange(this.props.model, item, this.state.readonly);
     }
 
     public render(): React.ReactNode {
@@ -59,7 +67,7 @@ export class ListUniversal extends React.Component<IListUniversalUniversalProps,
                     <tr>
                         <th>{ this.props.property }</th>
                         <td>
-                            <select disabled={ this.props.readonly } onChange={ this.updateItem.bind(this) } value={ this.state.itemId }>
+                            <select disabled={ this.state.readonly } onChange={ this.updateItem.bind(this) } value={ this.state.itemId }>
                                 {
                                     this.state.items.map(item => {
                                         return <option value={ item.id }>{ item.name }</option>;

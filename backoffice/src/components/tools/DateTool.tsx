@@ -31,10 +31,10 @@ export class DateTool extends React.Component<IDateToolProps, Object> {
 
     public render(): React.ReactNode {
         if ((Date.now() - this.datetime.getTime()) >= 86400000) { // one day
-            return <span>
+            return <React.Fragment>
                 { this.props.prefix }
                 <Moment format="DD/MM/YYYY à HH:mm">{ this.datetime.toString() }</Moment>
-            </span>;
+            </React.Fragment>;
         } else {
             return <TimeAgo date={ this.datetime.toString() } formatter={ DateTool.formatter } />
         }

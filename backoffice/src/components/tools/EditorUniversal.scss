@@ -1,0 +1,15 @@
+.editor-universal {
+    &.editor-universal__hide {
+        .mde-header {
+            display: none;
+        }
+    }
+
+    pre {
+        background: transparent !important;
+
+        code {
+            white-space: pre-line !important;
+        }
+    }
+}
