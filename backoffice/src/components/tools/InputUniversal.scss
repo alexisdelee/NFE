@@ -1,0 +1,22 @@
+.input-universal {
+    th, td {
+        width: 90px;
+        text-align: left;
+
+        &.input-universal__status {
+            width: 18px;
+        }
+    }
+
+    input {
+        &:disabled {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            border: none;
+            -webkit-appearance: none;
+        }
+
+        width: 145px;
+    }
+}

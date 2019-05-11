@@ -3,6 +3,7 @@ import * as React from "react";
 import { DateTool } from "../tools/DateTool";
 import { ListUniversal } from "../tools/ListUniversal";
 import { EditorUniversal } from "../tools/EditorUniversal";
+import { InputUniversal, InputUniversalType } from "../tools/InputUniversal";
 import { CommentList } from "./CommentList";
 import { ITicket } from "../../models/ITicket";
 import { IUniversal } from "../../models/IUniversal";
@@ -15,14 +16,14 @@ interface ITicketContentProps {
     ticket: ITicket;
     ticketId: number;
     readonly: boolean;
-    closed: boolean;
+    archived: boolean;
 }
 
 // State
 interface ITicketContentState {
     ticket: ITicket;
     readonly: boolean;
-    closed: boolean;
+    archived: boolean;
 }
 
 export class TicketContent extends React.Component<ITicketContentProps, ITicketContentState> {
@@ -30,7 +31,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
         ticket: null,
         ticketId: 0,
         readonly: false,
-        closed: false
+        archived: false
     };
 
     constructor(props: ITicketContentProps) {
@@ -38,8 +39,8 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
 
         this.state = {
             ticket: props.ticket,
-            readonly: props.readonly || props.closed,
-            closed: props.closed
+            readonly: props.readonly || props.archived,
+            archived: props.archived
         };
     }
 
@@ -51,15 +52,6 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
             }
         } catch(err) {
             console.error(err);
-        }
-    }
-
-    private updateListUniversal(model: string, ref: IUniversal, readonly: boolean): void {
-        if (!readonly) {
-            const ticket: ITicket = this.state.ticket;
-            ticket[model] = ref;
-
-            this.setState({ ticket });
         }
     }
 
@@ -77,6 +69,15 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
         return Promise.reject("unknown model");
     }
 
+    private updateListUniversal(model: string, ref: IUniversal, readonly: boolean): void {
+        if (!readonly) {
+            const ticket: ITicket = this.state.ticket;
+            ticket[model] = ref;
+
+            this.setState({ ticket });
+        }
+    }
+
     private updateEditorUniversal(model: string, value: string, readonly: boolean): void {
         if (!readonly) {
             if (model == "ticket") {
@@ -90,7 +91,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
 
     public render(): React.ReactNode {
         if (this.state.ticket) {
-            return <table className={ "ticket-content" + (this.state.closed ? " ticket-content__closed" : "") }>
+            return <table className={ [ "ticket-content" ].concat(this.state.archived ? "ticket-content__archived" : []).join(" ") }>
                 <thead>
                     <tr>
                         <td colSpan={ 2 }>
@@ -124,8 +125,14 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 onChange={ this.updateListUniversal.bind(this) } 
                                 onFetch={ this.fetchListUniversal.bind(this) } 
                                 readonly={ this.state.readonly } />
-                        </td>
-                        <td>
+
+                            <InputUniversal
+                                property="Couleur" 
+                                value={ this.state.ticket.color ? "#" + this.state.ticket.color : "#ffffff" } 
+                                type={ InputUniversalType.color } 
+                                required={ false } 
+                                readonly={ this.state.readonly } />
+
                             <ListUniversal 
                                 property="Catégorie" 
                                 value={ this.state.ticket.tracker } 
@@ -141,6 +148,23 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 onChange={ this.updateListUniversal.bind(this) } 
                                 onFetch={ this.fetchListUniversal.bind(this) } 
                                 readonly={ true } />
+                        </td>
+                        <td>
+                            <InputUniversal
+                                property="Client" 
+                                value="toto" 
+                                type={ InputUniversalType.text } 
+                                required={ true } 
+                                readonly={ true } />
+
+                            <InputUniversal
+                                property="Age" 
+                                value="" 
+                                type={ InputUniversalType.number } 
+                                min={ 0 } 
+                                max={ 100 } 
+                                required={ true } 
+                                readonly={ this.state.readonly } />
                         </td>
                     </tr>
                     <tr className="ticket-content__description">

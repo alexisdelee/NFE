@@ -1,5 +1,6 @@
 import * as React from "react";
 
+import { StatusItemUniversal } from "./StatusItemUniversal";
 import { IUniversal } from "../../models/IUniversal";
 
 import "./ListUniversal.scss";
@@ -16,9 +17,10 @@ interface IListUniversalUniversalProps {
 
 // State
 interface IListUniversalUniversalState {
-    readonly: boolean;
     items: Array<IUniversal>;
     itemId: number;
+    error: boolean;
+    readonly: boolean;
 }
 
 export class ListUniversal extends React.Component<IListUniversalUniversalProps, IListUniversalUniversalState> {
@@ -30,9 +32,10 @@ export class ListUniversal extends React.Component<IListUniversalUniversalProps,
         super(props);
 
         this.state = {
-            readonly: props.readonly,
             items: null,
-            itemId: this.props.value.id
+            itemId: this.props.value.id,
+            error: null,
+            readonly: props.readonly
         };
     }
 
@@ -45,11 +48,13 @@ export class ListUniversal extends React.Component<IListUniversalUniversalProps,
     }
 
     private updateItem(event): void {
-        const itemId: number = +event.target.value;
-        const item = this.state.items.find(item => item.id === itemId);
+        if (!this.state.readonly) {
+            const itemId: number = +event.target.value;
+            const item = this.state.items.find(item => item.id === itemId);
 
-        this.setState({ itemId });
-        this.props.onChange(this.props.model, item, this.state.readonly);
+            this.setState({ itemId, error: false });
+            this.props.onChange(this.props.model, item, this.state.readonly);
+        }
     }
 
     public render(): React.ReactNode {
@@ -57,6 +62,12 @@ export class ListUniversal extends React.Component<IListUniversalUniversalProps,
             return <table className="list-universal">
                 <tbody>
                     <tr>
+                        <td className="input-universal__status">
+                            <StatusItemUniversal
+                                fields={ this.props.property } 
+                                error={ this.state.error }
+                                readonly={ this.state.readonly } />
+                        </td>
                         <th>{ this.props.property }</th>
                         <td>
                             <select disabled={ this.state.readonly } onChange={ this.updateItem.bind(this) } value={ this.state.itemId }>

@@ -67,7 +67,7 @@ export class EditorUniversal extends React.Component<IEditorUniversalProps, IEdi
                 readOnly={ this.props.readonly }
                 selectedTab={ this.state.mode }
                 onTabChange={ this.trick.bind(this) }
-                className={ "editor-universal" + (this.props.readonly ? " editor-universal__hide" : "") }
+                className={ [ "editor-universal" ].concat(this.props.readonly ? "editor-universal__hide" : []).join(" ") }
                 minPreviewHeight={ 0 }
                 minEditorHeight={ 270 }
                 generateMarkdownPreview={ markdown =>

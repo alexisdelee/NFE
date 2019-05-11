@@ -3,5 +3,9 @@
         background: transparent;
         border: none;
         -webkit-appearance: none;
+
+        &.input-universal__status {
+            width: 18px;
+        }
     }
 }
