@@ -55,7 +55,7 @@ export class StatusItemUniversal extends React.Component<IStatusItemUniversalPro
 
     public render(): React.ReactNode {
         return <React.Fragment>
-            <span title={ "orange = aucune modification\nrouge = une erreur est survenue\nvert = modification effectuée sans problème" } className={ this.getAllStyles() }>{ !this.state.readonly ? "?" : "" }</span>
+            <span title={ "orange = champs à renseigner\nrouge = une erreur est survenue\nvert = modification effectuée sans rencontrer de problème" } className={ this.getAllStyles() }>{ !this.state.readonly ? "?" : "" }</span>
         </React.Fragment>;
     };
 }

@@ -15,6 +15,15 @@
             background: transparent;
             border: none;
             -webkit-appearance: none;
+
+            &[type=checkbox] {
+                -webkit-appearance: checkbox !important;
+            }
+        }
+
+        &[type=checkbox] {
+            width: auto;
+            margin: 0;
         }
 
         width: 145px;

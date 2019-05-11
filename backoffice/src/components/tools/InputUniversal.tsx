@@ -60,12 +60,14 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
     }
 
     private checkValidity(event): void {
-        const colorItem: HTMLElement = event.target.closest("tr").querySelector(".input-universal__status");
-
         event.target.reportValidity();
-
         this.setState({ error: !event.target.checkValidity() });
-        this.setState({ value: event.target.value });
+
+        if (this.props.type == InputUniversalType.checkbox) {
+            this.setState({ value: event.target.checked });
+        } else {
+            this.setState({ value: event.target.value });
+        }
     }
 
     private buildGenericType(): React.ReactNode {
@@ -87,6 +89,13 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
                         max={ this.props.max } 
                         onChange={ this.checkValidity.bind(this) } 
                         onFocus={ this.checkValidity.bind(this) } 
+                        disabled={ this.state.readonly } 
+                        required={ this.state.required } />
+        } else if (this.props.type == InputUniversalType.checkbox) {
+            return <input 
+                        type={ this.props.type } 
+                        checked={ eval(this.state.value as string) as boolean } 
+                        onChange={ this.checkValidity.bind(this) } 
                         disabled={ this.state.readonly } 
                         required={ this.state.required } />
         }

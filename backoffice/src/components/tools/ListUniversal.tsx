@@ -10,6 +10,7 @@ interface IListUniversalUniversalProps {
     property: string;
     value: IUniversal;
     model: string;
+    required: boolean;
     readonly: boolean;
     onFetch: (model: string) => Promise<Array<IUniversal>>;
     onChange: (model: string, ref: IUniversal, readonly: boolean) => void;
@@ -20,11 +21,13 @@ interface IListUniversalUniversalState {
     items: Array<IUniversal>;
     itemId: number;
     error: boolean;
+    required: boolean;
     readonly: boolean;
 }
 
 export class ListUniversal extends React.Component<IListUniversalUniversalProps, IListUniversalUniversalState> {
     public static defaultProps = {
+        required: false,
         readonly: false
     };
     
@@ -35,6 +38,7 @@ export class ListUniversal extends React.Component<IListUniversalUniversalProps,
             items: null,
             itemId: this.props.value.id,
             error: null,
+            required: props.required,
             readonly: props.readonly
         };
     }
@@ -51,6 +55,11 @@ export class ListUniversal extends React.Component<IListUniversalUniversalProps,
         if (!this.state.readonly) {
             const itemId: number = +event.target.value;
             const item = this.state.items.find(item => item.id === itemId);
+
+            if (item == undefined && this.state.required) {
+                this.setState({ error: true });
+                return;
+            }
 
             this.setState({ itemId, error: false });
             this.props.onChange(this.props.model, item, this.state.readonly);
@@ -71,6 +80,9 @@ export class ListUniversal extends React.Component<IListUniversalUniversalProps,
                         <th>{ this.props.property }</th>
                         <td>
                             <select disabled={ this.state.readonly } onChange={ this.updateItem.bind(this) } value={ this.state.itemId }>
+                                {
+                                    this.state.required || <option></option>
+                                }
                                 {
                                     this.state.items.map(item => {
                                         return <option value={ item.id }>{ item.name }</option>;

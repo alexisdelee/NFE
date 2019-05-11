@@ -72,7 +72,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
     private updateListUniversal(model: string, ref: IUniversal, readonly: boolean): void {
         if (!readonly) {
             const ticket: ITicket = this.state.ticket;
-            ticket[model] = ref;
+            ticket[model] = ref || null;
 
             this.setState({ ticket });
         }
@@ -116,6 +116,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 model="status" 
                                 onChange={ this.updateListUniversal.bind(this) } 
                                 onFetch={ this.fetchListUniversal.bind(this) } 
+                                required={ true } 
                                 readonly={ this.state.readonly } />
                             
                             <ListUniversal 
@@ -124,6 +125,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 model="priority" 
                                 onChange={ this.updateListUniversal.bind(this) } 
                                 onFetch={ this.fetchListUniversal.bind(this) } 
+                                required={ true } 
                                 readonly={ this.state.readonly } />
 
                             <InputUniversal
@@ -139,6 +141,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 model="tracker" 
                                 onChange={ this.updateListUniversal.bind(this) } 
                                 onFetch={ this.fetchListUniversal.bind(this) } 
+                                required={ true } 
                                 readonly={ true } />
                             
                             <ListUniversal 
@@ -147,6 +150,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 model="region" 
                                 onChange={ this.updateListUniversal.bind(this) } 
                                 onFetch={ this.fetchListUniversal.bind(this) } 
+                                required={ true } 
                                 readonly={ true } />
                         </td>
                         <td>
