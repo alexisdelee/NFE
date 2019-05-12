@@ -6,7 +6,7 @@ import { IUniversal } from "../../models/IUniversal";
 import "./ListUniversal.scss";
 
 // Props
-interface IListUniversalUniversalProps {
+interface IListUniversalProps {
     property: string;
     value: IUniversal;
     model: string;
@@ -17,7 +17,7 @@ interface IListUniversalUniversalProps {
 }
 
 // State
-interface IListUniversalUniversalState {
+interface IListUniversalState {
     items: Array<IUniversal>;
     itemId: number;
     error: boolean;
@@ -25,13 +25,13 @@ interface IListUniversalUniversalState {
     readonly: boolean;
 }
 
-export class ListUniversal extends React.Component<IListUniversalUniversalProps, IListUniversalUniversalState> {
+export class ListUniversal extends React.Component<IListUniversalProps, IListUniversalState> {
     public static defaultProps = {
         required: false,
         readonly: false
     };
     
-    constructor(props: IListUniversalUniversalProps) {
+    constructor(props: IListUniversalProps) {
         super(props);
 
         this.state = {

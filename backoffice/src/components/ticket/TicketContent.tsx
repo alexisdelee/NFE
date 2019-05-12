@@ -4,6 +4,7 @@ import { DateTool } from "../tools/DateTool";
 import { ListUniversal } from "../tools/ListUniversal";
 import { EditorUniversal } from "../tools/EditorUniversal";
 import { InputUniversal, InputUniversalType } from "../tools/InputUniversal";
+import { MapUniversal } from "../tools/MapUniversal";
 import { CommentList } from "./CommentList";
 import { ITicket } from "../../models/ITicket";
 import { IUniversal } from "../../models/IUniversal";
@@ -108,6 +109,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                     </tr>
                 </thead>
                 <tbody className="ticket-content__body">
+                    <tr className="ticket-content__spacer"></tr>
                     <tr>
                         <td>
                             <ListUniversal 
@@ -171,6 +173,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 readonly={ this.state.readonly } />
                         </td>
                     </tr>
+                    <tr className="ticket-content__spacer"></tr>
                     <tr className="ticket-content__description">
                         <td colSpan={ 2 }>
                             <EditorUniversal 
