@@ -97,8 +97,21 @@ call internal_create_status ("Incomplet", "incomplete", "Le problème n'est pas 
 call internal_create_status ("Impossible à reproduire", "no_reproduce", "Toutes les tentatives de reproduction de cette demande ont échoué, ou il n'y a pas suffisamment d'informations pour reproduire la demande. En lisant le code, aucun indice sur la cause de ce comportement n'apparaît. Si d'autres informations apparaissent ultérieurement, veuillez rouvrir la demande", 4);
 call internal_create_status ("Fini", "over", null, 4);
 
-call internal_create_universal ("text");
-call internal_create_universal ("select");
+call internal_create_universal ("list", null);
+call internal_create_universal ("input", "checkbox");
+call internal_create_universal ("input", "color");
+call internal_create_universal ("input", "time");
+call internal_create_universal ("input", "date");
+call internal_create_universal ("input", "week");
+call internal_create_universal ("input", "month");
+call internal_create_universal ("input", "email");
+call internal_create_universal ("input", "file");
+call internal_create_universal ("input", "number");
+call internal_create_universal ("input", "confidential");
+call internal_create_universal ("input", "phone");
+call internal_create_universal ("input", "text");
+call internal_create_universal ("map", "zoom");
+call internal_create_universal ("map", "position");
 
 -- test
 
@@ -114,5 +127,7 @@ call create_ticket ("ticket 2", null, "abcdef", 1, 1, 2, null, 1);
 
 call assign_link_to_ticket (2, 1, 2);
 
+/*
 call assign_item_to_category ("Assigné à", "select it_dt_value from item_data where it_dt_ticket = £item_id and it_dt_ticket = £ticket_id", "replace into item_data (it_dt_value, it_dt_item, it_dt_ticket) values (£ticket_id, £item_id, £ticket_id)", 1, 1);
 call assign_item_to_category ("Collègues", "select it_dt_value from item_data where it_dt_ticket = £item_id and it_dt_ticket = £ticket_id", "replace into item_data (it_dt_value, it_dt_item, it_dt_ticket) values ('ok', £item_id, £ticket_id), ('nok', £item_id, £ticket_id)", 1, 2);
+*/
