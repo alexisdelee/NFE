@@ -29,6 +29,10 @@
     }
 
     .ticket-content__body {
+        .ticket-content__spacer {
+            height: 15px;
+        }
+
         .list-universal {
             th {
                 width: 90px;
