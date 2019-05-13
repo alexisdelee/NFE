@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>NFE</title>
+        <meta charset="UTF-8">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-title" content="NFE">
+        <meta name="description" content="web app">
+        <link rel="manifest" href="/public/manifest.json">
+    </head>
+    <body>
+        <div id="app"></div>
+
+        <script src="/dist/bundle.js"></script>
+        <script>
+            if ("serviceWorker" in navigator) {
+                window.addEventListener("load", async () => {
+                    const reg = await navigator.serviceWorker.register("/public/service-worker.js");
+                    console.log(reg);
+                });
+            }
+        </script>
+    </body>
+</html>
