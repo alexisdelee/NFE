@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as Flex from "react-simple-flex-grid";
 
 import { DateTool } from "../tools/DateTool";
 import { ListUniversal } from "../tools/ListUniversal";
@@ -92,26 +93,27 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
 
     public render(): React.ReactNode {
         if (this.state.ticket) {
-            return <table className={ [ "ticket-content" ].concat(this.state.archived ? "ticket-content__archived" : []).join(" ") }>
-                <thead>
-                    <tr>
-                        <td colSpan={ 2 }>
-                            <img className="ticket-content__gravatar" title="Auteur" src="https://www.gravatar.com/avatar/54fc98617b5c0b9a77a8b05f0879490c?rating=PG&size=50&default=wavatar" /><br />
+            return <section className={ [ "ticket-content" ].concat(this.state.archived ? "ticket-content__archived" : []).join(" ") }>
+                <header>
+                    <Flex.Row align="middle">
+                        <Flex.Col xs={ 1 }>
+                            <img className="ticket-content__gravatar" title="Auteur" src="https://www.gravatar.com/avatar/54fc98617b5c0b9a77a8b05f0879490c?rating=PG&size=50&default=wavatar" />
+                        </Flex.Col>
+                        <Flex.Col xs={ 11 }>
                             <div className="ticket-content__subject">
-                                <h3>{ this.state.ticket.summary }</h3>
-                                <br />
-                                <span>Ajouté par <a href={ "/tickets/reporter/" + this.state.ticket.reporter.id }>{ this.state.ticket.reporter.pseudo }</a> <DateTool datetime={ this.state.ticket.created } prefix="le " />. </span>
+                                <strong>{ this.state.ticket.summary }</strong><br />
+                                <small>Ajouté par <a href={ "/tickets/reporter/" + this.state.ticket.reporter.id }>{ this.state.ticket.reporter.pseudo }</a> <DateTool datetime={ this.state.ticket.created } prefix="le " />. </small>
                                 {
-                                    this.state.ticket.updated && <span>Mise à jour <DateTool datetime={ this.state.ticket.updated } prefix="le " />.</span>
+                                    this.state.ticket.updated && <small>Mise à jour <DateTool datetime={ this.state.ticket.updated } prefix="le " />.</small>
                                 }
                             </div>
-                        </td>
-                    </tr>
-                </thead>
-                <tbody className="ticket-content__body">
-                    <tr className="ticket-content__spacer"></tr>
-                    <tr>
-                        <td>
+                        </Flex.Col>
+                    </Flex.Row>
+                </header>
+
+                <section className="ticket-content__body">
+                    <Flex.Row>
+                        <Flex.Col xs={ 12 } md={ 6 }>
                             <ListUniversal 
                                 property="Statut" 
                                 value={ this.state.ticket.status } 
@@ -120,7 +122,8 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 onFetch={ this.fetchListUniversal.bind(this) } 
                                 required={ true } 
                                 readonly={ this.state.readonly } />
-                            
+                        </Flex.Col>
+                        <Flex.Col xs={ 12 } md={ 6 }>
                             <ListUniversal 
                                 property="Priorité" 
                                 value={ this.state.ticket.priority } 
@@ -129,14 +132,19 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 onFetch={ this.fetchListUniversal.bind(this) } 
                                 required={ true } 
                                 readonly={ this.state.readonly } />
+                        </Flex.Col>
+                    </Flex.Row>
 
+                    <Flex.Row>
+                        <Flex.Col xs={ 12 } md={ 6 }>
                             <InputUniversal
                                 property="Couleur" 
                                 value={ this.state.ticket.color ? "#" + this.state.ticket.color : "#ffffff" } 
                                 type={ InputUniversalType.color } 
                                 required={ false } 
                                 readonly={ this.state.readonly } />
-
+                        </Flex.Col>
+                        <Flex.Col xs={ 12 } md={ 6 }>
                             <ListUniversal 
                                 property="Catégorie" 
                                 value={ this.state.ticket.tracker } 
@@ -145,7 +153,11 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 onFetch={ this.fetchListUniversal.bind(this) } 
                                 required={ true } 
                                 readonly={ true } />
-                            
+                        </Flex.Col>
+                    </Flex.Row>
+
+                    <Flex.Row>
+                        <Flex.Col xs={ 12 } md={ 6 }>
                             <ListUniversal 
                                 property="Région" 
                                 value={ this.state.ticket.region } 
@@ -154,15 +166,27 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 onFetch={ this.fetchListUniversal.bind(this) } 
                                 required={ true } 
                                 readonly={ true } />
-                        </td>
-                        <td>
+                        </Flex.Col>
+                    </Flex.Row>
+
+                    {
+                        /*
+                            Custom universals
+                        */
+                    }
+
+                    <hr />
+
+                    <Flex.Row>
+                        <Flex.Col xs={ 12 } md={ 6 }>
                             <InputUniversal
                                 property="Client" 
                                 value="toto" 
                                 type={ InputUniversalType.text } 
                                 required={ true } 
                                 readonly={ true } />
-
+                        </Flex.Col>
+                        <Flex.Col xs={ 12 } md={ 6 }>
                             <InputUniversal
                                 property="Age" 
                                 value="" 
@@ -171,25 +195,18 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 max={ 100 } 
                                 required={ true } 
                                 readonly={ this.state.readonly } />
-                        </td>
-                    </tr>
-                    <tr className="ticket-content__spacer"></tr>
-                    <tr className="ticket-content__description">
-                        <td colSpan={ 2 }>
-                            <EditorUniversal 
-                                value={ this.state.ticket.description ? atob(this.state.ticket.description) : "" } 
-                                model="ticket"
-                                onChange={ this.updateEditorUniversal.bind(this) } 
-                                readonly={ this.state.readonly } />
-                        </td>
-                    </tr>
-                    {
-                        /* <tr className="ticket-content__comments">
-                            <CommentList readonly={ this.state.readonly } />
-                        </tr> */
-                    }
-                </tbody>
-            </table>;
+                        </Flex.Col>
+                    </Flex.Row>
+
+                    <div className="ticket-content__description">
+                        <EditorUniversal 
+                            value={ this.state.ticket.description ? atob(this.state.ticket.description) : "" } 
+                            model="ticket"
+                            onChange={ this.updateEditorUniversal.bind(this) } 
+                            readonly={ this.state.readonly } />
+                    </div>
+                </section>
+            </section>;
         }
 
         return null;

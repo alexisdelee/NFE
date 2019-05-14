@@ -8,30 +8,28 @@
         filter: grayscale(1);
     }
 
-    thead {
-        .ticket-content__gravatar {
-            max-width: 50px;
-            max-height: 50px;
-        }
+    a, a:link {
+        color: #169;
+        text-decoration: none;
+        font-weight: bold;
+    }
 
-        img.ticket-content__gravatar, .ticket-content__subject {
-            float: left;
+    header {
+        text-align: center;
+
+        img.ticket-content__gravatar {
+            width: 100%;
+            max-width: 75px;
         }
 
         .ticket-content__subject {
-            margin-left: 10px;
-
-            h3 {
-                display: inline-block;
-                margin: 0;
-            }
+            text-align: left;
+            padding-left: 10px;
         }
     }
 
     .ticket-content__body {
-        .ticket-content__spacer {
-            height: 15px;
-        }
+        padding: 15px 0;
 
         .list-universal {
             th {
@@ -44,6 +42,10 @@
                     width: 145px;
                 }
             }
+        }
+
+        .ticket-content__description {
+            margin-top: 15px;
         }
 
         .ticket-content__comments {

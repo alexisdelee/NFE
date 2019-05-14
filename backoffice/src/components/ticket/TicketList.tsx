@@ -5,6 +5,7 @@ import { TicketContent } from "./TicketContent";
 import { ITicket } from "../../models/ITicket";
 import { Api } from "../../Api";
 
+import "react-simple-flex-grid/lib/main.css";
 import "./TicketList.scss";
 
 // Props
@@ -55,12 +56,6 @@ export class TicketList extends React.Component<ITicketListProps, ITicketListSta
                         return <TicketItem ticket={ ticket } />
                     })
                 }
-
-                <tr>
-                    <td colSpan={ 11 }>
-                        <TicketContent ticketId={ 1 } />
-                    </td>
-                </tr>
             </tbody>
         </table>;
     }
