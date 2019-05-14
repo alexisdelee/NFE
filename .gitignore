@@ -1,4 +1,6 @@
 api/node_modules/
+api/nfe_*.sql
+api/kernel/layers_*.sql
 
 backoffice/node_modules/
 backoffice/helpers/

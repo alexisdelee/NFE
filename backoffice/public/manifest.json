@@ -1,15 +1,22 @@
 {
     "short_name": "NFE",
     "name": "NFE",
+    "description": "Progressive Web App",
     "icons": [
         {
-            "src:": "icon.png",
+            "src": "/favicon192.png",
             "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/favicon512.png",
+            "sizes": "512x512",
             "type": "image/png"
         }
     ],
-    "start_url": "/?utm_source=homescreen",
-    "display": "standalone",
+    "start_url": "/",
+    "display": "fullscreen",
+    "orientation": "landscape",
     "background_color": "#222",
     "theme_color": "#ffffff"
 }
