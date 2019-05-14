@@ -9,7 +9,7 @@ import { MapUniversal } from "../tools/MapUniversal";
 import { CommentList } from "./CommentList";
 import { ITicket } from "../../models/ITicket";
 import { IUniversal } from "../../models/IUniversal";
-import { Api } from "../../Api";
+import * as Api from "../../Api";
 
 import "./TicketContent.scss";
 

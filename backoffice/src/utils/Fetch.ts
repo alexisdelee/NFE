@@ -1,4 +1,4 @@
-export const enum FetchType {
+export enum FetchType {
     GET = "get",
     DELETE = "delete",
     POST = "post",

@@ -3,7 +3,7 @@ import * as React from "react";
 import { TicketItem } from "./TicketItem";
 import { TicketContent } from "./TicketContent";
 import { ITicket } from "../../models/ITicket";
-import { Api } from "../../Api";
+import * as Api from "../../Api";
 
 import "react-simple-flex-grid/lib/main.css";
 import "./TicketList.scss";

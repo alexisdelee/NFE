@@ -3,3 +3,4 @@ api/node_modules/
 backoffice/node_modules/
 backoffice/build/
 backoffice/helpers/
+backoffice/firebase-debug.log

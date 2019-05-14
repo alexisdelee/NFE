@@ -7,22 +7,14 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
         <meta name="apple-mobile-web-title" content="NFE">
         <meta name="description" content="NFE">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="manifest" href="/public/manifest.json">
-        <link rel="icon" href="/public/favicon.ico">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+        <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     </head>
     <body>
+        <noscript>You need to enable JavaScript to run this app.</noscript>
+
         <div id="root"></div>
         <div id="ticket"></div>
-
-        <script src="/dist/bundle.js"></script>
-        <script>
-            if ("serviceWorker" in navigator) {
-                window.addEventListener("load", async () => {
-                    const reg = await navigator.serviceWorker.register("/public/service-worker.js");
-                    console.log(reg);
-                });
-            }
-        </script>
     </body>
 </html>

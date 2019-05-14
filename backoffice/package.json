@@ -1,41 +1,53 @@
 {
-    "name": "070519",
-    "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
+    "name": "nfe",
+    "version": "0.1.0",
+    "private": true,
     "scripts": {
-        "dev": "cross-env NODE_ENV=development webpack-dev-server --hot",
-        "build": "cross-env NODE_ENV=production webpack"
+        "dev": "npx react-scripts start",
+        "build": "npx react-scripts build",
+        "test": "npx react-scripts test",
+        "eject": "npx react-scripts eject",
+        "predeploy": "npm run build",
+        "deploy": "npx gh-pages -d build"
     },
-    "keywords": [],
-    "author": "",
     "license": "ISC",
     "devDependencies": {
+        "@types/jest": "^24.0.13",
+        "@types/node": "^12.0.1",
         "@types/react": "^16.8.16",
         "@types/react-dom": "^16.8.4",
         "cross-env": "^5.2.0",
-        "css-loader": "^2.1.1",
         "draft.js": "^0.2.0",
-        "mini-css-extract-plugin": "^0.6.0",
+        "gh-pages": "^2.0.1",
         "moment-timezone": "^0.5.25",
         "node-sass": "^4.12.0",
         "react-google-maps": "^9.4.5",
         "react-mde": "^7.3.2",
         "react-moment": "^0.9.2",
+        "react-scripts": "^3.0.1",
         "react-simple-flex-grid": "^1.2.3",
         "react-timeago": "^4.4.0",
         "recompose": "^0.30.0",
-        "sass-loader": "^7.1.0",
         "showdown": "^1.9.0",
-        "style-loader": "^0.23.1",
         "ts-loader": "^6.0.0",
         "typescript": "^3.4.5",
-        "webpack": "^4.30.0",
-        "webpack-cli": "^3.3.2",
-        "webpack-dev-server": "^3.3.1"
+        "webpack": "4.29.6",
+        "webpack-cli": "^3.3.2"
     },
     "dependencies": {
         "react": "^16.8.6",
         "react-dom": "^16.8.6"
-    }
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version"
+        ]
+    },
+    "homepage": "https://github.com/alexisdelee/NFE"
 }
