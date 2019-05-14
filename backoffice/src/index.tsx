@@ -2,8 +2,6 @@ import * as React from "react";
 import { render } from "react-dom";
 import * as Flex from "react-simple-flex-grid";
 
-import * as serviceWorker from "./serviceWorker";
-
 import { TicketList } from "./components/ticket/TicketList";
 import { TicketContent } from "./components/ticket/TicketContent";
 
@@ -26,8 +24,3 @@ render(
     </Flex.Row>,
     document.querySelector("#ticket")
 );
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();

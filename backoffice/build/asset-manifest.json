@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/alexisdelee/NFE/static/css/main.cca38e7f.chunk.css",
-    "main.js": "/alexisdelee/NFE/static/js/main.b63e4239.chunk.js",
-    "main.js.map": "/alexisdelee/NFE/static/js/main.b63e4239.chunk.js.map",
-    "runtime~main.js": "/alexisdelee/NFE/static/js/runtime~main.9af462ff.js",
-    "runtime~main.js.map": "/alexisdelee/NFE/static/js/runtime~main.9af462ff.js.map",
-    "static/css/2.a0d65ac7.chunk.css": "/alexisdelee/NFE/static/css/2.a0d65ac7.chunk.css",
-    "static/js/2.574bb174.chunk.js": "/alexisdelee/NFE/static/js/2.574bb174.chunk.js",
-    "static/js/2.574bb174.chunk.js.map": "/alexisdelee/NFE/static/js/2.574bb174.chunk.js.map",
-    "index.html": "/alexisdelee/NFE/index.html",
-    "precache-manifest.2d80c7967eb4b6619c3928ce3b9d68a4.js": "/alexisdelee/NFE/precache-manifest.2d80c7967eb4b6619c3928ce3b9d68a4.js",
-    "service-worker.js": "/alexisdelee/NFE/service-worker.js",
-    "static/css/2.a0d65ac7.chunk.css.map": "/alexisdelee/NFE/static/css/2.a0d65ac7.chunk.css.map",
-    "static/css/main.cca38e7f.chunk.css.map": "/alexisdelee/NFE/static/css/main.cca38e7f.chunk.css.map"
+    "main.css": "./static/css/main.cca38e7f.chunk.css",
+    "main.js": "./static/js/main.7922d7d0.chunk.js",
+    "main.js.map": "./static/js/main.7922d7d0.chunk.js.map",
+    "runtime~main.js": "./static/js/runtime~main.d653cc00.js",
+    "runtime~main.js.map": "./static/js/runtime~main.d653cc00.js.map",
+    "static/css/2.a0d65ac7.chunk.css": "./static/css/2.a0d65ac7.chunk.css",
+    "static/js/2.574bb174.chunk.js": "./static/js/2.574bb174.chunk.js",
+    "static/js/2.574bb174.chunk.js.map": "./static/js/2.574bb174.chunk.js.map",
+    "index.html": "./index.html",
+    "precache-manifest.78ef392dc99b234bf86a97fc4a8340fc.js": "./precache-manifest.78ef392dc99b234bf86a97fc4a8340fc.js",
+    "service-worker.js": "./service-worker.js",
+    "static/css/2.a0d65ac7.chunk.css.map": "./static/css/2.a0d65ac7.chunk.css.map",
+    "static/css/main.cca38e7f.chunk.css.map": "./static/css/main.cca38e7f.chunk.css.map"
   }
 }

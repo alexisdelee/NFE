@@ -3,3 +3,5 @@ api/node_modules/
 backoffice/node_modules/
 backoffice/helpers/
 backoffice/firebase-debug.log
+
+credential.txt

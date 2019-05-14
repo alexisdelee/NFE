@@ -7,8 +7,7 @@
         "build": "npx react-scripts build",
         "test": "npx react-scripts test",
         "eject": "npx react-scripts eject",
-        "predeploy": "npm run build",
-        "deploy": "npx gh-pages -d build"
+        "deploy": "npm run build && firebase deploy"
     },
     "license": "ISC",
     "devDependencies": {
@@ -18,7 +17,6 @@
         "@types/react-dom": "^16.8.4",
         "cross-env": "^5.2.0",
         "draft.js": "^0.2.0",
-        "gh-pages": "^2.0.1",
         "moment-timezone": "^0.5.25",
         "node-sass": "^4.12.0",
         "react-google-maps": "^9.4.5",
@@ -49,5 +47,5 @@
             "last 1 firefox version"
         ]
     },
-    "homepage": "https://github.com/alexisdelee/NFE"
+    "homepage": "."
 }
