@@ -244,7 +244,8 @@ row_format=compressed;
 
 create table universal (
     ul_id int unsigned primary key auto_increment,
-    ul_label varchar(255) not null,
+    ul_parent varchar(255) not null,
+    ul_label varchar(255),
     unique (ul_label)
 )
 engine=InnoDB

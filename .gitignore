@@ -1,4 +1,5 @@
 api/node_modules/
+api/tmp/
 api/nfe_*.sql
 api/kernel/layers_*.sql
 

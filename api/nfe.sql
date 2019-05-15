@@ -97,8 +97,21 @@ call internal_create_status ("Incomplet", "incomplete", "Le problème n'est pas 
 call internal_create_status ("Impossible à reproduire", "no_reproduce", "Toutes les tentatives de reproduction de cette demande ont échoué, ou il n'y a pas suffisamment d'informations pour reproduire la demande. En lisant le code, aucun indice sur la cause de ce comportement n'apparaît. Si d'autres informations apparaissent ultérieurement, veuillez rouvrir la demande", 4);
 call internal_create_status ("Fini", "over", null, 4);
 
-call internal_create_universal ("text");
-call internal_create_universal ("select");
+call internal_create_universal ("list", null);
+call internal_create_universal ("input", "checkbox");
+call internal_create_universal ("input", "color");
+call internal_create_universal ("input", "time");
+call internal_create_universal ("input", "date");
+call internal_create_universal ("input", "week");
+call internal_create_universal ("input", "month");
+call internal_create_universal ("input", "email");
+call internal_create_universal ("input", "file");
+call internal_create_universal ("input", "number");
+call internal_create_universal ("input", "confidential");
+call internal_create_universal ("input", "phone");
+call internal_create_universal ("input", "text");
+call internal_create_universal ("map", "zoom");
+call internal_create_universal ("map", "position");
 
 -- test
 

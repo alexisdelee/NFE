@@ -1,5 +1,3 @@
-source kernel/functions.sql;
-
 -- Internal stored procedure
 
 drop procedure if exists internal_create_universal;
@@ -88,10 +86,11 @@ end; //
 
 -- debug
 create procedure internal_create_universal
-(in label varchar(255))
+(in parent varchar(255),
+ in label varchar(255))
 begin
-    insert into universal (ul_label)
-    values (label);
+    insert into universal (ul_parent, ul_label)
+    values (parent, label);
 end; //
 -- debug
 
