@@ -5,7 +5,7 @@ import { Datatype } from "../../utils/Utils";
 import { HttpError, ServerError } from "../../utils/HttpWrapper";
 import { RowDataPacket, Query, Request } from "../../utils/QueryWrapper";
 
-import webconfig from "../../../webconfig";
+const webconfig = require("../../../webconfig");
 
 import { Connection, createConnection, MysqlError, FieldInfo } from "mysql";
 
@@ -84,10 +84,10 @@ export abstract class ABaseRepository<T> implements IWrite<T>, IRead<T> {
     private static getSharedConnection(): Connection {
         if(!ABaseRepository.__shared_connection__) {
             ABaseRepository.__shared_connection__ = createConnection({
-                host: webconfig.database.host,
-                user: webconfig.database.user,
-                password: webconfig.database.password,
-                database: webconfig.database.name
+                host: webconfig.database[webconfig.env].host,
+                user: webconfig.database[webconfig.env].user,
+                password: webconfig.database[webconfig.env].password,
+                database: webconfig.database[webconfig.env].dbname
             });
 
             ABaseRepository.__shared_connection__.connect();

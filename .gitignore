@@ -8,3 +8,4 @@ backoffice/helpers/
 backoffice/firebase-debug.log
 
 credential.txt
+webconfig.js

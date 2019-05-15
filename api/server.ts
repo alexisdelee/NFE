@@ -1,10 +1,11 @@
 import * as express from "express";
 import * as Q from "q";
 
-import webconfig from "../webconfig";
 import application from "./Application";
 import { HttpError, ServerError, cover } from "./utils/HttpWrapper";
 import { GlobalData } from "./data/GlobalData";
+
+const webconfig = require("../webconfig");
 
 application.use((error: any, request: express.Request, response: express.Response, next: express.NextFunction) => {
     try {
@@ -22,5 +23,5 @@ application.use((error: any, request: express.Request, response: express.Respons
 
 application.listen(webconfig.api.port, Q.async(function *() {
     yield GlobalData.boot();
-    console.log("Worker " + process.pid + " running a " + webconfig.api.env + " server listening on port " + webconfig.api.port);
+    console.log("Worker " + process.pid + " running a " + webconfig.env + " server listening on port " + webconfig.api.port);
 }));

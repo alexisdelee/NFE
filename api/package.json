@@ -7,7 +7,7 @@
         "db:import": "mysql -u root < nfe.sql",
         "start": "npx ts-node --files server.ts",
         "test": "npx ts-node --files index.ts",
-        "task": "node ./tasksfile.js"
+        "deploy": "node ./tasksfile.js prod_import_db"
     },
     "keywords": [],
     "author": "",
