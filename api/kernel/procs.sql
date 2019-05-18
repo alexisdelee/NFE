@@ -224,7 +224,7 @@ begin
 end; //
 
 -- debug
-create procedure assign_item_to_category
+/* create procedure assign_item_to_category
 (in label varchar(255),
  in select_field text,
  in update_field text,
@@ -233,7 +233,7 @@ create procedure assign_item_to_category
 begin
     insert into item (it_label, it_select_field, it_update_field, it_sorting, it_tracker, it_universal)
     values (label, select_field, update_field, 1, tracker_id, universal_id); -- maybe compress select_field and update_field later
-end; //
+end; // */
 -- debug
 
 create procedure get_ticket

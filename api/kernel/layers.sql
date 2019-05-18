@@ -257,7 +257,8 @@ create table item (
     it_label varchar(255) not null,
     it_select_field text not null,
     it_update_field text,
-    it_sorting int unsigned not null,
+    it_readonly boolean not null,
+    it_required boolean not null,
     it_tracker int unsigned not null,
     it_universal int unsigned not null,
     unique (it_label, it_tracker),
@@ -274,7 +275,8 @@ row_format=compressed;
 
 create table item_data (
     it_dt_id int unsigned primary key auto_increment,
-    it_dt_value varchar(255) not null, -- maybe null later
+    it_dt_value_text varchar(255),
+    it_dt_value_geo Point,
     it_dt_item int unsigned not null,
     it_dt_ticket int unsigned not null,
     unique (it_dt_id, it_dt_item, it_dt_ticket),

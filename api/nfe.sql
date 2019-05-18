@@ -127,5 +127,7 @@ call create_ticket ("ticket 2", null, "abcdef", 1, 1, 2, null, 1);
 
 call assign_link_to_ticket (2, 1, 2);
 
+/*
 call assign_item_to_category ("Assigné à", "select it_dt_value from item_data where it_dt_ticket = £item_id and it_dt_ticket = £ticket_id", "replace into item_data (it_dt_value, it_dt_item, it_dt_ticket) values (£ticket_id, £item_id, £ticket_id)", 1, 1);
 call assign_item_to_category ("Collègues", "select it_dt_value from item_data where it_dt_ticket = £item_id and it_dt_ticket = £ticket_id", "replace into item_data (it_dt_value, it_dt_item, it_dt_ticket) values ('ok', £item_id, £ticket_id), ('nok', £item_id, £ticket_id)", 1, 2);
+*/
