@@ -8,7 +8,11 @@ const ROOT_TMP = "tmp";
 const DB       = config.database;
 
 function dev_import_db() {
-    sh("mysql -u root < nfe.sql");
+    sh(`mysql -u\"${DB.development.user}\" < nfe.sql`);
+}
+
+function dev_export_db() {
+    sh(`mysqldump --no-create-info --skip-triggers -u ${DB.development.user} nfe > ${ROOT_TMP}/data.sql`);
 }
 
 function prod_import_db() {
@@ -24,7 +28,7 @@ function prod_import_db() {
     fs.unlinkSync(`${ROOT_TMP}/layers.sql`);
 
     // dump database
-    sh(`mysqldump --no-create-info --skip-triggers -u ${DB.development.user} nfe > ${ROOT_TMP}/data.sql`);
+    dev_export_db();
 
     var contents = fs.readFileSync(`${ROOT_TMP}/data.sql`, "utf8");
 
@@ -39,5 +43,6 @@ function prod_import_db() {
 
 cli({
     dev_import_db,
+    dev_export_db,
     prod_import_db
 });

@@ -4,10 +4,12 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "db:import": "mysql -u root < nfe.sql",
-        "start": "npx ts-node --files server.ts",
-        "test": "npx ts-node --files index.ts",
-        "deploy": "node ./tasksfile.js prod_import_db"
+        "dev": "npx ts-node --files server.ts",
+        "dev:db:import": "npm run taskfile dev_import_db",
+        "dev:db:export": "npm run taskfile dev_export_db",
+        "predeploy": "npm run taskfile prod_import_db",
+        "deploy": "npm run predeploy",
+        "taskfile": "node ./tasksfile.js"
     },
     "keywords": [],
     "author": "",
