@@ -1,5 +1,5 @@
-drop table if exists preference;
 drop table if exists item_data;
+drop table if exists item_option;
 drop table if exists item;
 drop table if exists universal;
 drop table if exists link_ticket;
@@ -131,10 +131,8 @@ row_format=compressed;
 create table ticket (
     tk_id int unsigned primary key auto_increment,
     tk_region int unsigned not null,
-    tk_shortid int unsigned not null,
     tk_summary varchar(255) not null,
     tk_description blob,
-    tk_color char(6),
     tk_tracker int unsigned not null,
     tk_priority int unsigned not null,
     tk_status int unsigned not null,
@@ -255,8 +253,6 @@ row_format=compressed;
 create table item (
     it_id int unsigned primary key auto_increment,
     it_label varchar(255) not null,
-    it_select_field text not null,
-    it_update_field text,
     it_readonly boolean not null,
     it_required boolean not null,
     it_tracker int unsigned not null,
@@ -268,6 +264,20 @@ create table item (
     constraint item_universal_key
         foreign key (it_universal)
         references universal(ul_id)
+)
+engine=InnoDB
+default charset="utf8" collate="utf8_general_ci"
+row_format=compressed;
+
+create table item_option (
+    it_op_id int unsigned primary key auto_increment,
+    it_op_label varchar(255) not null,
+    it_op_value varchar(255),
+    it_op_item int unsigned not null,
+    unique (it_op_label, it_op_item),
+    constraint item_option_item_key
+        foreign key (it_op_item)
+        references item(it_id)
 )
 engine=InnoDB
 default charset="utf8" collate="utf8_general_ci"
@@ -286,22 +296,6 @@ create table item_data (
     constraint item_data_ticket_key
         foreign key (it_dt_ticket)
         references ticket(tk_id)
-)
-engine=InnoDB
-default charset="utf8" collate="utf8_general_ci"
-row_format=compressed;
-
-create table preference ( -- for rgpd and other preferences
-    pf_id int unsigned primary key auto_increment,
-    pf_user int unsigned not null,
-    pf_key varchar(255) not null,
-    pf_value varchar(255),
-    pf_created datetime default current_timestamp,
-    pf_updated datetime on update current_timestamp,
-    unique(pf_user, pf_key),
-    constraint preference_user_key
-        foreign key (pf_user)
-        references user(usr_id)
 )
 engine=InnoDB
 default charset="utf8" collate="utf8_general_ci"

@@ -8,7 +8,6 @@ use nfe;
 source kernel/layers.sql;
 source kernel/functions.sql;
 source kernel/procs.sql;
-source kernel/triggers.sql;
 
 -- Data
 
@@ -97,6 +96,8 @@ call internal_create_status ("Incomplet", "incomplete", "Le problème n'est pas 
 call internal_create_status ("Impossible à reproduire", "no_reproduce", "Toutes les tentatives de reproduction de cette demande ont échoué, ou il n'y a pas suffisamment d'informations pour reproduire la demande. En lisant le code, aucun indice sur la cause de ce comportement n'apparaît. Si d'autres informations apparaissent ultérieurement, veuillez rouvrir la demande", 4);
 call internal_create_status ("Fini", "over", null, 4);
 
+-- universal
+
 call internal_create_universal ("list", null);
 call internal_create_universal ("input", "checkbox");
 call internal_create_universal ("input", "color");
@@ -110,20 +111,24 @@ call internal_create_universal ("input", "number");
 call internal_create_universal ("input", "confidential");
 call internal_create_universal ("input", "phone");
 call internal_create_universal ("input", "text");
-call internal_create_universal ("map", "zoom");
-call internal_create_universal ("map", "position");
+call internal_create_universal ("map", null);
+
+call internal_create_item ("age", false, true, 5, 10);
+
+call internal_create_option ("min", "0", 1);
+call internal_create_option ("max", "100", 1);
 
 -- test
 
 call create_user ("root", "4n5pxq24kpiob12og9", "19352e5b3d8994f1b03a6cd434ca19b726bc7807551d0641463c122d59274f27ccf4538d4c7b38b06599b02f178c7ff28134cfe6653844e32e4bee93af3172fa", "m7dPtXzSJsTuma4V24hA", 200, null, null, 5); -- 1secret,
 
-call create_ticket ("ticket 1", null, "abcdef", 1, 1, 2, null, 1);
+call create_ticket ("ticket 1", null, 1, 1, 2, null, 1);
 
 call assign_user_to_ticket (1, 1);
 call assign_commentary_to_ticket ("Ceci un commentaire", 1, 1);
 call assign_tag_to_ticket ("wifi", false, 1, 1);
 
-call create_ticket ("ticket 2", null, "abcdef", 1, 1, 2, null, 1);
+call create_ticket ("ticket 2", null, 1, 1, 2, null, 1);
 
 call assign_link_to_ticket (2, 1, 2);
 

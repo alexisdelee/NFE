@@ -1,5 +1,7 @@
 -- Internal stored procedure
 
+drop procedure if exists internal_create_option;
+drop procedure if exists internal_create_item;
 drop procedure if exists internal_create_universal;
 drop procedure if exists internal_create_status;
 drop procedure if exists internal_create_category;
@@ -92,6 +94,26 @@ begin
     insert into universal (ul_parent, ul_label)
     values (parent, label);
 end; //
+
+create procedure internal_create_item
+(in label varchar(255),
+ in readonly boolean,
+ in required boolean,
+ in tracker_id int,
+ in universal_id int)
+begin
+    insert into item (it_label, it_readonly, it_required, it_tracker, it_universal)
+    values (label, readonly, required, tracker_id, universal_id);
+end; //
+
+create procedure internal_create_option
+(in label varchar(255),
+ in value varchar(255),
+ in item_id int)
+begin
+    insert into item_option (it_op_label, it_op_value, it_op_item)
+    values (label, value, item_id);
+end; //
 -- debug
 
 delimiter ;
@@ -108,7 +130,6 @@ drop procedure if exists get_link;
 drop procedure if exists get_tag;
 drop procedure if exists get_commentary;
 drop procedure if exists get_ticket;
-drop procedure if exists assign_item_to_category;
 drop procedure if exists assign_link_to_ticket;
 drop procedure if exists assign_tag_to_ticket;
 drop procedure if exists assign_commentary_to_ticket;
@@ -164,7 +185,6 @@ end; //
 create procedure create_ticket
 (in summary varchar(255),
  in description text,
- in color char(6),
  in region_id int,
  in tracker_id int,
  in priority_id int,
@@ -181,8 +201,8 @@ begin
         set __status_id__ = status_id;
     end if;
 
-    insert into ticket (tk_region, tk_summary, tk_description, tk_color, tk_tracker, tk_priority, tk_status, tk_reporter)
-    values (region_id, summary, compress (description), color, tracker_id, priority_id, __status_id__, user_id);
+    insert into ticket (tk_region, tk_summary, tk_description, tk_tracker, tk_priority, tk_status, tk_reporter)
+    values (region_id, summary, compress (description), tracker_id, priority_id, __status_id__, user_id);
 end; //
 
 create procedure assign_user_to_ticket
@@ -223,24 +243,10 @@ begin
     values (link_id, from_ticket_id, to_ticket_id);
 end; //
 
--- debug
-/* create procedure assign_item_to_category
-(in label varchar(255),
- in select_field text,
- in update_field text,
- in tracker_id int,
- in universal_id int)
-begin
-    insert into item (it_label, it_select_field, it_update_field, it_sorting, it_tracker, it_universal)
-    values (label, select_field, update_field, 1, tracker_id, universal_id); -- maybe compress select_field and update_field later
-end; // */
--- debug
-
 create procedure get_ticket
 (in ticket_id int)
 begin
     select tk_id,
-        tk_shortid,
         tk_summary,
         uncompress (tk_description) as "tk_description",
         tk_created,
