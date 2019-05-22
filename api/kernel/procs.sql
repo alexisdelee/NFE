@@ -88,11 +88,11 @@ end; //
 
 -- debug
 create procedure internal_create_universal
-(in parent varchar(255),
+(in category varchar(255),
  in label varchar(255))
 begin
-    insert into universal (ul_parent, ul_label)
-    values (parent, label);
+    insert into universal (ul_category, ul_label)
+    values (category, label);
 end; //
 
 create procedure internal_create_item

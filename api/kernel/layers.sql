@@ -242,7 +242,7 @@ row_format=compressed;
 
 create table universal (
     ul_id int unsigned primary key auto_increment,
-    ul_parent varchar(255) not null,
+    ul_category varchar(255) not null,
     ul_label varchar(255),
     unique (ul_label)
 )
@@ -285,10 +285,12 @@ row_format=compressed;
 
 create table item_data (
     it_dt_id int unsigned primary key auto_increment,
-    it_dt_value_text varchar(255),
-    it_dt_value_geo Point,
+    it_dt_value varchar(255),
     it_dt_item int unsigned not null,
     it_dt_ticket int unsigned not null,
+    it_dt_deleted boolean not null default false,
+    it_dt_created datetime default current_timestamp,
+    it_dt_updated datetime on update current_timestamp,
     unique (it_dt_id, it_dt_item, it_dt_ticket),
     constraint item_data_item_key
         foreign key (it_dt_item)

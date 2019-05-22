@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "dev": "npx ts-node --files server.ts",
+        "test": "npx ts-node --files index.ts",
         "dev:db:import": "npm run taskfile dev_import_db",
         "dev:db:export": "npm run taskfile dev_export_db",
         "predeploy": "npm run taskfile prod_import_db",

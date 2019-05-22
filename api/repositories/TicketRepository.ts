@@ -22,10 +22,9 @@ export class TicketRepository extends ABaseRepository<Ticket> {
 
     @makeCoffee
     public *create(ticket: Ticket): Datatype.Iterator.BiIterator<Query> {
-        yield this.call("create_ticket (?, ?, ?, ?, ?, ?, ?, ?)", [
+        yield this.call("create_ticket (?, ?, ?, ?, ?, ?, ?)", [
             ticket.summary,
             ticket.description,
-            ticket.color,
             ticket.region.id,
             ticket.tracker.id,
             ticket.priority.id,
@@ -40,10 +39,8 @@ export class TicketRepository extends ABaseRepository<Ticket> {
         yield this.query(`
             update ${this.collection} 
             set tk_region = ?, 
-                tk_shortid = ?, 
                 tk_summary = ?, 
                 tk_description = compress (?), 
-                tk_color = ?, 
                 tk_tracker = ?, 
                 tk_priority = ?, 
                 tk_status = ?,  
@@ -54,10 +51,8 @@ export class TicketRepository extends ABaseRepository<Ticket> {
                 and tk_deleted = false 
         `, [
             ticket.region.id, 
-            ticket.shortid, 
             ticket.summary, 
             ticket.description, 
-            ticket.color, 
             ticket.tracker.id, 
             ticket.priority.id, 
             ticket.status.id,  
@@ -107,7 +102,7 @@ export class TicketRepository extends ABaseRepository<Ticket> {
             from ${this.collection} 
         `;
 
-        const availableResources: Array<string> = ["region", "color", "tracker", "priority", "status", "reporter", "assignee"];
+        const availableResources: Array<string> = ["region", "tracker", "priority", "status", "reporter", "assignee"];
         if (availableResources.includes(resource)) {
             raw += ` where tk_${resource} `;
         } else {
@@ -130,10 +125,8 @@ export class TicketRepository extends ABaseRepository<Ticket> {
     public *accessToSQL(row: RowDataPacket, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<Query> {        
         return <Ticket>{
             id: row["tk_id"],
-            shortid: row["tk_shortid"],
             summary: row["tk_summary"],
             description: row["tk_description"] === null ? null : row["tk_description"].toString("utf8"), // because of uncompress method, convert buffer to utf8
-            color: row["tk_color"],
             created: row["tk_created"],
             updated: row["tk_updated"],
             resolved: row["tk_resolved"],

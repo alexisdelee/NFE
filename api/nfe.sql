@@ -118,6 +118,10 @@ call internal_create_item ("age", false, true, 5, 10);
 call internal_create_option ("min", "0", 1);
 call internal_create_option ("max", "100", 1);
 
+call internal_create_item ("date de début de congé payé", true, true, 5, 5);
+
+call internal_create_option ("année courante", "2019", 2);
+
 -- test
 
 call create_user ("root", "4n5pxq24kpiob12og9", "19352e5b3d8994f1b03a6cd434ca19b726bc7807551d0641463c122d59274f27ccf4538d4c7b38b06599b02f178c7ff28134cfe6653844e32e4bee93af3172fa", "m7dPtXzSJsTuma4V24hA", 200, null, null, 5); -- 1secret,
@@ -132,7 +136,5 @@ call create_ticket ("ticket 2", null, 1, 1, 2, null, 1);
 
 call assign_link_to_ticket (2, 1, 2);
 
-/*
-call assign_item_to_category ("Assigné à", "select it_dt_value from item_data where it_dt_ticket = £item_id and it_dt_ticket = £ticket_id", "replace into item_data (it_dt_value, it_dt_item, it_dt_ticket) values (£ticket_id, £item_id, £ticket_id)", 1, 1);
-call assign_item_to_category ("Collègues", "select it_dt_value from item_data where it_dt_ticket = £item_id and it_dt_ticket = £ticket_id", "replace into item_data (it_dt_value, it_dt_item, it_dt_ticket) values ('ok', £item_id, £ticket_id), ('nok', £item_id, £ticket_id)", 1, 2);
-*/
+insert into item_data (it_dt_value, it_dt_item, it_dt_ticket)
+values ('17', 1, 1), ('22/05/2019', 2, 1);
