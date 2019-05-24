@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { StatusItemUniversal } from "./StatusItemUniversal";
+import { IItemOption } from "../../models/IItemOption";
 
 import "./InputUniversal.scss";
 
@@ -10,8 +11,7 @@ interface IInputUniversalProps {
     value: string | number;
     type: InputUniversalType;
     pattern: string;
-    min: number;
-    max: number;
+    options: Array<IItemOption>;
     readonly: boolean;
     required: boolean;
 }
@@ -19,7 +19,8 @@ interface IInputUniversalProps {
 // State
 interface IInputUniversalState {
     value: string | number;
-    error: boolean,
+    options: Array<IItemOption>;
+    error: boolean;
     readonly: boolean;
     required: boolean;
 }
@@ -40,12 +41,12 @@ export enum InputUniversalType {
 };
 
 export class InputUniversal extends React.Component<IInputUniversalProps, IInputUniversalState> {
+    private inputRef: React.RefObject<any> = React.createRef();
+
     public static defaultProps = {
         pattern: null,
         readonly: false,
-        required: false,
-        min: -Infinity,
-        max: Infinity
+        required: false
     };
 
     constructor(props: IInputUniversalProps) {
@@ -53,10 +54,17 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
 
         this.state = {
             value: props.value,
+            options: props.options,
             error: null,
             readonly: props.readonly,
             required: props.required
         };
+    }
+
+    public componentDidMount(): any {
+        for (const option of this.state.options) {
+            this.inputRef.current.setAttribute(option.label, option.value);
+        }
     }
 
     private checkValidity(event): void {
@@ -73,6 +81,7 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
     private buildGenericType(): React.ReactNode {
         if (this.props.type == InputUniversalType.phone) {
             return <input 
+                        ref={ this.inputRef }
                         type={ this.props.type } 
                         value={ this.state.value } 
                         placeholder={ this.props.pattern || "0[6-9][0-9]{8}" } 
@@ -81,18 +90,9 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
                         onFocus={ this.checkValidity.bind(this) } 
                         disabled={ this.state.readonly } 
                         required={ this.state.required } />
-        } else if (this.props.type == InputUniversalType.number) {
-            return <input 
-                        type={ this.props.type } 
-                        value={ this.state.value } 
-                        min={ this.props.min } 
-                        max={ this.props.max } 
-                        onChange={ this.checkValidity.bind(this) } 
-                        onFocus={ this.checkValidity.bind(this) } 
-                        disabled={ this.state.readonly } 
-                        required={ this.state.required } />
         } else if (this.props.type == InputUniversalType.checkbox) {
             return <input 
+                        ref={ this.inputRef }
                         type={ this.props.type } 
                         checked={ eval(this.state.value as string) as boolean } 
                         onChange={ this.checkValidity.bind(this) } 
@@ -101,6 +101,7 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
         }
 
         return <input 
+                    ref={ this.inputRef }
                     type={ this.props.type } 
                     value={ this.state.value } 
                     onChange={ this.checkValidity.bind(this) } 

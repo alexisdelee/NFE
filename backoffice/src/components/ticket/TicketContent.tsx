@@ -6,9 +6,11 @@ import { ListUniversal } from "../tools/ListUniversal";
 import { EditorUniversal } from "../tools/EditorUniversal";
 import { InputUniversal, InputUniversalType } from "../tools/InputUniversal";
 import { MapUniversal } from "../tools/MapUniversal";
+import { Universal } from "../tools/Universal";
 import { CommentList } from "./CommentList";
 import { ITicket } from "../../models/ITicket";
-import { IUniversal } from "../../models/IUniversal";
+import { IUniversalWrapper } from "../../models/IUniversalWrapper";
+import { IGeneric } from "../../models/IGeneric";
 import * as Api from "../../Api";
 
 import "./TicketContent.scss";
@@ -26,6 +28,7 @@ interface ITicketContentState {
     ticket: ITicket;
     readonly: boolean;
     archived: boolean;
+    universals: Array<IUniversalWrapper>;
 }
 
 export class TicketContent extends React.Component<ITicketContentProps, ITicketContentState> {
@@ -42,7 +45,8 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
         this.state = {
             ticket: props.ticket,
             readonly: props.readonly || props.archived,
-            archived: props.archived
+            archived: props.archived,
+            universals: new Array<IUniversalWrapper>()
         };
     }
 
@@ -51,13 +55,16 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
             if (this.props.ticket == null) {
                 const ticket: ITicket = await Api.Ticket.findOne(this.props.ticketId);
                 this.setState({ ticket });
+
+                const universals: Array<IUniversalWrapper> = await Api.Universal.findByTicket(this.props.ticketId);
+                this.setState({ universals });
             }
         } catch(err) {
             console.error(err);
         }
     }
 
-    private fetchListUniversal(model: string): Promise<Array<IUniversal>> {
+    private fetchListUniversal(model: string): Promise<Array<IGeneric>> {
         if (model == "status") {
             return Api.Status.find();
         } else if (model == "priority") {
@@ -71,7 +78,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
         return Promise.reject("unknown model");
     }
 
-    private updateListUniversal(model: string, ref: IUniversal, readonly: boolean): void {
+    private updateListUniversal(model: string, ref: IGeneric, readonly: boolean): void {
         if (!readonly) {
             const ticket: ITicket = this.state.ticket;
             ticket[model] = ref || null;
@@ -89,6 +96,31 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                 this.setState({ ticket });
             }
         }
+    }
+
+    private makeUpUniversals(): React.ReactNode {
+        return [<hr />].concat(this.state.universals.reduce((result, value, index, array) => {
+            if (index % 2 == 0) {
+                result.push(array.slice(index, index + 2));
+            }
+
+            return result;
+        }, []).map((universals) => {
+            return <Flex.Col>
+                <Flex.Col xs={ 12 } md={ 6 }>
+                    <Universal 
+                        universal={ universals[0] }
+                        readonly={ this.state.readonly } />
+                </Flex.Col>
+
+                {
+                    (universals.length > 1) && 
+                        <Universal 
+                            universal={ universals[1] }
+                            readonly={ this.state.readonly } />
+                }
+            </Flex.Col>;
+        }));
     }
 
     public render(): React.ReactNode {
@@ -115,37 +147,6 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                     <Flex.Row>
                         <Flex.Col xs={ 12 } md={ 6 }>
                             <ListUniversal 
-                                property="Statut" 
-                                value={ this.state.ticket.status } 
-                                model="status" 
-                                onChange={ this.updateListUniversal.bind(this) } 
-                                onFetch={ this.fetchListUniversal.bind(this) } 
-                                required={ true } 
-                                readonly={ this.state.readonly } />
-                        </Flex.Col>
-                        <Flex.Col xs={ 12 } md={ 6 }>
-                            <ListUniversal 
-                                property="Priorité" 
-                                value={ this.state.ticket.priority } 
-                                model="priority" 
-                                onChange={ this.updateListUniversal.bind(this) } 
-                                onFetch={ this.fetchListUniversal.bind(this) } 
-                                required={ true } 
-                                readonly={ this.state.readonly } />
-                        </Flex.Col>
-                    </Flex.Row>
-
-                    <Flex.Row>
-                        <Flex.Col xs={ 12 } md={ 6 }>
-                            <InputUniversal
-                                property="Couleur" 
-                                value={ this.state.ticket.color ? "#" + this.state.ticket.color : "#ffffff" } 
-                                type={ InputUniversalType.color } 
-                                required={ false } 
-                                readonly={ this.state.readonly } />
-                        </Flex.Col>
-                        <Flex.Col xs={ 12 } md={ 6 }>
-                            <ListUniversal 
                                 property="Catégorie" 
                                 value={ this.state.ticket.tracker } 
                                 model="tracker" 
@@ -153,6 +154,17 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 onFetch={ this.fetchListUniversal.bind(this) } 
                                 required={ true } 
                                 readonly={ true } />
+                        </Flex.Col>
+
+                        <Flex.Col xs={ 12 } md={ 6 }>
+                            <ListUniversal 
+                                property="Statut" 
+                                value={ this.state.ticket.status } 
+                                model="status" 
+                                onChange={ this.updateListUniversal.bind(this) } 
+                                onFetch={ this.fetchListUniversal.bind(this) } 
+                                required={ true } 
+                                readonly={ this.state.readonly } />
                         </Flex.Col>
                     </Flex.Row>
 
@@ -167,36 +179,21 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                 required={ true } 
                                 readonly={ true } />
                         </Flex.Col>
-                    </Flex.Row>
-
-                    {
-                        /*
-                            Custom universals
-                        */
-                    }
-
-                    <hr />
-
-                    <Flex.Row>
                         <Flex.Col xs={ 12 } md={ 6 }>
-                            <InputUniversal
-                                property="Client" 
-                                value="toto" 
-                                type={ InputUniversalType.text } 
-                                required={ true } 
-                                readonly={ true } />
-                        </Flex.Col>
-                        <Flex.Col xs={ 12 } md={ 6 }>
-                            <InputUniversal
-                                property="Age" 
-                                value="" 
-                                type={ InputUniversalType.number } 
-                                min={ 0 } 
-                                max={ 100 } 
+                            <ListUniversal 
+                                property="Priorité" 
+                                value={ this.state.ticket.priority } 
+                                model="priority" 
+                                onChange={ this.updateListUniversal.bind(this) } 
+                                onFetch={ this.fetchListUniversal.bind(this) } 
                                 required={ true } 
                                 readonly={ this.state.readonly } />
                         </Flex.Col>
                     </Flex.Row>
+
+                    {
+                        this.state.universals.length > 0 && this.makeUpUniversals()
+                    }
 
                     <div className="ticket-content__description">
                         <EditorUniversal 

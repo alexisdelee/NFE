@@ -1,6 +1,6 @@
-import { IUniversal } from "./IUniversal";
+import { IGeneric } from "./IGeneric";
 import { IResource } from "./IResource";
 
-export interface IPriority extends IUniversal {
+export interface IPriority extends IGeneric {
     icon: IResource;
 }

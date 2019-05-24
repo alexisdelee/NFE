@@ -31,7 +31,6 @@ export class TicketItem extends React.Component<ITicketProps, ITicketState> {
                 <td className="ticket-item__id">
                     <a href={ "/tickets/" + this.state.ticket.id }>{ this.state.ticket.id }</a>
                 </td>
-                <td className="ticket-item__color" style={{ backgroundColor: this.state.ticket.color == null ? "" : "#" + this.state.ticket.color }}></td>
                 <td className="ticket-item__tracker">
                     <a href={ "/tickets/tracker/" + this.state.ticket.tracker.id }>{ this.state.ticket.tracker.name }</a>
                 </td>
