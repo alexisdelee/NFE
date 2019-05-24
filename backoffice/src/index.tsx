@@ -18,7 +18,7 @@ class Index extends React.Component<Object, Object> {
 }
 
 // Incidents
-class Incident extends React.Component<{ trackers: Array<ITracker>, resource: string }, Object> {
+class Resource extends React.Component<{ trackers: Array<ITracker>, resource: string }, Object> {
     public render(): React.ReactNode {
         const tracker: ITracker = this.props.trackers.find(tracker => tracker.shortname == this.props.resource);
 
@@ -64,22 +64,22 @@ class NoMatch extends React.Component<Object, Object> {
 
                 <Route path="/incidents" exact render={
                     (props) => 
-                        <Incident { ...props } trackers={ trackers } resource="incident" /> 
+                        <Resource { ...props } trackers={ trackers } resource="incident" /> 
                 } />
 
                 <Route path="/interventions" exact render={
                     (props) => 
-                        <Incident { ...props } trackers={ trackers } resource="intervention" /> 
+                        <Resource { ...props } trackers={ trackers } resource="intervention" /> 
                 } />
 
                 <Route path="/sickness" exact render={
                     (props) => 
-                        <Incident { ...props } trackers={ trackers } resource="sickness_leave" /> 
+                        <Resource { ...props } trackers={ trackers } resource="sickness_leave" /> 
                 } />
 
                 <Route path="/paid" exact render={
                     (props) => 
-                        <Incident { ...props } trackers={ trackers } resource="paid_leave" /> 
+                        <Resource { ...props } trackers={ trackers } resource="paid_leave" /> 
                 } />
 
                 <Route path="/tickets/:id([0-9]+)" component={ Ticket } />

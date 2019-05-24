@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>NFE - Déclaration d'incidents</title>
+    <link rel="stylesheet" href="css/declaration_incidents.css" />
+</head>
+
+<header>
+    <a href="/">
+        <img src="images/logo.png" alt="Logo NFE" width="auto" height="auto" />
+    </a>
+</header>
+
+<body>
+    <h1 class="title">Déclaration d'incident</h1>
+
+    <div class="declaration_form">
+        <div class="form_line">
+            <label class="form_label" for="incident_place">Lieu de l'incident :</label>
+            <input class="form_input" id="incident_place" type="text" /><br>
+        </div>
+
+        <div class="form_line">
+            <label class="form_label" for="incident_date">Date d'apparition :</label>
+            <input class="form_input" id="incident_date" type="date" value="" /><br>
+        </div>
+
+        <div class="form_line">
+            <label class="form_label" for="client_name">Nom du client :</label>
+            <input class="form_input" id="client_name" type="text" /><br>
+        </div>
+
+        <div class="form_line">
+            <label class="form_label" for="degradation_type">Type de dégradation :</label>
+            <select class="form_input" id="degradation_type">
+                <option v-for="option in options" v-bind:value="option.value">
+                    {{ option.text }}
+                </option>
+            </select><br>
+        </div>
+
+        <div class="form_line">
+            <label class="form_label" for="phone_number">Numéro de téléphone :</label>
+            <input class="form_input" id="phone_number" type="text" /><br>
+        </div>
+
+        <div class="form_line">
+            <label class="form_label" for="mail_address">Adresse mail :</label>
+            <input class="form_input" id="mail_address" type="email" /><br>
+        </div>
+
+        <div class="form_line">
+            <label class="form_label" for="comment">Commentaire :</label>
+            <textarea class="form_input" id="comment"></textarea><br><br>
+        </div>
+
+        <button id="report_incident_button">Déclarer l'incident</button>
+    </div>
+</body>
+
+<script src="https://fr.vuejs.org/js/vue.js"></script>
+<script src="js/declaration_incidents.js"></script>
+
+</html>
