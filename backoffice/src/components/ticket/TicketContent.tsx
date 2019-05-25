@@ -147,7 +147,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                     <Flex.Row>
                         <Flex.Col xs={ 12 } md={ 6 }>
                             <ListUniversal 
-                                property="Catégorie" 
+                                property="Tracker" 
                                 value={ this.state.ticket.tracker } 
                                 model="tracker" 
                                 onChange={ this.updateListUniversal.bind(this) } 

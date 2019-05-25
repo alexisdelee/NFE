@@ -35,10 +35,10 @@ export class TicketItem extends React.Component<ITicketProps, ITicketState> {
                     <a href={ "/tickets/tracker/" + this.state.ticket.tracker.id }>{ this.state.ticket.tracker.name }</a>
                 </td>
                 <td className="ticket-item__status">
-                    <a href={ "/tickets/status/" + this.state.ticket.status.id }>{ this.state.ticket.status.name }</a>
+                    { this.state.ticket.status.name }
                 </td>
                 <td className="ticket-item__priority">
-                    <a href={ "/tickets/priority/" + this.state.ticket.priority.id }>{ this.state.ticket.priority.name }</a>
+                    { this.state.ticket.priority.name }
                 </td>
                 <td className="ticket-item__subject">
                     <a href={ "/tickets/" + this.state.ticket.id }>{ this.state.ticket.summary }</a>

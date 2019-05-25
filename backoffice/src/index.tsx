@@ -1,37 +1,32 @@
 import * as React from "react";
 import { render } from "react-dom";
 import * as Flex from "react-simple-flex-grid";
-import { BrowserRouter, Switch, Route, match } from "react-router-dom";
+import { BrowserRouter, Switch, Route, match, Redirect } from "react-router-dom";
 
-import { Tracker } from "./Api";
+import { Menu } from "./components/home/Menu";
 import { TicketList } from "./components/ticket/TicketList";
 import { TicketContent } from "./components/ticket/TicketContent";
-import { ITracker } from "./models/ITracker";
 
 // Home
 class Index extends React.Component<Object, Object> {
     public render(): React.ReactNode {
-        return <Flex.Row>
-            <span>toto</span>
-        </Flex.Row>;
+        return <Menu />;
     }
 }
 
 // Incidents
-class Resource extends React.Component<{ trackers: Array<ITracker>, resource: string }, Object> {
+class Resource extends React.Component<{ match: match<{ resource: string, ids: string }> }, Object> {
     public render(): React.ReactNode {
-        const tracker: ITracker = this.props.trackers.find(tracker => tracker.shortname == this.props.resource);
-
-        if (tracker) {
+        if (["tracker"].includes(this.props.match.params.resource)) {
             return <Flex.Row>
                 <Flex.Col xs={ 12 } sm={ 9 }>
-                    <TicketList address={ "/tickets/tracker/" + tracker.id } />
+                    <TicketList address={ "/tickets/" + this.props.match.params.resource + "/" + this.props.match.params.ids } />
                 </Flex.Col>
                 <Flex.Col xs={ 0 } sm={ 3 }></Flex.Col>
             </Flex.Row>;
         }
 
-        return null;
+        return <Redirect to="/404" />;
     }
 }
 
@@ -47,46 +42,30 @@ class Ticket extends React.Component<{ match: match<{ id: string }> }, Object> {
     }
 }
 
-// No Match
-class NoMatch extends React.Component<Object, Object> {
+// 404
+class NotFound extends React.Component<Object, Object> {
     public render(): React.ReactNode {
         return <span>Lost...</span>;
     }
 }
 
-(async () => {
-    const trackers: Array<ITracker> = await Tracker.find();
+// No Match
+class NoMatch extends React.Component<Object, Object> {
+    public render(): React.ReactNode {
+        return <Redirect to="/404" />;
+    }
+}
 
-    render(
-        <BrowserRouter>
-            <Switch>
-                <Route path="/" exact render={ (props) => <Index { ...props } /> } />
+render(
+    <BrowserRouter>
+        <Switch>
+            <Route path="/" exact render={ (props) => <Index { ...props } /> } />
+            <Route path="/tickets/:resource/:ids([0-9,]+)" component={ Resource } />
+            <Route path="/tickets/:id([0-9]+)" component={ Ticket } />
 
-                <Route path="/incidents" exact render={
-                    (props) => 
-                        <Resource { ...props } trackers={ trackers } resource="incident" /> 
-                } />
-
-                <Route path="/interventions" exact render={
-                    (props) => 
-                        <Resource { ...props } trackers={ trackers } resource="intervention" /> 
-                } />
-
-                <Route path="/sickness" exact render={
-                    (props) => 
-                        <Resource { ...props } trackers={ trackers } resource="sickness_leave" /> 
-                } />
-
-                <Route path="/paid" exact render={
-                    (props) => 
-                        <Resource { ...props } trackers={ trackers } resource="paid_leave" /> 
-                } />
-
-                <Route path="/tickets/:id([0-9]+)" component={ Ticket } />
-
-                <Route component={ NoMatch } />
-            </Switch>
-        </BrowserRouter>,
-        document.querySelector("#root") as Element
-    );
-})();
+            <Route path="/404" component={ NotFound } />
+            <Route component={ NoMatch } />
+        </Switch>
+    </BrowserRouter>,
+    document.querySelector("#root") as Element
+);
