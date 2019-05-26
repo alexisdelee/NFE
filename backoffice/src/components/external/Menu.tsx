@@ -33,6 +33,14 @@ export class Menu extends React.Component<Object, IMenuState> {
         if (this.state.trackers.length) {
             return <Flex.Row className="menu">
                 <Flex.Col xs={ 0 } sm={ 3 }></Flex.Col>
+                <Flex.Col xs={ 12 } sm={ 6 } className="tile">
+                    <a href="/tickets">
+                        <span>Tous les tickets</span>
+                    </a>
+                </Flex.Col>
+                <Flex.Col xs={ 0 } sm={ 3 }></Flex.Col>
+
+                <Flex.Col xs={ 0 } sm={ 3 }></Flex.Col>
                 <Flex.Col xs={ 12 } sm={ 3 } className="tile">
                     <a href={ "/tickets/tracker/" + this.findTrackerByShortname("incident").id }>
                         <span>Incidents</span>

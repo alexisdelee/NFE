@@ -3,7 +3,7 @@ import { render } from "react-dom";
 import * as Flex from "react-simple-flex-grid";
 import { BrowserRouter, Switch, Route, match, Redirect } from "react-router-dom";
 
-import { Menu } from "./components/home/Menu";
+import { Menu } from "./components/external/Menu";
 import { TicketList } from "./components/ticket/TicketList";
 import { TicketContent } from "./components/ticket/TicketContent";
 
@@ -27,6 +27,17 @@ class Resource extends React.Component<{ match: match<{ resource: string, ids: s
         }
 
         return <Redirect to="/404" />;
+    }
+}
+
+// All tickets
+class AllTickets extends React.Component<Object, Object> {
+    public render(): React.ReactNode {
+        return <Flex.Row>
+            <Flex.Col xs={ 12 } sm={ 6 }>
+                <TicketList address="/tickets" />
+            </Flex.Col>
+        </Flex.Row>;
     }
 }
 
@@ -61,6 +72,7 @@ render(
         <Switch>
             <Route path="/" exact render={ (props) => <Index { ...props } /> } />
             <Route path="/tickets/:resource/:ids([0-9,]+)" component={ Resource } />
+            <Route path="/tickets" exact component={ AllTickets } />
             <Route path="/tickets/:id([0-9]+)" component={ Ticket } />
 
             <Route path="/404" component={ NotFound } />

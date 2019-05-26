@@ -8,17 +8,18 @@ import "./InputUniversal.scss";
 // Props
 interface IInputUniversalProps {
     property: string;
-    value: string | number;
+    value: string | number | boolean;
     type: InputUniversalType;
     pattern: string;
     options: Array<IItemOption>;
     readonly: boolean;
     required: boolean;
+    onChange: (property: string, value: string, readonly: boolean) => void;
 }
 
 // State
 interface IInputUniversalState {
-    value: string | number;
+    value: string | number | boolean;
     options: Array<IItemOption>;
     error: boolean;
     readonly: boolean;
@@ -67,14 +68,25 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
         }
     }
 
-    private checkValidity(event): void {
-        event.target.reportValidity();
-        this.setState({ error: !event.target.checkValidity() });
+    private checkValidity(target): boolean {
+        target.reportValidity();
+        this.setState({ error: !target.checkValidity() });
 
-        if (this.props.type == InputUniversalType.checkbox) {
-            this.setState({ value: event.target.checked });
-        } else {
-            this.setState({ value: event.target.value });
+        return target.checkValidity();
+    }
+
+    private updateItem(event): void {
+        if (!this.state.readonly) {
+            let value = null;
+            if (this.props.type == InputUniversalType.checkbox) {
+                this.setState({ value: (value = event.target.checked) });
+            } else {
+                this.setState({ value: (value = event.target.value) });
+            }
+
+            if (this.checkValidity(event.target)) {
+                this.props.onChange(this.props.property, value, this.state.readonly);
+            }
         }
     }
 
@@ -83,11 +95,11 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
             return <input 
                         ref={ this.inputRef }
                         type={ this.props.type } 
-                        value={ this.state.value } 
+                        value={ this.state.value.toString() } 
                         placeholder={ this.props.pattern || "0[6-9][0-9]{8}" } 
                         pattern={ this.props.pattern || "0[6-9][0-9]{8}" } 
-                        onChange={ this.checkValidity.bind(this) } 
-                        onFocus={ this.checkValidity.bind(this) } 
+                        onChange={ this.updateItem.bind(this) } 
+                        onFocus={ this.updateItem.bind(this) } 
                         disabled={ this.state.readonly } 
                         required={ this.state.required } />
         } else if (this.props.type == InputUniversalType.checkbox) {
@@ -95,7 +107,7 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
                         ref={ this.inputRef }
                         type={ this.props.type } 
                         checked={ eval(this.state.value as string) as boolean } 
-                        onChange={ this.checkValidity.bind(this) } 
+                        onChange={ this.updateItem.bind(this) } 
                         disabled={ this.state.readonly } 
                         required={ this.state.required } />
         }
@@ -103,9 +115,9 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
         return <input 
                     ref={ this.inputRef }
                     type={ this.props.type } 
-                    value={ this.state.value } 
-                    onChange={ this.checkValidity.bind(this) } 
-                    onFocus={ this.checkValidity.bind(this) } 
+                    value={ this.state.value.toString() } 
+                    onChange={ this.updateItem.bind(this) } 
+                    onFocus={ this.updateItem.bind(this) } 
                     disabled={ this.state.readonly }
                     required={ this.state.required } />;
     }

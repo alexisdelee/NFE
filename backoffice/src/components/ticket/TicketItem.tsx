@@ -54,7 +54,6 @@ export class TicketItem extends React.Component<ITicketProps, ITicketState> {
                         this.state.ticket.updated && <DateTool datetime={ this.state.ticket.updated } />
                     }
                 </td>
-                <td className="ticket-item__tags"></td>
             </tr>;
         }
 

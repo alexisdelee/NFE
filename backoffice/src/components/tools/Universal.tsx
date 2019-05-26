@@ -36,8 +36,9 @@ export class Universal extends React.Component<IStatusItemUniversalProps, IStatu
                         value={ this.state.universal.data.value }
                         type={ InputUniversalType[this.state.universal.universal.label] }
                         required={ this.state.universal.item.required }
-                        readonly={ this.state.readonly && this.state.universal.item.readonly }
-                        options={ this.state.universal.options } />;
+                        readonly={ this.state.readonly || this.state.universal.item.readonly }
+                        options={ this.state.universal.options }
+                        onChange={ console.log } />;
         }
     }
 
