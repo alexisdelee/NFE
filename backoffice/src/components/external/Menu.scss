@@ -1,0 +1,34 @@
+@font-face {
+    font-family: "TheChampRegular";
+    src: url("../../fonts/TheChampRegular.ttf");
+}
+
+.menu {
+    .tile {
+        position: relative;
+        height: 150px;
+
+        &:nth-of-type(2) { background: #027b79; }
+        &:nth-of-type(5) { background: #df392d; border-top: 2px solid #483d41; border-left: 2px solid #483d41; }
+        &:nth-of-type(6) { background: #fcba02; border-top: 2px solid #483d41; border-right: 2px solid #483d41; }
+        &:nth-of-type(9) { background: #483d41; border-bottom: 2px solid #483d41; border-left: 2px solid #483d41; }
+        &:nth-of-type(10) { background: #0574a1; border-bottom: 2px solid #483d41; border-right: 2px solid #483d41; }
+
+        a {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+            color: white;
+
+            span {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-family: "TheChampRegular";
+                font-size: 20px;
+            }
+        }
+    }
+}

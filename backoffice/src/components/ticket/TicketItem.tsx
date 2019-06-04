@@ -31,15 +31,14 @@ export class TicketItem extends React.Component<ITicketProps, ITicketState> {
                 <td className="ticket-item__id">
                     <a href={ "/tickets/" + this.state.ticket.id }>{ this.state.ticket.id }</a>
                 </td>
-                <td className="ticket-item__color" style={{ backgroundColor: this.state.ticket.color == null ? "" : "#" + this.state.ticket.color }}></td>
                 <td className="ticket-item__tracker">
                     <a href={ "/tickets/tracker/" + this.state.ticket.tracker.id }>{ this.state.ticket.tracker.name }</a>
                 </td>
                 <td className="ticket-item__status">
-                    <a href={ "/tickets/status/" + this.state.ticket.status.id }>{ this.state.ticket.status.name }</a>
+                    { this.state.ticket.status.name }
                 </td>
                 <td className="ticket-item__priority">
-                    <a href={ "/tickets/priority/" + this.state.ticket.priority.id }>{ this.state.ticket.priority.name }</a>
+                    { this.state.ticket.priority.name }
                 </td>
                 <td className="ticket-item__subject">
                     <a href={ "/tickets/" + this.state.ticket.id }>{ this.state.ticket.summary }</a>
@@ -55,7 +54,6 @@ export class TicketItem extends React.Component<ITicketProps, ITicketState> {
                         this.state.ticket.updated && <DateTool datetime={ this.state.ticket.updated } />
                     }
                 </td>
-                <td className="ticket-item__tags"></td>
             </tr>;
         }
 

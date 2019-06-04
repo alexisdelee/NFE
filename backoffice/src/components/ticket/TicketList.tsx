@@ -39,7 +39,6 @@ export class TicketList extends React.Component<ITicketListProps, ITicketListSta
                 <tr>
                     <th><input type="checkbox" title="Tout cocher / décocher" /></th>
                     <th>#</th>
-                    <th></th>
                     <th>Tracker</th>
                     <th>Statut</th>
                     <th>Priorité</th>
@@ -47,7 +46,6 @@ export class TicketList extends React.Component<ITicketListProps, ITicketListSta
                     <th>Reporté par</th>
                     <th>Assigné à</th>
                     <th>Dernière mise à jour</th>
-                    <th>Tags</th>
                 </tr>
             </thead>
             <tbody className="ticket-list__content">

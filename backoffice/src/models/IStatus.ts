@@ -1,6 +1,6 @@
 import { ICategory } from "./ICategory";
-import { IUniversal } from "./IUniversal";
+import { IGeneric } from "./IGeneric";
 
-export interface IStatus extends IUniversal {
+export interface IStatus extends IGeneric {
     category: ICategory;
 }

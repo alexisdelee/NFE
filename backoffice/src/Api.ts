@@ -4,6 +4,7 @@ import { IPriority } from "./models/IPriority";
 import { ITracker } from "./models/ITracker";
 import { IRegion } from "./models/IRegion";
 import { Fetch } from "./utils/Fetch";
+import { IUniversalWrapper } from "./models/IUniversalWrapper";
 
 export class Path {
     public static readonly host: string = "http://localhost:3001";
@@ -22,6 +23,12 @@ export class Ticket {
         return await new Fetch<ITicket>(Path.resolve("/tickets/" + ticketId)).json();
     }
 };
+
+export class Universal {
+    public static async findByTicket(ticketId: number): Promise<Array<IUniversalWrapper>> {
+        return await new Fetch<Array<IUniversalWrapper>>(Path.resolve("/universals/ticket/" + ticketId)).json();
+    }
+}
 
 export class Status {
     public static async find(): Promise<Array<IStatus>> {

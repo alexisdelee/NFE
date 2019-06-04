@@ -1,24 +1,24 @@
 import * as React from "react";
 
 import { StatusItemUniversal } from "./StatusItemUniversal";
-import { IUniversal } from "../../models/IUniversal";
+import { IGeneric } from "../../models/IGeneric";
 
 import "./ListUniversal.scss";
 
 // Props
 interface IListUniversalProps {
     property: string;
-    value: IUniversal;
+    value: IGeneric;
     model: string;
     required: boolean;
     readonly: boolean;
-    onFetch: (model: string) => Promise<Array<IUniversal>>;
-    onChange: (model: string, ref: IUniversal, readonly: boolean) => void;
+    onFetch: (model: string) => Promise<Array<IGeneric>>;
+    onChange: (model: string, ref: IGeneric, readonly: boolean) => void;
 }
 
 // State
 interface IListUniversalState {
-    items: Array<IUniversal>;
+    items: Array<IGeneric>;
     itemId: number;
     error: boolean;
     required: boolean;

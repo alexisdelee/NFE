@@ -1,0 +1,22 @@
+{
+  "name": "web",
+  "version": "0.0.1",
+  "description": "Partie web nfe.fr",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node-dev index.js",
+    "start": "node index.js",
+    "scanner": "sonar-scanner",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "francois",
+  "license": "ISC",
+  "dependencies": {
+    "@sentry/node": "^5.0.5",
+    "express": "^4.16.4",
+    "node-dev": "^3.1.3",
+    "sentry": "^0.1.2",
+    "vue": "^2.6.9",
+    "vue-server-renderer": "^2.6.10"
+  }
+}

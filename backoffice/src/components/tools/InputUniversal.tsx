@@ -1,25 +1,27 @@
 import * as React from "react";
 
 import { StatusItemUniversal } from "./StatusItemUniversal";
+import { IItemOption } from "../../models/IItemOption";
 
 import "./InputUniversal.scss";
 
 // Props
 interface IInputUniversalProps {
     property: string;
-    value: string | number;
+    value: string | number | boolean;
     type: InputUniversalType;
     pattern: string;
-    min: number;
-    max: number;
+    options: Array<IItemOption>;
     readonly: boolean;
     required: boolean;
+    onChange: (property: string, value: string, readonly: boolean) => void;
 }
 
 // State
 interface IInputUniversalState {
-    value: string | number;
-    error: boolean,
+    value: string | number | boolean;
+    options: Array<IItemOption>;
+    error: boolean;
     readonly: boolean;
     required: boolean;
 }
@@ -40,12 +42,12 @@ export enum InputUniversalType {
 };
 
 export class InputUniversal extends React.Component<IInputUniversalProps, IInputUniversalState> {
+    private inputRef: React.RefObject<any> = React.createRef();
+
     public static defaultProps = {
         pattern: null,
         readonly: false,
-        required: false,
-        min: -Infinity,
-        max: Infinity
+        required: false
     };
 
     constructor(props: IInputUniversalProps) {
@@ -53,58 +55,69 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
 
         this.state = {
             value: props.value,
+            options: props.options,
             error: null,
             readonly: props.readonly,
             required: props.required
         };
     }
 
-    private checkValidity(event): void {
-        event.target.reportValidity();
-        this.setState({ error: !event.target.checkValidity() });
+    public componentDidMount(): any {
+        for (const option of this.state.options) {
+            this.inputRef.current.setAttribute(option.label, option.value);
+        }
+    }
 
-        if (this.props.type == InputUniversalType.checkbox) {
-            this.setState({ value: event.target.checked });
-        } else {
-            this.setState({ value: event.target.value });
+    private checkValidity(target): boolean {
+        target.reportValidity();
+        this.setState({ error: !target.checkValidity() });
+
+        return target.checkValidity();
+    }
+
+    private updateItem(event): void {
+        if (!this.state.readonly) {
+            let value = null;
+            if (this.props.type == InputUniversalType.checkbox) {
+                this.setState({ value: (value = event.target.checked) });
+            } else {
+                this.setState({ value: (value = event.target.value) });
+            }
+
+            if (this.checkValidity(event.target)) {
+                this.props.onChange(this.props.property, value, this.state.readonly);
+            }
         }
     }
 
     private buildGenericType(): React.ReactNode {
         if (this.props.type == InputUniversalType.phone) {
             return <input 
+                        ref={ this.inputRef }
                         type={ this.props.type } 
-                        value={ this.state.value } 
+                        value={ this.state.value.toString() } 
                         placeholder={ this.props.pattern || "0[6-9][0-9]{8}" } 
                         pattern={ this.props.pattern || "0[6-9][0-9]{8}" } 
-                        onChange={ this.checkValidity.bind(this) } 
-                        onFocus={ this.checkValidity.bind(this) } 
-                        disabled={ this.state.readonly } 
-                        required={ this.state.required } />
-        } else if (this.props.type == InputUniversalType.number) {
-            return <input 
-                        type={ this.props.type } 
-                        value={ this.state.value } 
-                        min={ this.props.min } 
-                        max={ this.props.max } 
-                        onChange={ this.checkValidity.bind(this) } 
-                        onFocus={ this.checkValidity.bind(this) } 
+                        onChange={ this.updateItem.bind(this) } 
+                        onFocus={ this.updateItem.bind(this) } 
                         disabled={ this.state.readonly } 
                         required={ this.state.required } />
         } else if (this.props.type == InputUniversalType.checkbox) {
             return <input 
+                        ref={ this.inputRef }
                         type={ this.props.type } 
                         checked={ eval(this.state.value as string) as boolean } 
-                        onChange={ this.checkValidity.bind(this) } 
+                        onChange={ this.updateItem.bind(this) } 
                         disabled={ this.state.readonly } 
                         required={ this.state.required } />
         }
 
         return <input 
+                    ref={ this.inputRef }
                     type={ this.props.type } 
-                    value={ this.state.value } 
-                    onChange={ this.checkValidity.bind(this) } 
-                    onFocus={ this.checkValidity.bind(this) } 
+                    value={ this.state.value.toString() } 
+                    onChange={ this.updateItem.bind(this) } 
+                    onFocus={ this.updateItem.bind(this) } 
                     disabled={ this.state.readonly }
                     required={ this.state.required } />;
     }
