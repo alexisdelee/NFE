@@ -16,5 +16,7 @@ export interface ITicket extends IQuery {
     status: IStatus;
     assignee: IUser;
     reporter: IUser;
+    deleted: boolean;
+    archived: boolean;
     resolved: Date;
 }
