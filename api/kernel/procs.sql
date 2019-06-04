@@ -212,6 +212,7 @@ begin
     update ticket
     set tk_assignee = user_id
     where tk_deleted = false
+        and tk_archived = false
         and tk_id = ticket_id;
 end; //
 

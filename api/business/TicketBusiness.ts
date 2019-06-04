@@ -8,6 +8,7 @@ import { Status } from "../entities/Status";
 import { User } from "../entities/User";
 import { HttpError, ClientError, ServerError } from "../utils/HttpWrapper";
 import { Request } from "../utils/QueryWrapper";
+import { Datatype } from "../utils/Utils";
 
 export class TicketBusiness {
     public static readonly allowModifyResources: Array<string> = ["region", "tracker", "priority", "status"];
@@ -16,12 +17,19 @@ export class TicketBusiness {
     }
 
     @makeCoffee
-    public *create(): IterableIterator<any> {
-        return yield new TicketRepository().create(this.ticket);
+    public *create(): Datatype.Iterator.BiIterator<any> {
+        /* const a = { ...this.ticket, ...{ reporter: "titi" } };
+        console.log(a); */
+        yield new TicketRepository().create(this.ticket);
     }
 
     @makeCoffee
-    public *modifyResource<T extends Region | Tracker | Priority | Status>(item: T, resource: string): IterableIterator<any> {
+    public *update(ticketId: number): Datatype.Iterator.BiIterator<any> {
+        yield new TicketRepository().update(ticketId, this.ticket);
+    }
+
+    @makeCoffee
+    public *modifyResource<T extends Region | Tracker | Priority | Status>(item: T, resource: string): Datatype.Iterator.BiIterator<any> {
         if (!TicketBusiness.allowModifyResources.includes(resource)) {
             throw new HttpError(ClientError.MethodNotAllowed, "thoses modifications are not allowed");
         }
@@ -32,24 +40,19 @@ export class TicketBusiness {
     }
 
     @makeCoffee
-    public *assignTo(user: User): IterableIterator<any> {
+    public *assignTo(user: User): Datatype.Iterator.BiIterator<any> {
         this.ticket.assignee = user;
 
         yield new TicketRepository().update(this.ticket.id, this.ticket);
     }
 
     @makeCoffee
-    public *disable(): IterableIterator<any> {
-        yield new TicketRepository().delete(this.ticket.id);
-    }
-
-    @makeCoffee
-    public static *findOne(ticketId: number): IterableIterator<any> {
+    public static *findOne(ticketId: number): Datatype.Iterator.BiIterator<any> {
         return yield new TicketRepository().findOne(ticketId, Request.FetchType.Eager);
     }
 
     @makeCoffee
-    public static *findByResource(itemId: number, resource: string): IterableIterator<any> {
+    public static *findByResource(itemId: number, resource: string): Datatype.Iterator.BiIterator<any> {
         try {
             return yield new TicketRepository().findOneByResource(itemId, resource, Request.FetchType.Eager);
         } catch(err) {
@@ -62,7 +65,12 @@ export class TicketBusiness {
     }
 
     @makeCoffee
-    public static *disable(ticketId: number): IterableIterator<any> {
+    public static *archive(ticketId: number): Datatype.Iterator.BiIterator<any> {
+        yield new TicketRepository().archive(ticketId);
+    }
+
+    @makeCoffee
+    public static *disable(ticketId: number): Datatype.Iterator.BiIterator<any> {
         yield new TicketRepository().delete(ticketId);
     }
 }

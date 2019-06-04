@@ -139,6 +139,7 @@ create table ticket (
     tk_assignee int unsigned,
     tk_reporter int unsigned not null,
     tk_deleted boolean not null default false,
+    tk_archived boolean not null default false,
     tk_created datetime default current_timestamp,
     tk_updated datetime on update current_timestamp,
     tk_resolved datetime,

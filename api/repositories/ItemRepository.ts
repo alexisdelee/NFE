@@ -50,14 +50,19 @@ export class ItemRepository extends ABaseRepository<Item> {
     }
 
     @makeCoffee
-    public *findSpecificOne(item: Item): Datatype.Iterator.BiIterator<Query> {
+    public *findByTracker(trackerId: number, fetchType: Request.FetchType): Datatype.Iterator.BiIterator<any> {
         const query = yield this.query(`
             select *
             from ${this.collection}
-            where it_label = ?
-        `, [ item.label ]);
+            where it_tracker = ?
+        `, [ trackerId ]);
+        const rows: Array<Item> = [];
+        
+        for (const row of query.getRows()) {
+            rows.push(yield this.accessToSQL(row, fetchType));
+        }
 
-        return this.accessToSQL(query.getOneRow(), Request.FetchType.Eager);
+        return rows;
     }
 
     @makeCoffee

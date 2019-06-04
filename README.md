@@ -5,9 +5,12 @@
 | Agent    | GET     | /tickets/:ticketId([0-9]{1,20})             | Obtenir un ticket                                        |
 | Operator | GET     | /tickets/:resource                          | Obtenir tous les tickets liés à une ressource            |
 | Operator | GET     | /tickets/:resource/:resourceId([0-9]{1,20}) | Obtenir tous les tickets liés à une ressource spécifique |
+| Agent    | POST    | /tickets                                    | Créer un ticket                                          |
+| Agent    | PUT     | /tickets/:ticketId([0-9]{1,20})             | Mettre à jour un ticket                                  |
+| Agent    | POST    | /tickets/:ticketId([0-9]{1,20})/archived    | Archiver un ticket                                       |
 | Operator | DELETE  | /tickets/:ticketId([0-9]{1,20})             | Supprimer un ticket                                      |
 
-Toutes les ressources possibles : __region, color, tracker, priority, status, reporter, assignee__  
+Toutes les ressources possibles : __region, tracker, priority, status, reporter, assignee__  
 
 ### Routes pour les régions
 
@@ -43,6 +46,15 @@ Toutes les ressources possibles : __region, color, tracker, priority, status, re
 |-----------|---------|--------------------------------------|-------------------------------|
 | Anonymous | GET     | /categories/:categoryId([0-9]{1,20}) | Obtenir une catégorie         |
 | Anonymous | GET     | /categories                          | Obtenir toutes les catégories |
+
+
+### Routes pour les items
+
+| Accès | Méthode | Route                                  | Explication                                         |
+|-------|---------|----------------------------------------|-----------------------------------------------------|
+| Agent | GET     | /items/ticket/:ticketId([0-9]{1,20})   | Obtenir tous les items liés à un ticket spécifique  |
+| Agent | GET     | /items/tracker/:trackerId([0-9]{1,20}) | Obtenir tous les items liés à un tracker spécifique |
+| Agent | PUT     | /items/ticket/:ticketId([0-9]{1,30})   | Mettre à jour un item d'un ticket spécifique        |
 
 ### Routes pour les liens
 

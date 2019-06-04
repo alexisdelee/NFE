@@ -113,14 +113,16 @@ call internal_create_universal ("input", "phone");
 call internal_create_universal ("input", "text");
 call internal_create_universal ("map", null);
 
-call internal_create_item ("age", false, true, 5, 10);
+call internal_create_item ("age", false, true, 1, 10);
 
 call internal_create_option ("min", "0", 1);
 call internal_create_option ("max", "100", 1);
 
-call internal_create_item ("date de début de congé payé", true, true, 5, 5);
+call internal_create_item ("date de début de congé payé", true, true, 1, 5);
 
-call internal_create_option ("année courante", "2019", 2);
+call internal_create_option ("step", "10", 2);
+
+call internal_create_item ("majeur", false, true, 1, 2);
 
 -- test
 
@@ -137,4 +139,4 @@ call create_ticket ("ticket 2", null, 1, 1, 2, null, 1);
 call assign_link_to_ticket (2, 1, 2);
 
 insert into item_data (it_dt_value, it_dt_item, it_dt_ticket)
-values ('17', 1, 1), ('22/05/2019', 2, 1);
+values ('17', 1, 1), ('2019-05-22', 2, 1), ('true', 3, 1);

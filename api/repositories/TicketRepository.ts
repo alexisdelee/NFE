@@ -29,9 +29,8 @@ export class TicketRepository extends ABaseRepository<Ticket> {
             ticket.tracker.id,
             ticket.priority.id,
             ticket.status.id,
-            ticket.assignee.id
+            ticket.reporter.id
         ]);
-        return true;
     }
 
     @makeCoffee
@@ -40,28 +39,39 @@ export class TicketRepository extends ABaseRepository<Ticket> {
             update ${this.collection} 
             set tk_region = ?, 
                 tk_summary = ?, 
-                tk_description = compress (?), 
+                tk_description = if(? is null, null, compress (?)), 
                 tk_tracker = ?, 
                 tk_priority = ?, 
-                tk_status = ?,  
+                tk_status = ?, 
                 tk_assignee = ?, 
                 tk_reporter = ?, 
-                tk_resolved = ? 
+                tk_resolved = ?,
+                tk_archived = ? 
             where tk_id = ? 
                 and tk_deleted = false 
+                and tk_archived = false 
         `, [
             ticket.region.id, 
             ticket.summary, 
-            ticket.description, 
+            ticket.description, ticket.description, 
             ticket.tracker.id, 
             ticket.priority.id, 
             ticket.status.id,  
             ticket.assignee.id, 
             ticket.reporter.id, 
             ticket.resolved,
+            ticket.archived,
             id
         ]);
-        return true;
+    }
+    
+    @makeCoffee
+    public *archive(id: number): Datatype.Iterator.BiIterator<Query> {
+        yield this.query(`
+            update ${this.collection}
+            set tk_archived = true
+            where tk_id = ?
+        `, [ id ]);
     }
 
     @makeCoffee
@@ -71,7 +81,6 @@ export class TicketRepository extends ABaseRepository<Ticket> {
             set tk_deleted = true 
             where tk_id = ? 
         `, [ id ]);
-        return true;
     }
 
     @makeCoffee
@@ -130,12 +139,14 @@ export class TicketRepository extends ABaseRepository<Ticket> {
             created: row["tk_created"],
             updated: row["tk_updated"],
             resolved: row["tk_resolved"],
-            region: yield this.fetch<RegionRepository, Region>(row["tk_region"], RegionRepository, fetchType), // yield new RegionRepository().findOne(row["tk_region"]),
-            tracker: yield this.fetch<TrackerRepository, Tracker>(row["tk_tracker"], TrackerRepository, fetchType), // yield new TrackerRepository().findOne(row["tk_tracker"]),
-            priority: yield this.fetch<PriorityRepository, Priority>(row["tk_priority"], PriorityRepository, fetchType),// yield new PriorityRepository().findOne(row["tk_priority"]),
-            status: yield this.fetch<StatusRepository, Status>(row["tk_status"], StatusRepository, fetchType),// yield new StatusRepository().findOne(row["tk_status"]),
-            assignee: yield this.fetch<UserRepository, User>(row["tk_assignee"], UserRepository, fetchType),// yield new UserRepository().findOne(row["tk_assignee"]),
-            reporter: yield this.fetch<UserRepository, User>(row["tk_reporter"], UserRepository, fetchType) // yield new UserRepository().findOne(row["tk_reporter"])
+            region: yield this.fetch<RegionRepository, Region>(row["tk_region"], RegionRepository, fetchType),
+            tracker: yield this.fetch<TrackerRepository, Tracker>(row["tk_tracker"], TrackerRepository, fetchType),
+            priority: yield this.fetch<PriorityRepository, Priority>(row["tk_priority"], PriorityRepository, fetchType),
+            status: yield this.fetch<StatusRepository, Status>(row["tk_status"], StatusRepository, fetchType),
+            assignee: yield this.fetch<UserRepository, User>(row["tk_assignee"], UserRepository, fetchType),
+            reporter: yield this.fetch<UserRepository, User>(row["tk_reporter"], UserRepository, fetchType),
+            deleted: row["tk_deleted"],
+            archived: row["tk_archived"]
         };
     }
 }

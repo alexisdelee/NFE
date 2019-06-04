@@ -1,6 +1,6 @@
 import { ABaseRepository } from "./repositories/base/ABaseRepository";
-import { UniversalWrapperBusiness } from "./business/UniversalWrapperBusiness";
-import { UniversalWrapper } from "./entities/UniversalWrapper";
+import { ItemWrapperBusiness } from "./business/ItemWrapperBusiness";
+import { ItemWrapper } from "./entities/ItemWrapper";
 
 import * as Q from "q";
 import { JsonConvert, ValueCheckingMode } from "json2typescript/index";
@@ -20,8 +20,8 @@ Q.spawn(function *() {
         return; */
         // debug
 
-        const wrapper: UniversalWrapper = yield UniversalWrapperBusiness.findByTicket(1);
-        console.log(wrapper);
+        const wrapper: ItemWrapper = yield ItemWrapperBusiness.findByTicket(1);
+        console.log(JSON.stringify(wrapper, null, 2));
     } catch(err) {
         console.log("error");
         console.log(err);

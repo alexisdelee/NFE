@@ -10,7 +10,7 @@ import { Tracker } from "./routes/Tracker";
 import { Priority } from "./routes/Priority";
 import { Status } from "./routes/Status";
 import { Link } from "./routes/Link";
-import { Universal } from "./routes/Universal";
+import { Item } from "./routes/Item";
 import { HttpError, ServerError } from "./utils/HttpWrapper";
 
 class Application {
@@ -64,7 +64,7 @@ class Application {
         this.application.use("/priorities", new Priority().router);
         this.application.use("/status", new Status().router);
         this.application.use("/links", new Link().router);
-        this.application.use("/universals", new Universal().router);
+        this.application.use("/items", new Item().router);
     }
 }
 

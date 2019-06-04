@@ -14,5 +14,7 @@ export class Ticket extends Query {
     public status: Status;
     public assignee: User;
     public reporter: User;
+    public deleted: boolean;
+    public archived: boolean;
     public resolved: Date;
 }
