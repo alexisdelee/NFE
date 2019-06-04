@@ -1,19 +1,19 @@
 import * as React from "react";
 
 import { InputUniversal, InputUniversalType } from "./InputUniversal";
-import { IUniversalWrapper } from "../../models/IUniversalWrapper";
+import { IItemWrapper } from "../../models/IItemWrapper";
 
 import "./StatusItemUniversal.scss";
 
 // Props
 interface IStatusItemUniversalProps {
-    universal: IUniversalWrapper;
+    wrapper: IItemWrapper;
     readonly: boolean;
 }
 
 // State
 interface IStatusItemUniversalState {
-    universal: IUniversalWrapper;
+    wrapper: IItemWrapper;
     readonly: boolean;
 }
 
@@ -22,22 +22,22 @@ export class Universal extends React.Component<IStatusItemUniversalProps, IStatu
         super(props);
 
         this.state = {
-            universal: props.universal,
+            wrapper: props.wrapper,
             readonly: props.readonly
         };
 
-        console.log(props.universal);
+        console.log(props.wrapper);
     }
 
     private choiceUniversal(): React.ReactNode {
-        if (this.state.universal.universal.category == "input") {
+        if (this.state.wrapper.universal.category == "input") {
             return <InputUniversal
-                        property={ this.state.universal.item.label }
-                        value={ this.state.universal.data.value }
-                        type={ InputUniversalType[this.state.universal.universal.label] }
-                        required={ this.state.universal.item.required }
-                        readonly={ this.state.readonly || this.state.universal.item.readonly }
-                        options={ this.state.universal.options }
+                        property={ this.state.wrapper.item.label }
+                        value={ this.state.wrapper.data.value }
+                        type={ InputUniversalType[this.state.wrapper.universal.label] }
+                        required={ this.state.wrapper.item.required }
+                        readonly={ this.state.readonly || this.state.wrapper.item.readonly }
+                        options={ this.state.wrapper.options }
                         onChange={ console.log } />;
         }
     }

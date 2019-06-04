@@ -9,7 +9,7 @@ import { MapUniversal } from "../tools/MapUniversal";
 import { Universal } from "../tools/Universal";
 import { CommentList } from "./CommentList";
 import { ITicket } from "../../models/ITicket";
-import { IUniversalWrapper } from "../../models/IUniversalWrapper";
+import { IItemWrapper } from "../../models/IItemWrapper";
 import { IGeneric } from "../../models/IGeneric";
 import * as Api from "../../Api";
 
@@ -28,7 +28,7 @@ interface ITicketContentState {
     ticket: ITicket;
     readonly: boolean;
     archived: boolean;
-    universals: Array<IUniversalWrapper>;
+    wrappers: Array<IItemWrapper>;
 }
 
 export class TicketContent extends React.Component<ITicketContentProps, ITicketContentState> {
@@ -46,7 +46,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
             ticket: props.ticket,
             readonly: props.readonly || props.archived,
             archived: props.archived,
-            universals: new Array<IUniversalWrapper>()
+            wrappers: new Array<IItemWrapper>()
         };
     }
 
@@ -56,8 +56,8 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                 const ticket: ITicket = await Api.Ticket.findOne(this.props.ticketId);
                 this.setState({ ticket });
 
-                const universals: Array<IUniversalWrapper> = await Api.Universal.findByTicket(this.props.ticketId);
-                this.setState({ universals });
+                const wrappers: Array<IItemWrapper> = await Api.Item.findByTicket(this.props.ticketId);
+                this.setState({ wrappers });
             }
         } catch(err) {
             console.error(err);
@@ -99,24 +99,24 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
     }
 
     private makeUpUniversals(): React.ReactNode {
-        return [<hr />].concat(this.state.universals.reduce((result, value, index, array) => {
+        return [<hr />].concat(this.state.wrappers.reduce((result, value, index, array) => {
             if (index % 2 == 0) {
                 result.push(array.slice(index, index + 2));
             }
 
             return result;
-        }, []).map((universals) => {
+        }, []).map((wrappers) => {
             return <Flex.Col>
                 <Flex.Col xs={ 12 } md={ 6 }>
                     <Universal 
-                        universal={ universals[0] }
+                        wrapper={ wrappers[0] }
                         readonly={ this.state.readonly } />
                 </Flex.Col>
 
                 {
-                    (universals.length > 1) && 
+                    (wrappers.length > 1) && 
                         <Universal 
-                            universal={ universals[1] }
+                            wrapper={ wrappers[1] }
                             readonly={ this.state.readonly } />
                 }
             </Flex.Col>;
@@ -192,7 +192,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                     </Flex.Row>
 
                     {
-                        this.state.universals.length > 0 && this.makeUpUniversals()
+                        this.state.wrappers.length > 0 && this.makeUpUniversals()
                     }
 
                     <div className="ticket-content__description">
