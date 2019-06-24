@@ -3,7 +3,7 @@ import { IStatus } from "./models/IStatus";
 import { IPriority } from "./models/IPriority";
 import { ITracker } from "./models/ITracker";
 import { IRegion } from "./models/IRegion";
-import { Fetch } from "./utils/Fetch";
+import { Fetch, FetchType } from "./utils/Fetch";
 import { IItemWrapper } from "./models/IItemWrapper";
 
 export class Path {
@@ -27,6 +27,10 @@ export class Ticket {
 export class Item {
     public static async findByTicket(ticketId: number): Promise<Array<IItemWrapper>> {
         return await new Fetch<Array<IItemWrapper>>(Path.resolve("/items/ticket/" + ticketId)).json();
+    }
+
+    public static async updateByTicket(ticketId: number, wrapper: IItemWrapper): Promise<void> {
+        return await new Fetch<void>(Path.resolve("/items/ticket/" + ticketId), FetchType.PUT, { ...wrapper }).json();
     }
 }
 

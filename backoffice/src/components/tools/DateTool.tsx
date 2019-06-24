@@ -11,32 +11,48 @@ interface IDateToolProps {
     prefix: string;
 }
 
-export class DateTool extends React.Component<IDateToolProps, Object> {
+// State
+interface IDateToolState {
+    datetime: Date;
+}
+
+export class DateTool extends React.Component<IDateToolProps, IDateToolState> {
     static defaultProps = {
         prefix: ""
     };
 
     private static formatter: any = buildFormatter(fr);
-    private datetime: Date;
 
     constructor(props: IDateToolProps) {
         super(props);
 
         if (props.datetime instanceof Date) {
-            this.datetime = props.datetime as Date;
+            this.state = { datetime: this.stringToDate(props.datetime) };
         } else {
-            this.datetime = new Date(props.datetime);
+            this.state = { datetime: this.stringToDate(props.datetime) };
         }
     }
 
+    private stringToDate(datetime: Date | string | number): Date {
+        if (datetime instanceof Date) {
+            return datetime as Date;
+        }
+
+        return new Date(datetime);
+    }
+
+    public componentWillReceiveProps(props: IDateToolProps): void {
+        this.setState({ datetime: this.stringToDate(props.datetime) });
+    }
+
     public render(): React.ReactNode {
-        if ((Date.now() - this.datetime.getTime()) >= 86400000) { // one day
+        if ((Date.now() - this.state.datetime.getTime()) >= 86400000) { // one day
             return <React.Fragment>
                 { this.props.prefix }
-                <Moment format="DD/MM/YYYY à HH:mm">{ this.datetime.toString() }</Moment>
+                <Moment format="DD/MM/YYYY à HH:mm">{ this.state.datetime.toString() }</Moment>
             </React.Fragment>;
         } else {
-            return <TimeAgo date={ this.datetime.toString() } formatter={ DateTool.formatter } />
+            return <TimeAgo date={ this.state.datetime.toString() } formatter={ DateTool.formatter } />
         }
     }
 }

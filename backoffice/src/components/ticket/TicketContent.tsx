@@ -7,6 +7,7 @@ import { EditorUniversal } from "../tools/EditorUniversal";
 import { InputUniversal, InputUniversalType } from "../tools/InputUniversal";
 import { MapUniversal } from "../tools/MapUniversal";
 import { Universal } from "../tools/Universal";
+import { ASharedComponent } from "../tools/ASharedComponent";
 import { CommentList } from "./CommentList";
 import { ITicket } from "../../models/ITicket";
 import { IItemWrapper } from "../../models/IItemWrapper";
@@ -29,9 +30,10 @@ interface ITicketContentState {
     readonly: boolean;
     archived: boolean;
     wrappers: Array<IItemWrapper>;
+    wrapper: IItemWrapper;
 }
 
-export class TicketContent extends React.Component<ITicketContentProps, ITicketContentState> {
+export class TicketContent extends ASharedComponent<ITicketContentProps, ITicketContentState> {
     public static defaultProps: ITicketContentProps = {
         ticket: null,
         ticketId: 0,
@@ -46,23 +48,38 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
             ticket: props.ticket,
             readonly: props.readonly || props.archived,
             archived: props.archived,
-            wrappers: new Array<IItemWrapper>()
+            wrappers: new Array<IItemWrapper>(),
+            wrapper: null
         };
     }
 
     public async componentDidMount(): Promise<void> {
+        const self = this;
+
+        super.componentDidMount();
+
         try {
             if (this.props.ticket == null) {
                 const ticket: ITicket = await Api.Ticket.findOne(this.props.ticketId);
                 this.setState({ ticket });
 
                 const wrappers: Array<IItemWrapper> = await Api.Item.findByTicket(this.props.ticketId);
-                this.setState({ wrappers });
+                this.setState({ wrappers }, function() {
+                    this.subscribe("wrapper", "wrapper", async function() {
+                        await Api.Item.updateByTicket(self.state.ticket.id, { ...self.state.wrapper });
+
+                        const ticket: ITicket = { ...self.state.ticket };
+                        ticket.updated = new Date();
+
+                        self.setState({ ticket }, () => console.log(this.state.ticket.updated));
+                    }); // to initialize communication between components
+                });
             }
         } catch(err) {
             console.error(err);
         }
     }
+
 
     private fetchListUniversal(model: string): Promise<Array<IGeneric>> {
         if (model == "status") {
@@ -106,7 +123,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
 
             return result;
         }, []).map((wrappers) => {
-            return <Flex.Col>
+            return <Flex.Row>
                 <Flex.Col xs={ 12 } md={ 6 }>
                     <Universal 
                         wrapper={ wrappers[0] }
@@ -119,7 +136,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                             wrapper={ wrappers[1] }
                             readonly={ this.state.readonly } />
                 }
-            </Flex.Col>;
+            </Flex.Row>;
         }));
     }
 

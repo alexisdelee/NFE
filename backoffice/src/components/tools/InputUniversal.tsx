@@ -1,26 +1,23 @@
 import * as React from "react";
 
 import { StatusItemUniversal } from "./StatusItemUniversal";
-import { IItemOption } from "../../models/IItemOption";
+import { ASharedComponent } from "./ASharedComponent";
+import { IItemWrapper } from "../../models/IItemWrapper";
 
 import "./InputUniversal.scss";
 
 // Props
 interface IInputUniversalProps {
-    property: string;
-    value: string | number | boolean;
+    wrapper: IItemWrapper;
     type: InputUniversalType;
     pattern: string;
-    options: Array<IItemOption>;
     readonly: boolean;
     required: boolean;
-    onChange: (property: string, value: string, readonly: boolean) => void;
 }
 
 // State
 interface IInputUniversalState {
-    value: string | number | boolean;
-    options: Array<IItemOption>;
+    wrapper: IItemWrapper;
     error: boolean;
     readonly: boolean;
     required: boolean;
@@ -41,7 +38,9 @@ export enum InputUniversalType {
     text = "text"
 };
 
-export class InputUniversal extends React.Component<IInputUniversalProps, IInputUniversalState> {
+export class InputUniversal extends ASharedComponent<IInputUniversalProps, IInputUniversalState> {
+    private static interval: NodeJS.Timeout = null;
+    
     private inputRef: React.RefObject<any> = React.createRef();
 
     public static defaultProps = {
@@ -54,8 +53,7 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
         super(props);
 
         this.state = {
-            value: props.value,
-            options: props.options,
+            wrapper: props.wrapper,
             error: null,
             readonly: props.readonly,
             required: props.required
@@ -63,7 +61,10 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
     }
 
     public componentDidMount(): any {
-        for (const option of this.state.options) {
+        super.componentDidMount();
+        this.subscribe("wrapper", "value");
+
+        for (const option of this.state.wrapper.options) {
             this.inputRef.current.setAttribute(option.label, option.value);
         }
     }
@@ -75,17 +76,40 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
         return target.checkValidity();
     }
 
-    private updateItem(event): void {
+    private updateData(value: any): Promise<any> {
+        const self = this;
+
+        return new Promise(resolve => {
+            self.state.wrapper.data.value = value;
+            self.setState({ wrapper: self.state.wrapper }, resolve);
+        });
+    }
+
+    private sendInterval(): void {
+        if (InputUniversal.interval) {
+            clearTimeout(InputUniversal.interval);
+        }
+
+        const self = this;
+        InputUniversal.interval = setTimeout(async function() {
+            InputUniversal.interval = null;
+            
+            self.publish("wrapper", self.state.wrapper);
+        }, 1000);
+    }
+
+    private async updateItem(event): Promise<void> {
+        event = { ...event };
+
         if (!this.state.readonly) {
-            let value = null;
             if (this.props.type == InputUniversalType.checkbox) {
-                this.setState({ value: (value = event.target.checked) });
+                await this.updateData(event.target.checked);
             } else {
-                this.setState({ value: (value = event.target.value) });
+                await this.updateData(event.target.value);
             }
 
             if (this.checkValidity(event.target)) {
-                this.props.onChange(this.props.property, value, this.state.readonly);
+                this.sendInterval();
             }
         }
     }
@@ -95,27 +119,27 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
             return <input 
                         ref={ this.inputRef }
                         type={ this.props.type } 
-                        value={ this.state.value.toString() } 
+                        value={ this.state.wrapper.data.value.toString() } 
                         placeholder={ this.props.pattern || "0[6-9][0-9]{8}" } 
                         pattern={ this.props.pattern || "0[6-9][0-9]{8}" } 
                         onChange={ this.updateItem.bind(this) } 
                         onFocus={ this.updateItem.bind(this) } 
                         disabled={ this.state.readonly } 
-                        required={ this.state.required } />
+                        required={ this.state.required } />;
         } else if (this.props.type == InputUniversalType.checkbox) {
             return <input 
                         ref={ this.inputRef }
                         type={ this.props.type } 
-                        checked={ eval(this.state.value as string) as boolean } 
+                        checked={ eval(this.state.wrapper.data.value as string) as boolean } 
                         onChange={ this.updateItem.bind(this) } 
                         disabled={ this.state.readonly } 
-                        required={ this.state.required } />
+                        required={ this.state.required } />;
         }
 
         return <input 
                     ref={ this.inputRef }
                     type={ this.props.type } 
-                    value={ this.state.value.toString() } 
+                    value={ this.state.wrapper.data.value.toString() } 
                     onChange={ this.updateItem.bind(this) } 
                     onFocus={ this.updateItem.bind(this) } 
                     disabled={ this.state.readonly }
@@ -128,11 +152,11 @@ export class InputUniversal extends React.Component<IInputUniversalProps, IInput
                 <tr>
                     <td className="input-universal__status">
                         <StatusItemUniversal
-                            fields={ this.props.property } 
+                            fields={ this.props.wrapper.item.label } 
                             error={ this.state.error }
                             readonly={ this.state.readonly } />
                     </td>
-                    <th>{ this.props.property + (this.state.required ? "*" : "") }</th>
+                    <th>{ this.props.wrapper.item.label + (this.state.required ? "*" : "") }</th>
                     <td>
                         {
                             this.buildGenericType()

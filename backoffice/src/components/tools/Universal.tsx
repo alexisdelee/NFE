@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { InputUniversal, InputUniversalType } from "./InputUniversal";
 import { IItemWrapper } from "../../models/IItemWrapper";
+import { Item } from "../../Api";
 
 import "./StatusItemUniversal.scss";
 
@@ -25,20 +26,15 @@ export class Universal extends React.Component<IStatusItemUniversalProps, IStatu
             wrapper: props.wrapper,
             readonly: props.readonly
         };
-
-        console.log(props.wrapper);
     }
 
     private choiceUniversal(): React.ReactNode {
-        if (this.state.wrapper.universal.category == "input") {
+        if (this.state.wrapper.item.universal.category == "input") {
             return <InputUniversal
-                        property={ this.state.wrapper.item.label }
-                        value={ this.state.wrapper.data.value }
-                        type={ InputUniversalType[this.state.wrapper.universal.label] }
+                        wrapper={ this.state.wrapper }
+                        type={ InputUniversalType[this.state.wrapper.item.universal.label] }
                         required={ this.state.wrapper.item.required }
-                        readonly={ this.state.readonly || this.state.wrapper.item.readonly }
-                        options={ this.state.wrapper.options }
-                        onChange={ console.log } />;
+                        readonly={ this.state.readonly || this.state.wrapper.item.readonly } />;
         }
     }
 

@@ -1,5 +1,5 @@
 export interface IQuery {
     id: number;
-    created: Date;
-    updated: Date;
+    created: Date | string;
+    updated: Date | string;
 }
