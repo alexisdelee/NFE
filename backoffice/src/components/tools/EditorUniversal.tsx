@@ -10,9 +10,8 @@ type Mode = "write" | "preview";
 // Props
 interface IEditorUniversalProps {
     value: string;
-    model: string;
     readonly: boolean;
-    onChange: (model: string, data: string, readonly: boolean) => void;
+    onChange: (data: string) => void;
 }
 
 // State
@@ -48,7 +47,7 @@ export class EditorUniversal extends React.Component<IEditorUniversalProps, IEdi
 
     private updateValue(value: string): void {
         this.setState({ value });
-        this.props.onChange(this.props.model, value, this.state.readonly);
+        this.props.onChange(value);
     }
 
     private trick(mode: Mode): void {

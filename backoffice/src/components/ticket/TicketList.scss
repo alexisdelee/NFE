@@ -4,6 +4,11 @@
     font-size: 12px;
     // width: 1060px;
 
+    a, a:link {
+        color: #169;
+        text-decoration: none;
+    }
+
     thead th {
         padding: 4px;
         white-space: nowrap;
@@ -12,6 +17,10 @@
     }
 
     .ticket-list__content {
+        tr {
+            line-height: 2.2;
+        }
+
         th {
             padding: 0 10px;
         }
@@ -50,6 +59,25 @@
                     text-align: left;
                     width: 370px;
                 }
+
+                &.ticket-item__assign_to {
+                    width: 160px;
+
+                    a {
+                        padding: 2px 4px;
+                        margin: 0 2px;
+                        background: #dfdfaf;
+                        border: 1px solid #eeeeee;
+                    }
+                }
+
+                &.ticket-item__status {
+                    width: 85px;
+                }
+
+                &.ticket-item__tracker {
+                    width: 120px;
+                }
             }
 
             // base
@@ -62,11 +90,18 @@
                 /* margin-top: 1px; */
                 margin-bottom: 1px;
             }
+        }
+    }
 
-            a, a:link {
-                color: #169;
-                text-decoration: none;
-            }
+    tfoot {
+        line-height: 3;
+        background: #ecedd0;
+        text-align: center;
+
+        .ticket-list__filter {
+            padding: 6px 10px;
+            background: #dfdfaf;
+            border: 1px solid #eeeeee;
         }
     }
 }

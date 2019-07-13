@@ -44,11 +44,7 @@ export class ListUniversal extends React.Component<IListUniversalProps, IListUni
     }
 
     public async componentDidMount(): Promise<void> {
-        try {
-            this.setState({ items: await this.props.onFetch(this.props.model) });
-        } catch(err) {
-            console.error(err);
-        }
+        this.setState({ items: (await this.props.onFetch(this.props.model) as any).items });
     }
 
     private updateItem(event): void {

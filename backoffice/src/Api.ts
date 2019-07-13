@@ -1,16 +1,28 @@
+import { Fetch, FetchType } from "./utils/Fetch";
+
+import { IAuthentication } from "./models/IAuthentication";
 import { ITicket } from "./models/ITicket";
 import { IStatus } from "./models/IStatus";
 import { IPriority } from "./models/IPriority";
 import { ITracker } from "./models/ITracker";
 import { IRegion } from "./models/IRegion";
-import { Fetch, FetchType } from "./utils/Fetch";
-import { IItemWrapper } from "./models/IItemWrapper";
+import { IItem } from "./models/IItem";
+import { IUser } from "./models/IUser";
+import { ILink } from "./models/ILink";
 
 export class Path {
-    public static readonly host: string = "http://localhost:3001";
-
     public static resolve(address: string): string {
-        return new URL(address, Path.host).href;
+        if (window.location.hostname == "localhost") {
+            return new URL(address, "http://localhost:8080").href;
+        }
+
+        return new URL(address, "https://nfe-official.herokuapp.com").href;
+    }
+}
+
+export class Authentication {
+    public static async login(nfeid: string, password: string): Promise<IAuthentication> {
+        return await new Fetch<IAuthentication>(Path.resolve("/auth/login"), FetchType.POST, { nfeid, password }).json();
     }
 }
 
@@ -22,14 +34,26 @@ export class Ticket {
     public static async findOne(ticketId: number): Promise<ITicket> {
         return await new Fetch<ITicket>(Path.resolve("/tickets/" + ticketId)).json();
     }
+
+    public static async post(ticket: ITicket): Promise<ITicket> {
+        return await new Fetch<ITicket>(Path.resolve("/tickets"), FetchType.POST, { ...ticket }).json();
+    }
+
+    public static async save(ticketId: number, ticket: ITicket): Promise<ITicket> {
+        return await new Fetch<ITicket>(Path.resolve("/tickets/" + ticketId), FetchType.PUT, { ...ticket }).json();
+    }
+
+    public static async delete(ticketId: number): Promise<ITicket> {
+        return await new Fetch<ITicket>(Path.resolve("/tickets/" + ticketId), FetchType.DELETE).json();
+    }
 };
 
 export class Item {
-    public static async findByTicket(ticketId: number): Promise<Array<IItemWrapper>> {
-        return await new Fetch<Array<IItemWrapper>>(Path.resolve("/items/ticket/" + ticketId)).json();
+    public static async findByTicket(ticketId: number): Promise<Array<IItem>> {
+        return await new Fetch<Array<IItem>>(Path.resolve("/items/ticket/" + ticketId)).json();
     }
 
-    public static async updateByTicket(ticketId: number, wrapper: IItemWrapper): Promise<void> {
+    public static async updateByTicket(ticketId: number, wrapper: IItem): Promise<void> {
         return await new Fetch<void>(Path.resolve("/items/ticket/" + ticketId), FetchType.PUT, { ...wrapper }).json();
     }
 }
@@ -55,5 +79,17 @@ export class Tracker {
 export class Region {
     public static async find(): Promise<Array<IRegion>> {
         return await new Fetch<Array<IRegion>>(Path.resolve("/regions")).json();
+    }
+}
+
+export class User {
+    public static async find(): Promise<Array<IUser>> {
+        return await new Fetch<Array<IUser>>(Path.resolve("/users")).json();
+    }
+}
+
+export class Link {
+    public static async find(): Promise<Array<ILink>> {
+        return await new Fetch<Array<ILink>>(Path.resolve("/links")).json();
     }
 }

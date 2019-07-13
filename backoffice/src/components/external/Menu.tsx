@@ -1,10 +1,12 @@
 import * as React from "react";
 import * as Flex from "react-simple-flex-grid";
 
+import { Permission, PermissionMethod } from "../../Permission";
+
 import { Tracker } from "../../Api";
+import { ITracker } from "../../models/ITracker";
 
 import "./Menu.scss";
-import { ITracker } from "../../models/ITracker";
 
 // State
 interface IMenuState {
@@ -21,7 +23,7 @@ export class Menu extends React.Component<Object, IMenuState> {
     }
 
     public async componentDidMount(): Promise<void> {
-        const trackers: Array<ITracker> = await Tracker.find();
+        const trackers: Array<ITracker> = (await Tracker.find() as any).trackers;
         this.setState({ trackers });
     }
 
@@ -32,38 +34,48 @@ export class Menu extends React.Component<Object, IMenuState> {
     public render(): React.ReactNode {
         if (this.state.trackers.length) {
             return <Flex.Row className="menu">
-                <Flex.Col xs={ 0 } sm={ 3 }></Flex.Col>
-                <Flex.Col xs={ 12 } sm={ 6 } className="tile">
-                    <a href="/tickets">
-                        <span>Tous les tickets</span>
-                    </a>
-                </Flex.Col>
-                <Flex.Col xs={ 0 } sm={ 3 }></Flex.Col>
+                {
+                    Permission.parseFromStorage().has("tickets", PermissionMethod.READ)
+                        && <React.Fragment>
+                            <Flex.Col xs={ 0 } sm={ 3 }></Flex.Col>
+                                <Flex.Col xs={ 12 } sm={ 6 } className="tile">
+                                    <a href="/tickets">
+                                        <span>Tous les tickets</span>
+                                    </a>
+                                </Flex.Col>
+                            <Flex.Col xs={ 0 } sm={ 3 }></Flex.Col>
+
+                            <Flex.Col xs={ 0 } sm={ 3 }></Flex.Col>
+                            <Flex.Col xs={ 12 } sm={ 3 } className="tile">
+                                <a href={ "/tickets?resource=tracker&resourceId=" + this.findTrackerByShortname("incident").id }>
+                                    <span>Incidents</span>
+                                </a>
+                            </Flex.Col>
+                            <Flex.Col xs={ 12 } sm={ 3 } className="tile">
+                                <a href={ "/tickets?resource=tracker&resourceId=" + this.findTrackerByShortname("intervention").id }>
+                                    <span>Interventions</span>
+                                </a>
+                            </Flex.Col>
+                            <Flex.Col xs={ 0 } sm={ 3 }></Flex.Col>
+                        </React.Fragment>
+                }
 
                 <Flex.Col xs={ 0 } sm={ 3 }></Flex.Col>
-                <Flex.Col xs={ 12 } sm={ 3 } className="tile">
-                    <a href={ "/tickets/tracker/" + this.findTrackerByShortname("incident").id }>
-                        <span>Incidents</span>
-                    </a>
-                </Flex.Col>
-                <Flex.Col xs={ 12 } sm={ 3 } className="tile">
-                    <a href={ "/tickets/tracker/" + this.findTrackerByShortname("intervention").id }>
-                        <span>Interventions</span>
-                    </a>
-                </Flex.Col>
-                <Flex.Col xs={ 0 } sm={ 3 }></Flex.Col>
-
-                <Flex.Col xs={ 0 } sm={ 3 }></Flex.Col>
-                <Flex.Col xs={ 12 } sm={ 3 } className="tile">
+                {
+                    Permission.parseFromStorage().has("tickets", PermissionMethod.READ)
+                        && <React.Fragment>
+                            <Flex.Col xs={ 12 } sm={ 3 } className="tile">
+                                <a href={ "/tickets?resource=tracker&resourceId=" 
+                                            + this.findTrackerByShortname("sickness_leave").id
+                                            + "," + this.findTrackerByShortname("paid_leave").id }>
+                                    <span>Congés</span>
+                                </a>
+                            </Flex.Col>
+                        </React.Fragment>
+                }
+                <Flex.Col xs={ 12 } sm={ 3 } className="tile" style={{ filter: "grayscale(100%)" }}>
                     <a href="#">
-                        <span>Agents</span>
-                    </a>
-                </Flex.Col>
-                <Flex.Col xs={ 12 } sm={ 3 } className="tile">
-                    <a href={ "/tickets/tracker/" 
-                                + this.findTrackerByShortname("sickness_leave").id
-                                + "," + this.findTrackerByShortname("paid_leave").id }>
-                        <span>Congés</span>
+                        <span>Statistiques</span>
                     </a>
                 </Flex.Col>
                 <Flex.Col xs={ 0 } sm={ 3 }></Flex.Col>

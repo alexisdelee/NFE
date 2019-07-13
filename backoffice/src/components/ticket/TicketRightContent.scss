@@ -1,0 +1,17 @@
+.ticket-right-content {
+    fieldset {
+        margin-bottom: 10px;
+    }
+
+    table {
+        thead {
+            th {
+                text-align: center;
+            }
+        }
+
+        tr.ticket-right-content__special-details {
+            line-height: 2.2;
+        }
+    }
+}
