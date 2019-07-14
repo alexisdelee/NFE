@@ -49,6 +49,8 @@ export class Fetch<T> {
                     if (window.location.pathname != "/login") {
                         window.location.href = "/logout";
                     }
+                } else if (response.status == 410) { // Gone resource
+                    window.location.href = "/404";
                 }
 
                 try {

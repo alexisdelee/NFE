@@ -43,14 +43,14 @@ export class Ticket {
         return await new Fetch<ITicket>(Path.resolve("/tickets/" + ticketId), FetchType.PUT, { ...ticket }).json();
     }
 
-    public static async delete(ticketId: number): Promise<ITicket> {
-        return await new Fetch<ITicket>(Path.resolve("/tickets/" + ticketId), FetchType.DELETE).json();
+    public static async delete(ticketId: number): Promise<void> {
+        return await new Fetch<void>(Path.resolve("/tickets/" + ticketId), FetchType.DELETE).json();
     }
 };
 
 export class Item {
-    public static async findByTicket(ticketId: number): Promise<Array<IItem>> {
-        return await new Fetch<Array<IItem>>(Path.resolve("/items/ticket/" + ticketId)).json();
+    public static async findByTracker(trackerId: number): Promise<Array<IItem>> {
+        return await new Fetch<Array<IItem>>(Path.resolve("/items/trackers/" + trackerId)).json();
     }
 
     public static async updateByTicket(ticketId: number, wrapper: IItem): Promise<void> {

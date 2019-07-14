@@ -44,7 +44,7 @@ export class Permission {
     }
 
     private _has(entity: string, method: PermissionMethod): boolean {
-        const permission: IPermission = this.permissions.find(permission => permission.entity.label.includes(entity));
+        const permission: IPermission = this.permissions.find(permission => permission.entity.label.substring(1) == entity);
         return permission && permission[method];
     }
 

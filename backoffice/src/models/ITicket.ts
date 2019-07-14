@@ -6,6 +6,7 @@ import { IStatus } from "./IStatus";
 import { IUser } from "./IUser";
 import { IAssignee } from "./IAssignee";
 import { ILinkTicket } from "./ILinkTicket";
+import { IItemData } from "./IItemData";
 
 export interface ITicket extends IQuery {
     region: IRegion;
@@ -18,6 +19,7 @@ export interface ITicket extends IQuery {
     assignees: Array<IAssignee>;
     referents: Array<ILinkTicket>;
     references: Array<ILinkTicket>;
+    data: Array<IItemData>;
     deleted: boolean;
     archived: boolean;
 }

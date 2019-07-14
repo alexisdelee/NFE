@@ -6,9 +6,12 @@ import { BrowserRouter, Switch, Route, match, Redirect } from "react-router-dom"
 import { Permission, PermissionMethod } from "./Permission";
 
 import { Login } from "./components/session/Login";
+import { Header } from "./components/external/Header";
 import { Menu } from "./components/external/Menu";
 import { TicketList } from "./components/ticket/TicketList";
 import { TicketContent } from "./components/ticket/TicketContent";
+
+import "./Index.scss";
 
 class Session extends React.Component<Object, Object> {
     public static mustBeLogged(node: React.ReactNode): React.ReactNode {
@@ -45,13 +48,13 @@ class AllTickets extends React.Component<Object, Object> {
         return Session.mustBeLogged(
             Permission.parseFromStorage().has("tickets", PermissionMethod.READ)
                 && <Flex.Row>
-                    <Flex.Col xs={ 0 } sm={ 2 }></Flex.Col>
-                    <Flex.Col xs={ 12 } sm={ 8 }>
+                    <Flex.Col xs={ 0 } md={ 1 }></Flex.Col>
+                    <Flex.Col xs={ 12 } md={ 10 }>
                         <TicketList 
                             address={ window.location.pathname + window.location.search }
                             readonly={ !Permission.parseFromStorage().has("tickets", PermissionMethod.CREATE) } />
                     </Flex.Col>
-                    <Flex.Col xs={ 0 } sm={ 2 }></Flex.Col>
+                    <Flex.Col xs={ 0 } md={ 1 }></Flex.Col>
                 </Flex.Row>
                 || <Redirect to="/404" />
         );
@@ -108,7 +111,12 @@ class AuthenticationLogout extends React.Component<Object, Object> {
 // 404
 class NotFound extends React.Component<Object, Object> {
     public render(): React.ReactNode {
-        return <a href="/">Revenir à la page d'accueil</a>;
+        return <section style={{ textAlign: "center" }}>
+            <a href="/">
+                <img src="/pipe_404.png" style={{ width: "240px" }} />
+            </a>
+        </section>;
+        // return <a href="/">Revenir à la page d'accueil</a>;
     }
 }
 
@@ -121,18 +129,22 @@ class NoMatch extends React.Component<Object, Object> {
 
 render(
     <BrowserRouter>
-        <Switch>
-            <Route path="/" exact render={ (props) => <Index { ...props } /> } />
-            <Route path="/tickets" exact component={ AllTickets } />
-            <Route path="/tickets/new" exact component={ NewTicket } />
-            <Route path="/tickets/:id([0-9]+)" component={ Ticket } />
+        <Header />
 
-            <Route path="/login" component={ AuthenticationLogin } />
-            <Route path="/logout" component={ AuthenticationLogout } />
+        <section className="index-content">
+            <Switch>            
+                <Route path="/" exact render={ (props) => <Index { ...props } /> } />
+                <Route path="/tickets" exact component={ AllTickets } />
+                <Route path="/tickets/new" exact component={ NewTicket } />
+                <Route path="/tickets/:id([0-9]+)" component={ Ticket } />
 
-            <Route path="/404" component={ NotFound } />
-            <Route component={ NoMatch } />
-        </Switch>
+                <Route path="/login" component={ AuthenticationLogin } />
+                <Route path="/logout" component={ AuthenticationLogout } />
+
+                <Route path="/404" component={ NotFound } />
+                <Route component={ NoMatch } />
+            </Switch>
+        </section>
     </BrowserRouter>,
     document.querySelector("#root") as Element
 );

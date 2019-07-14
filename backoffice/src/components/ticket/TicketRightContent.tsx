@@ -5,6 +5,7 @@ import * as Api from "../../Api";
 
 import { SelectUniversal } from "../tools/SelectUniversal";
 import { EditorUniversal } from "../tools/EditorUniversal";
+import { Items } from "../tools/Items";
 
 import { TicketList } from "./TicketList";
 
@@ -15,6 +16,8 @@ import { IPriority } from "../../models/IPriority";
 import { IStatus } from "../../models/IStatus";
 import { ILink } from "../../models/ILink";
 import { ILinkTicket } from "../../models/ILinkTicket";
+import { IItem } from "../../models/IItem";
+import { IItemData } from "../../models/IItemData";
 
 import "./TicketRightContent.scss";
 
@@ -35,6 +38,7 @@ interface TicketRightContentState {
     priorities: Array<IPriority>;
     status: Array<IStatus>;
     links: Array<ILink>;
+    items: Array<IItem>;
     linkFilters: { link: ILink, ticket: ITicket };
     readonly: boolean;
 }
@@ -51,20 +55,42 @@ export class TicketRightContent extends React.Component<TicketRightContentProps,
             priorities: new Array<IPriority>(),
             status: new Array<IStatus>(),
             links: new Array<ILink>(),
+            items: new Array<IItem>(),
             linkFilters: null,
             readonly: this.props.readonly
         };
     }
 
     public async componentDidMount(): Promise<void> {
+        let { ticket } = this.state;
+
         const tickets: Array<ITicket> = (await Api.Ticket.find("/tickets") as any).tickets;
         const users: Array<IUser> = (await Api.User.find() as any).users;
         const trackers: Array<ITracker> = (await Api.Tracker.find() as any).trackers;
         const priorities: Array<IPriority> = (await Api.Priority.find() as any).priorities;
         const status: Array<IStatus> = (await Api.Status.find() as any).status;
         const links: Array<ILink> = (await Api.Link.find() as any).links;
+        let { items } = this.state;
 
-        this.setState({ tickets, users, trackers, priorities, status, links });
+        if (this.props.new) {
+            ticket = ticket || {} as ITicket;
+            ticket.tracker = trackers.find(tracker => tracker.id.toString() == this.getParam("tracker"));
+            if (ticket.tracker) {
+                items = (await Api.Item.findByTracker(ticket.tracker.id) as any).items;
+
+                const data: Array<IItemData> = items.map(item => {
+                    return {
+                        value: item.universal.defaultValue,
+                        item: item
+                    } as unknown;
+                }) as Array<IItemData>;
+
+                ticket.data = data;
+            }
+        }
+
+        this.setState({ ticket, tickets, users, trackers, priorities, status, links, items });
+        this.props.onChange(ticket);
     }
 
     public async componentWillReceiveProps(props: TicketRightContentProps): Promise<void> {
@@ -84,7 +110,8 @@ export class TicketRightContent extends React.Component<TicketRightContentProps,
     }
 
     private handleTrackerChange(value) {
-        this.handleSimpleChange("tracker", value);
+        window.location.href = "/tickets/new?tracker=" + value.tracker.id;
+        // this.handleSimpleChange("tracker", value);
     }
 
     private handlePriorityChange(value) {
@@ -161,11 +188,9 @@ export class TicketRightContent extends React.Component<TicketRightContentProps,
                                             this.state.trackers.length
                                                 && <SelectUniversal
                                                         options={ this.state.trackers.map(tracker => ({ value: tracker.id, label: tracker.name, tracker })) }
-                                                        defaultValue={ !this.props.new 
+                                                        defaultValue={ (this.state.ticket && this.state.ticket.tracker)
                                                             ? { value: this.state.ticket.tracker.id, label: this.state.ticket.tracker.name } 
-                                                            : (this.getParam("tracker") ? ((tracker: ITracker) => {
-                                                                return { value: tracker.id, label: tracker.name, tracker };
-                                                            })(this.state.trackers.find(tracker => tracker.id.toString() == this.getParam("tracker"))) : undefined) }
+                                                            : undefined }
                                                         name="tracker"
                                                         onChange={ this.handleTrackerChange.bind(this) }
                                                         isDisabled={ !this.props.new } />
@@ -220,9 +245,17 @@ export class TicketRightContent extends React.Component<TicketRightContentProps,
                 </Flex.Row>
             </fieldset>
 
-            <fieldset>
-                <legend>Détails personnalisées</legend>
-            </fieldset>
+            {
+                (this.state.ticket && this.state.ticket.data && this.state.ticket.data.length)
+                    && <fieldset style={{ backgroundColor: "#ffffee" }}>
+                        <legend>Détails personnalisées</legend>
+        
+                        <Items
+                            ticket={ this.state.ticket }
+                            readonly={ this.state.readonly }
+                            onChange={ console.log } />
+                    </fieldset>
+            }
 
             <fieldset>
                 <legend>Description</legend>
@@ -289,7 +322,7 @@ export class TicketRightContent extends React.Component<TicketRightContentProps,
                                                 (this.state.linkFilters && this.state.linkFilters.ticket)
                                                     && <React.Fragment>
                                                         {
-                                                            console.log("view", this.state.linkFilters.ticket)
+                                                            // console.log("view", this.state.linkFilters.ticket)
                                                         }
                                                         
                                                         <TicketList id="cqcwA2iauz" tickets={ [this.state.linkFilters.ticket] } style={{ margin: "5px 0" }} />

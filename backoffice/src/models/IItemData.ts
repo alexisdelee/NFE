@@ -5,6 +5,4 @@ import { IQuery } from "./IQuery";
 export interface IItemData extends IQuery {
     value: string;
     item: IItem;
-    ticket: ITicket;
-    deleted: boolean;
 }

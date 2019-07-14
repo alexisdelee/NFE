@@ -16,6 +16,7 @@ interface TicketLeftContentProps {
     ticket: ITicket;
     readonly: boolean;
     new: boolean;
+    loading: boolean;
     onChange: (ticket: ITicket) => void;
     onSave: () => Promise<void>;
     onDelete: () => Promise<void>;
@@ -28,6 +29,7 @@ interface TicketLeftContentState {
     users: Array<IUser>;
     regions: Array<IRegion>;
     readonly: boolean;
+    loading: boolean;
 }
 
 export class TicketLeftContent extends React.Component<TicketLeftContentProps, TicketLeftContentState> {    
@@ -38,7 +40,8 @@ export class TicketLeftContent extends React.Component<TicketLeftContentProps, T
             ticket: { ...this.props.ticket },
             users: new Array<IUser>(),
             regions: new Array<IRegion>(),
-            readonly: this.props.readonly
+            readonly: this.props.readonly,
+            loading: this.props.loading
         };
     }
 
@@ -51,12 +54,15 @@ export class TicketLeftContent extends React.Component<TicketLeftContentProps, T
             ticket.reporter = users.find(user => user.id == Permission.parseFromStorage().userId) || null;
         }
 
+        console.log(ticket.reporter);
+
         this.setState({ users, regions, ticket });
         this.props.onChange(ticket);
     }
 
-    public async componentWillReceiveProps(props: TicketLeftContentProps): Promise<void> {
-        this.setState({ ticket: props.ticket });
+    public componentWillReceiveProps(props: TicketLeftContentProps): void {
+        props.ticket.reporter = this.state.ticket.reporter;
+        this.setState({ ticket: props.ticket, loading: props.loading });
     }
 
     private handleSimpleChange(entity: string, value) {
@@ -111,17 +117,17 @@ export class TicketLeftContent extends React.Component<TicketLeftContentProps, T
                                                 }
                                                 name="region"
                                                 onChange={ this.handleRegionChange.bind(this) }
-                                                isDisabled={ !this.props.new } />
+                                                isDisabled={ this.state.readonly || !this.props.new } />
                                 }
                             </td>
                         </tr>
                         <tr>
-                            <th>Ajouté par</th>
+                            <th>Ajouté par *</th>
                             <td>
                                 {
                                     (this.state.ticket && this.state.ticket.reporter)
                                         && <SelectUniversal
-                                                options={ [] }
+                                                options={ this.state.users.map(user => ({ value: user.id, label: user.pseudo, user })) }
                                                 defaultValue={ { value: this.state.ticket.reporter.id, label: this.state.ticket.reporter.pseudo, reporter: this.state.ticket.reporter } }
                                                 name="reporter"
                                                 onChange={ () => {} }
@@ -130,7 +136,7 @@ export class TicketLeftContent extends React.Component<TicketLeftContentProps, T
                             </td>
                         </tr>
                         <tr>
-                            <th>Assigné(s) à *</th>
+                            <th>Assigné(s) à</th>
                             <td>
                                 {
                                     this.state.users.length
@@ -140,7 +146,7 @@ export class TicketLeftContent extends React.Component<TicketLeftContentProps, T
                                                 defaultValue={ !this.props.new && this.state.ticket.assignees.map(assignee => ({ value: assignee.user.id, label: assignee.user.pseudo, user: assignee.user })) }
                                                 name="assignees"
                                                 onChange={ this.handleAssigneeChange.bind(this) }
-                                                isDisabled={ this.state.readonly } />
+                                                isDisabled={ this.state.readonly || this.props.new } />
                                 }
                             </td>
                         </tr>
@@ -180,21 +186,44 @@ export class TicketLeftContent extends React.Component<TicketLeftContentProps, T
                     && <fieldset>
                         <legend>Administration</legend>
 
-                        <input type="button" value="Sauvegarder" onClick={ this.props.onSave.bind(this) } />&nbsp;
+                        <table style={{ width: "100%" }}>
+                            <thead>
+                                <tr>
+                                    <th style={{ textAlign: "center" }}>
+                                        {
+                                            this.state.loading
+                                                && <img src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif" height={ 80 } style={{ filter: "grayscale(100%)" }} />
+                                        }
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style={{ textAlign: "center" }}>
+                                        {
+                                            !this.state.loading
+                                                && <React.Fragment>
+                                                    <input type="button" value="Sauvegarder" onClick={ this.props.onSave.bind(this) } />&nbsp;
+                                                </React.Fragment>
+                                        }
 
-                        {
-                            !this.props.new
-                                && <React.Fragment>
-                                    {
-                                        Permission.parseFromStorage().has("tickets", PermissionMethod.DELETE)
-                                            && <React.Fragment>
-                                                <input type="button" value="Supprimer" onClick={ this.props.onDelete.bind(this) } />&nbsp;
-                                            </React.Fragment>
-                                    }
+                                        {
+                                            (!this.props.new && !this.state.loading)
+                                                && <React.Fragment>
+                                                    {
+                                                        Permission.parseFromStorage().has("tickets", PermissionMethod.DELETE)
+                                                            && <React.Fragment>
+                                                                <input type="button" value="Supprimer" onClick={ this.props.onDelete.bind(this) } />&nbsp;
+                                                            </React.Fragment>
+                                                    }
 
-                                    <input type="button" value="Archiver" onClick={ this.props.onArchived.bind(this) } />
-                                </React.Fragment>
-                        }
+                                                    <input type="button" value="Archiver" onClick={ this.props.onArchived.bind(this) } />
+                                                </React.Fragment>
+                                        }
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </fieldset>
             }
         </section>;
