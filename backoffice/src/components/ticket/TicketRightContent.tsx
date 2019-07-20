@@ -5,8 +5,8 @@ import * as Api from "../../Api";
 
 import { SelectUniversal } from "../tools/SelectUniversal";
 import { EditorUniversal } from "../tools/EditorUniversal";
-import { Items } from "../tools/Items";
 
+import { Items } from "./Items";
 import { TicketList } from "./TicketList";
 
 import { ITicket } from "../../models/ITicket";
@@ -26,6 +26,7 @@ interface TicketRightContentProps {
     ticket: ITicket;
     readonly: boolean;
     new: boolean;
+    highlighting: boolean;
     onChange: (ticket: ITicket) => void;
 }
 
@@ -41,6 +42,7 @@ interface TicketRightContentState {
     items: Array<IItem>;
     linkFilters: { link: ILink, ticket: ITicket };
     readonly: boolean;
+    highlighting: boolean;
 }
 
 export class TicketRightContent extends React.Component<TicketRightContentProps, TicketRightContentState> {    
@@ -57,7 +59,8 @@ export class TicketRightContent extends React.Component<TicketRightContentProps,
             links: new Array<ILink>(),
             items: new Array<IItem>(),
             linkFilters: null,
-            readonly: this.props.readonly
+            readonly: this.props.readonly,
+            highlighting: this.props.highlighting
         };
     }
 
@@ -94,7 +97,7 @@ export class TicketRightContent extends React.Component<TicketRightContentProps,
     }
 
     public async componentWillReceiveProps(props: TicketRightContentProps): Promise<void> {
-        this.setState({ ticket: props.ticket });
+        this.setState({ ticket: props.ticket, readonly: props.readonly, highlighting: props.highlighting });
     }
 
     private getParam(key: string): string {
@@ -174,7 +177,7 @@ export class TicketRightContent extends React.Component<TicketRightContentProps,
 
     public render(): React.ReactNode {
         return <section className="ticket-right-content">
-            <fieldset>
+            <fieldset style={ this.state.highlighting ? { backgroundColor: "#e6ecfa" } : {} }>
                 <legend>Détails</legend>
 
                 <Flex.Row>
@@ -247,14 +250,15 @@ export class TicketRightContent extends React.Component<TicketRightContentProps,
 
             {
                 (this.state.ticket && this.state.ticket.data && this.state.ticket.data.length)
-                    && <fieldset style={{ backgroundColor: "#ffffee" }}>
-                        <legend>Détails personnalisées</legend>
+                    && <fieldset style={ this.state.highlighting ? { backgroundColor: "#ffffee" } : {} }>
+                        <legend>Détails personnalisés</legend>
         
                         <Items
                             ticket={ this.state.ticket }
                             readonly={ this.state.readonly }
                             onChange={ console.log } />
                     </fieldset>
+                    || null
             }
 
             <fieldset>
@@ -275,7 +279,7 @@ export class TicketRightContent extends React.Component<TicketRightContentProps,
 
                         {
                             !this.state.readonly
-                                && <fieldset style={{ backgroundColor: "hsl(0, 100%, 99%)" }}>
+                                && <fieldset style={ this.state.highlighting ? { backgroundColor: "#fff4f4" } : {} }>
                                     <legend>Filtres</legend>
 
                                     <Flex.Row>

@@ -9,6 +9,7 @@ import { IRegion } from "./models/IRegion";
 import { IItem } from "./models/IItem";
 import { IUser } from "./models/IUser";
 import { ILink } from "./models/ILink";
+import { IHistory } from "./models/IHistory";
 
 export class Path {
     public static resolve(address: string): string {
@@ -91,5 +92,17 @@ export class User {
 export class Link {
     public static async find(): Promise<Array<ILink>> {
         return await new Fetch<Array<ILink>>(Path.resolve("/links")).json();
+    }
+}
+
+export class History {
+    public static async findByTicket(ticketId: number): Promise<Array<IHistory>> {
+        return await new Fetch<Array<IHistory>>(Path.resolve("/histories/" + ticketId)).json();
+    }
+}
+
+export class Statistic {
+    public static async findWithDuration(typeDuration: string): Promise<Array<ITicket>> {
+        return await new Fetch<Array<ITicket>>(Path.resolve("/statistics/duration?type-duration=" + typeDuration)).json();
     }
 }

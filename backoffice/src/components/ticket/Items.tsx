@@ -5,7 +5,9 @@ import { ITicket } from "../../models/ITicket";
 import { IItemData } from "../../models/IItemData";
 import { IItem } from "../../models/IItem";
 
-import { InputUniversal } from "./InputUniversal";
+import { InputUniversal } from "../tools/InputUniversal";
+
+import "./Items.scss";
 
 // Props
 interface ItemsProps {
@@ -47,8 +49,31 @@ export class Items extends React.Component<ItemsProps, ItemsState> {
         this.setState({ ticket });
     }
 
+    private async handleUploadFile(event): Promise<void> {
+        try {
+            // Complete a file upload
+            /* response = await fetch("https://dev.wetransfer.com/v2/transfers/" + transferId + "/files/" + file.id + "/upload-complete", {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-api-key": api,
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({
+
+                })
+            }); */
+        } catch(err) {
+            console.log(err);
+        }
+    }
+
     public render(): React.ReactNode {
         return <React.Fragment>
+            <small className="blink warning">
+                <strong>&#9888; l'upload de fichiers est limité à 2GB et sera stocké sur un serveur externe durant seulement 7 jours</strong>
+            </small><br /><br />
+
             {
                 this.state.ticket && this.state.ticket.data && this.state.ticket.data.reduce((acc, item, index) => { acc[Math.floor(index / 2)] = [ ...(acc[Math.floor(index / 2)] || []), item ]; return acc; }, []).map((d: Array<IItemData>) => {
                     return <Flex.Row>

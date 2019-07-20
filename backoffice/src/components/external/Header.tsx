@@ -2,6 +2,7 @@ import * as React from "react";
 import * as Flex from "react-simple-flex-grid";
 
 import "./Header.scss";
+import { Permission, PermissionMethod } from "../../Permission";
 
 // State
 interface IHeaderState {
@@ -18,7 +19,11 @@ export class Header extends React.Component<Object, IHeaderState> {
     }
 
     public componentDidMount(): void {
-        this.setState({ alive: !!window.sessionStorage.getItem("x-access-token") });
+        this.setState({ alive: !!window.sessionStorage.getItem("x-access-token") && !(this.getParam("no-header") == "true") });
+    }
+
+    public getParam(key: string): string {
+        return new URL(window.location.href).searchParams.get(key);
     }
 
     public render(): React.ReactNode {
@@ -27,13 +32,13 @@ export class Header extends React.Component<Object, IHeaderState> {
                 <Flex.Col xs={ 7 }>
                     <ul>
                         <li>
-                            <a href="/">Acccueil</a>
+                            <a href="/" className={ window.location.pathname == "/" ? "active": "" }>Acccueil</a>
                         </li>
                         {
                             window.innerWidth > 1175
                                 && <React.Fragment>
                                     <li>
-                                        <a href="/tickets">Tous les tickets</a>
+                                        <a href="/tickets" className={ window.location.pathname == "/tickets" ? "active": "" }>Tous les tickets</a>
                                     </li>
                                     <li>
                                         <a href="/tickets?resource=tracker&resourceId=1">Incidents</a>
@@ -44,9 +49,12 @@ export class Header extends React.Component<Object, IHeaderState> {
                                     <li>
                                         <a href="/tickets?resource=tracker&resourceId=4,5">Congés</a>
                                     </li>
-                                    <li>
-                                        <a href="#">Statistiques</a>
-                                    </li>
+                                    {
+                                        Permission.parseFromStorage().has("statistics", PermissionMethod.READ)
+                                            && <li>
+                                                <a href="/statistics" className={ window.location.pathname == "/statistics" ? "active": "" }>Statistiques</a>
+                                            </li>
+                                    }
                                 </React.Fragment>
                         }
                     </ul>

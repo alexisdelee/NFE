@@ -21,6 +21,11 @@
                 font-weight: bold;
                 color: #727272;
 
+                &.active {
+                    padding-bottom: 0;
+                    background: #ffdab9 !important;
+                }
+
                 &:hover {
                     background: #ffcaa2;
                 }

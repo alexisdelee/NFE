@@ -17,6 +17,7 @@ interface TicketLeftContentProps {
     readonly: boolean;
     new: boolean;
     loading: boolean;
+    highlighting: boolean;
     onChange: (ticket: ITicket) => void;
     onSave: () => Promise<void>;
     onDelete: () => Promise<void>;
@@ -30,6 +31,7 @@ interface TicketLeftContentState {
     regions: Array<IRegion>;
     readonly: boolean;
     loading: boolean;
+    highlighting: boolean;
 }
 
 export class TicketLeftContent extends React.Component<TicketLeftContentProps, TicketLeftContentState> {    
@@ -41,7 +43,8 @@ export class TicketLeftContent extends React.Component<TicketLeftContentProps, T
             users: new Array<IUser>(),
             regions: new Array<IRegion>(),
             readonly: this.props.readonly,
-            loading: this.props.loading
+            loading: this.props.loading,
+            highlighting: this.props.highlighting
         };
     }
 
@@ -62,7 +65,7 @@ export class TicketLeftContent extends React.Component<TicketLeftContentProps, T
 
     public componentWillReceiveProps(props: TicketLeftContentProps): void {
         props.ticket.reporter = this.state.ticket.reporter;
-        this.setState({ ticket: props.ticket, loading: props.loading });
+        this.setState({ ticket: props.ticket, loading: props.loading, highlighting: props.highlighting });
     }
 
     private handleSimpleChange(entity: string, value) {
@@ -99,7 +102,7 @@ export class TicketLeftContent extends React.Component<TicketLeftContentProps, T
 
     public render(): React.ReactNode {
         return <section className="ticket-left-content">
-            <fieldset>
+            <fieldset style={ this.state.highlighting ? { backgroundColor: "#eefff1" } : {} }>
                 <legend>Ressources</legend>
 
                 <table>
@@ -181,51 +184,58 @@ export class TicketLeftContent extends React.Component<TicketLeftContentProps, T
                 </table>
             </fieldset>
 
-            {
-                !this.state.readonly
-                    && <fieldset>
-                        <legend>Administration</legend>
+            <fieldset>
+                <legend>Administration</legend>
 
-                        <table style={{ width: "100%" }}>
-                            <thead>
-                                <tr>
-                                    <th style={{ textAlign: "center" }}>
-                                        {
-                                            this.state.loading
-                                                && <img src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif" height={ 80 } style={{ filter: "grayscale(100%)" }} />
-                                        }
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style={{ textAlign: "center" }}>
-                                        {
-                                            !this.state.loading
-                                                && <React.Fragment>
-                                                    <input type="button" value="Sauvegarder" onClick={ this.props.onSave.bind(this) } />&nbsp;
-                                                </React.Fragment>
-                                        }
+                <table style={{ width: "100%" }}>
+                    <thead>
+                        <tr>
+                            <th style={{ textAlign: "center" }}>
+                                {
+                                    this.state.loading
+                                        && <img src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif" height={ 80 } style={{ filter: "grayscale(100%)" }} />
+                                }
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style={{ textAlign: "center" }}>
+                                {
+                                    (!this.state.readonly && !this.state.loading)
+                                        && <React.Fragment>
+                                            <input type="button" value="Sauvegarder" onClick={ this.props.onSave.bind(this) } />&nbsp;
+                                        </React.Fragment>
+                                }
 
-                                        {
-                                            (!this.props.new && !this.state.loading)
-                                                && <React.Fragment>
-                                                    {
-                                                        Permission.parseFromStorage().has("tickets", PermissionMethod.DELETE)
-                                                            && <React.Fragment>
-                                                                <input type="button" value="Supprimer" onClick={ this.props.onDelete.bind(this) } />&nbsp;
-                                                            </React.Fragment>
-                                                    }
+                                {
+                                    (!this.state.readonly && !this.props.new && !this.state.loading)
+                                        && <React.Fragment>
+                                            {
+                                                Permission.parseFromStorage().has("tickets", PermissionMethod.DELETE)
+                                                    && <React.Fragment>
+                                                        <input 
+                                                            type="button"
+                                                            value="Supprimer"
+                                                            onClick={ this.props.onDelete.bind(this) } />&nbsp;
+                                                    </React.Fragment>
+                                            }
 
-                                                    <input type="button" value="Archiver" onClick={ this.props.onArchived.bind(this) } />
-                                                </React.Fragment>
-                                        }
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </fieldset>
-            }
+                                            <input type="button" value="Archiver" onClick={ this.props.onArchived.bind(this) } />&nbsp;
+                                        </React.Fragment>
+                                }
+
+                                {
+                                    (!this.props.new && Permission.parseFromStorage().has("histories", PermissionMethod.READ))
+                                        && <button onClick={ () => window.open("/tickets/" + this.state.ticket.id + "/history?no-header=true", "Historique des modicications", "menubar=no, status=no, scrollbars=no, menubar=no, width=826, height=450") }>Historique des modifications</button>
+                                        || null
+                                }
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+            
         </section>;
     }
 }

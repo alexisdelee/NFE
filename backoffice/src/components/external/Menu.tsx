@@ -73,8 +73,8 @@ export class Menu extends React.Component<Object, IMenuState> {
                             </Flex.Col>
                         </React.Fragment>
                 }
-                <Flex.Col xs={ 12 } sm={ 3 } className="tile" style={{ filter: "grayscale(100%)" }}>
-                    <a href="#">
+                <Flex.Col xs={ 12 } sm={ 3 } className="tile">
+                    <a href="/statistics">
                         <span>Statistiques</span>
                     </a>
                 </Flex.Col>

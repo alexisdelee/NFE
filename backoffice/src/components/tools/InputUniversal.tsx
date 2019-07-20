@@ -3,6 +3,7 @@ import Switch from "rc-switch";
 
 import { ITicket } from "../../models/ITicket";
 import { IItemData } from "../../models/IItemData";
+import { InputFileUniversal } from "../tools/InputFileUniversal";
 
 import "./SwitchUniversal.scss";
 
@@ -59,12 +60,16 @@ export class InputUniversal extends React.Component<InputUniversalProps, InputUn
     }
     
     private makeUp(data: IItemData): React.ReactNode {
-        if (data.item.universal.label == "checkbox") {
-            return <Switch 
-                        ref={ this.inputRef }
-                        checked={ !!parseInt(data.value, 10) }
-                        disabled={ this.state.readonly || this.state.data.item.readonly }
-                        onChange={ this.handleChange.bind(this)  } />
+        if (data.item.universal.category == "input") {
+            if (data.item.universal.label == "checkbox") {
+                return <Switch 
+                            ref={ this.inputRef }
+                            checked={ !!parseInt(data.value, 10) }
+                            disabled={ this.state.readonly || this.state.data.item.readonly }
+                            onChange={ this.handleChange.bind(this)  } />
+            } else if (data.item.universal.label == "file") {
+                return <InputFileUniversal />;
+            }
         }
 
         return <input

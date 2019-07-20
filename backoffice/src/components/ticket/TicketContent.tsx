@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as Flex from "react-simple-flex-grid";
-import { Redirect } from "react-router-dom";
+import Switch from "rc-switch";
 
 import { Permission, PermissionMethod } from "../../Permission";
 import * as Api from "../../Api";
@@ -24,6 +24,7 @@ interface ITicketContentState {
     ticket: ITicket;
     readonly: boolean;
     loading: boolean;
+    highlighting: boolean;
 }
 
 export class TicketContent extends React.Component<ITicketContentProps, ITicketContentState> {
@@ -40,7 +41,8 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
         this.state = {
             ticket: props.ticket,
             readonly: props.readonly || (this.props.new && !this.getParam("tracker")),
-            loading: false
+            loading: false,
+            highlighting: window.localStorage.getItem("highlighting") == "true"
         };
     }
 
@@ -64,8 +66,16 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
         this.setState({ ticket });
     }
 
+    private loadOn(): void {
+        this.setState({ loading: true, readonly: true });
+    }
+
+    private loadOff(): void {
+        this.setState({ loading: false, readonly: false });
+    }
+
     private async handleSaveClick(): Promise<void> {
-        this.setState({ loading: true });
+        this.loadOn();
 
         try {
             if (this.props.new) {
@@ -76,14 +86,14 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                 window.location.reload();
             }
         } catch(err) {
-            this.setState({ loading: false });
+            this.loadOff();
             alert(err.error ? err.error : err);
         }
     }
 
     private async handleDeleteClick(): Promise<void> {
         if (!this.props.new) {
-            this.setState({ loading: true });
+            this.loadOn();
 
             await Api.Ticket.delete(this.state.ticket.id);
             window.location.href = "/";
@@ -92,7 +102,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
 
     private async handleArchivedClick(): Promise<void> {
         if (!this.props.new) {
-            this.setState({ loading: true });
+            this.loadOn();
             
             let ticket: ITicket = this.state.ticket;
             ticket.archived = true;
@@ -100,6 +110,10 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
             await Api.Ticket.save(ticket.id, ticket);
             window.location.reload();
         }
+    }
+
+    private handleHighlightingChange(value): void {
+        this.setState({ highlighting: value }, () => window.localStorage.setItem("highlighting", value));
     }
 
     private getParam(key: string): string {
@@ -110,6 +124,14 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
         if (this.state.ticket || this.props.new) {
             return <section className={ (this.state.readonly ? ["ticket-content", "ticket-content__readonly"] : ["ticket-content"]).join(" ") }>
                 <Flex.Row>
+                    <Flex.Col xs={ 12 }>
+                        <div style={{ float: "right" }}>
+                            <strong>{ (!this.state.highlighting ? "Activer" : "Désactiver") + " l'aide à la coloration syntaxique" }</strong>&nbsp;&nbsp;
+                            <Switch 
+                                checked={ this.state.highlighting }
+                                onChange={ this.handleHighlightingChange.bind(this) } /><br /><br />
+                        </div>
+                    </Flex.Col>
                     <Flex.Col xs={ 12 }>
                         <fieldset>
                             <legend>Titre du ticket*</legend>
@@ -137,6 +159,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                             readonly={ this.state.readonly }
                                             new={ this.props.new }
                                             loading={ this.state.loading }
+                                            highlighting={ this.state.highlighting }
                                             onChange={ this.handleTicketChange.bind(this) }
                                             onSave={ this.handleSaveClick.bind(this) }
                                             onDelete={ this.handleDeleteClick.bind(this) }
@@ -151,6 +174,7 @@ export class TicketContent extends React.Component<ITicketContentProps, ITicketC
                                         ticket={ this.state.ticket }
                                         readonly={ this.state.readonly }
                                         new={ this.props.new }
+                                        highlighting={ this.state.highlighting }
                                         onChange={ this.handleTicketChange.bind(this) } />
                         }
                     </Flex.Col>

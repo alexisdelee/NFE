@@ -10,8 +10,11 @@ import { Header } from "./components/external/Header";
 import { Menu } from "./components/external/Menu";
 import { TicketList } from "./components/ticket/TicketList";
 import { TicketContent } from "./components/ticket/TicketContent";
+import { HistoryList } from "./components/history/HistoryList";
+import { Statistic } from "./components/external/Statistic";
 
 import "./Index.scss";
+
 
 class Session extends React.Component<Object, Object> {
     public static mustBeLogged(node: React.ReactNode): React.ReactNode {
@@ -78,7 +81,7 @@ class Ticket extends React.Component<{ match: match<{ id: string }> }, Object> {
     }
 }
 
-// NewTicket
+// New ticket
 class NewTicket extends React.Component<Object, Object> {
     public render(): React.ReactNode {
         return Session.mustBeLogged(
@@ -88,6 +91,34 @@ class NewTicket extends React.Component<Object, Object> {
                         <TicketContent new={ true } />
                     </Flex.Col>
                 </Flex.Row>
+                || <Redirect to="/404" />
+        );
+    }
+}
+
+// All histories for a specific ticket
+class AllHistories extends React.Component<{ match: match<{ id: string }> }, Object> {
+    public render(): React.ReactNode {
+        return Session.mustBeLogged(
+            Permission.parseFromStorage().has("histories", PermissionMethod.READ)
+                && <Flex.Row>
+                    <Flex.Col xs={ 0 } md={ 1 }></Flex.Col>
+                    <Flex.Col xs={ 12 } md={ 10 }>
+                        <HistoryList ticketId={ parseInt(this.props.match.params.id, 10) } />
+                    </Flex.Col>
+                    <Flex.Col xs={ 0 } md={ 1 }></Flex.Col>
+                </Flex.Row>
+                || <Redirect to="/404" />
+        );
+    }
+}
+
+// Statistics
+class Statistics extends React.Component<Object, Object> {
+    public render(): React.ReactNode {
+        return Session.mustBeLogged(
+            Permission.parseFromStorage().has("statistics", PermissionMethod.READ)
+                && <Statistic />
                 || <Redirect to="/404" />
         );
     }
@@ -136,7 +167,10 @@ render(
                 <Route path="/" exact render={ (props) => <Index { ...props } /> } />
                 <Route path="/tickets" exact component={ AllTickets } />
                 <Route path="/tickets/new" exact component={ NewTicket } />
+                <Route path="/tickets/:id([0-9]+)/history" component={ AllHistories } />
                 <Route path="/tickets/:id([0-9]+)" component={ Ticket } />
+
+                <Route path="/statistics" exact component={ Statistics }></Route>
 
                 <Route path="/login" component={ AuthenticationLogin } />
                 <Route path="/logout" component={ AuthenticationLogout } />
