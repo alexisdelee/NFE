@@ -1,7 +1,6 @@
-api/node_modules/
-api/tmp/
-api/nfe_*.sql
-api/kernel/layers_*.sql
+api/.idea/
+api/.mvn/
+api/target/
 
 backoffice/node_modules/
 backoffice/helpers/
