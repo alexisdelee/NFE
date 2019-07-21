@@ -5,7 +5,7 @@ api/kernel/layers_*.sql
 
 backoffice/node_modules/
 backoffice/helpers/
-backoffice/build/static/
+backoffice/build/
 backoffice/.firebase/
 backoffice/firebase-debug.log
 
