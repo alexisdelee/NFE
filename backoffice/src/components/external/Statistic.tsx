@@ -137,6 +137,7 @@ export class Statistic extends React.Component<Object, IMenuState> {
 
     // Handler >>> 
         private handleTrackerChange(trackers: Array<any>): void {
+            trackers = trackers || new Array<ITracker>();
             this.setState({ selectedTrackers: trackers, data: this.generateFormattedData(trackers, this.state.tickets, this.state.selectedX.value.toLowerCase()) });
         }
 

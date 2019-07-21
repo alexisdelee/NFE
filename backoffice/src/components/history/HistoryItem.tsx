@@ -41,7 +41,7 @@ export class HistoryItem extends React.Component<IHistoryProps, IHistoryState> {
                 return "#eefff1"; 
             case "detail":
                 return "#e6ecfa";
-            case "item":
+            case "custom-detail":
                 return "#ffffee";
             case "link":
                 return "#fff4f4";

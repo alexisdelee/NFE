@@ -1,16 +1,22 @@
-.blink {
-    animation: blinker 1s linear infinite;
-}
+.items-content {
+    .blink {
+        animation: blinker 1.2s linear infinite;
+    }
 
-.warning {
-    text-align: center;
-    width: 100%;
-    display: inline-block;
-    color: #d7b427;
-}
+    .warning {
+        text-align: center;
+        width: 100%;
+        display: inline-block;
+        color: #d7b427;
+    }
 
-@keyframes blinker {
-    50% {
-        opacity: 0;
+    th {
+        font-size: 15px;
+    }
+
+    @keyframes blinker {
+        50% {
+            opacity: 0;
+        }
     }
 }

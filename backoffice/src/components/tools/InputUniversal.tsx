@@ -1,7 +1,6 @@
 import * as React from "react";
 import Switch from "rc-switch";
 
-import { ITicket } from "../../models/ITicket";
 import { IItemData } from "../../models/IItemData";
 import { InputFileUniversal } from "../tools/InputFileUniversal";
 
@@ -9,6 +8,7 @@ import "./SwitchUniversal.scss";
 
 // Props
 interface InputUniversalProps {
+    new: boolean;
     data: IItemData;
     readonly: boolean;
     onChange: (data: IItemData) => void;
@@ -43,20 +43,31 @@ export class InputUniversal extends React.Component<InputUniversalProps, InputUn
     }
 
     public componentWillReceiveProps(props: InputUniversalProps): void {
-        this.setState({ data: props.data });
+        this.setState({ data: props.data, readonly: props.readonly });
+    }
+
+    private notifyParent(data: IItemData): void {
+        this.setState({ data });
+        this.props.onChange(data);
     }
 
     private handleChange(event): void {
         const { data } = this.state;
 
-        if (this.state.data.item.universal.label == "checkbox") {
+        if (this.state.data.item.universal.category == "input" && this.state.data.item.universal.label == "checkbox") {
             data.value = event ? "1" : "0";
+            
+            this.notifyParent(data);
         } else {
+            event.target.reportValidity();
             data.value = event.target.value;
-        }
 
-        this.setState({ data });
-        this.props.onChange(data);
+            this.props.onChange(data);
+        }
+    }
+
+    private handleFileChange(data: IItemData): void {
+        this.notifyParent(data);
     }
     
     private makeUp(data: IItemData): React.ReactNode {
@@ -65,10 +76,14 @@ export class InputUniversal extends React.Component<InputUniversalProps, InputUn
                 return <Switch 
                             ref={ this.inputRef }
                             checked={ !!parseInt(data.value, 10) }
-                            disabled={ this.state.readonly || this.state.data.item.readonly }
-                            onChange={ this.handleChange.bind(this)  } />
-            } else if (data.item.universal.label == "file") {
-                return <InputFileUniversal />;
+                            disabled={ !this.props.new && (this.state.readonly || this.state.data.item.readonly) }
+                            onChange={ this.handleChange.bind(this)  }
+                            onFocus={ event => event.target.reportValidity() } />
+            } else if (data.item.universal.category == "input" && data.item.universal.label == "file") {
+                return <InputFileUniversal
+                            data={ this.state.data }
+                            readonly={ !this.props.new && (this.state.readonly || this.state.data.item.readonly) }
+                            onChange={ this.handleFileChange.bind(this) } />;
             }
         }
 
@@ -76,8 +91,10 @@ export class InputUniversal extends React.Component<InputUniversalProps, InputUn
                     ref={ this.inputRef }
                     type={ this.state.data.item.universal.label }
                     value={ this.state.data.value }
-                    disabled={ this.state.readonly || this.state.data.item.readonly }
+                    disabled={ !this.props.new && (this.state.readonly || this.state.data.item.readonly) }
+                    required={ this.state.data.item.required }
                     onChange={ this.handleChange.bind(this) }
+                    onFocus={ event => event.target.reportValidity() }
                     style={{ padding: "7px 8px", fontSize: "14px", width: "100%" }} />
     }
 
@@ -87,7 +104,17 @@ export class InputUniversal extends React.Component<InputUniversalProps, InputUn
                 <table>
                     <tbody>
                         <tr>
-                            <th>{ this.state.data.item.label + (this.state.data.item.required ? " *" : "") }</th>
+                            <th>
+                                <span title={ this.state.data.item.options.map(option => option.label + ": " + option.value).join(", ") }>{ this.state.data.item.label + (this.state.data.item.required ? " *" : "") }</span>
+                                {
+                                    (this.state.data.item.universal.category == "input" && this.state.data.item.universal.label == "file" && !!this.state.data.value)
+                                        && 	<React.Fragment>
+                                            &nbsp;<small>
+                                                <a target="_blanck" href={ this.state.data.value } style={{ textDecoration: "none", color: "gray" }}>(télécharger)</a>
+                                            </small>
+                                        </React.Fragment>
+                                }
+                            </th>
                             <td>
                                 {
                                     this.state.data

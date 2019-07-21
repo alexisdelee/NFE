@@ -7,6 +7,7 @@ export interface IItem extends IQuery {
     label: string;
     readonly: boolean;
     required: boolean;
+    sort: number;
     tracker: ITracker;
     universal: IUniversal;
     options: Array<IItemOption>;

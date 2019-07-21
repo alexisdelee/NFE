@@ -104,12 +104,20 @@ export class TicketRightContent extends React.Component<TicketRightContentProps,
         return new URL(window.location.href).searchParams.get(key);
     }
 
+    private notifyParent(ticket: ITicket): void {
+        this.setState({ ticket });
+        this.props.onChange(ticket);
+    }
+
     private handleSimpleChange(entity: string, value) {
         let ticket: ITicket = { ...this.state.ticket };
         ticket[entity] = value[entity];
 
-        this.setState({ ticket });
-        this.props.onChange(ticket);
+        this.notifyParent(ticket);
+    }
+
+    private handleItemsChange(ticket: ITicket): void {
+        this.notifyParent(ticket);
     }
 
     private handleTrackerChange(value) {
@@ -254,9 +262,10 @@ export class TicketRightContent extends React.Component<TicketRightContentProps,
                         <legend>Détails personnalisés</legend>
         
                         <Items
+                            new={ this.props.new }
                             ticket={ this.state.ticket }
                             readonly={ this.state.readonly }
-                            onChange={ console.log } />
+                            onChange={ this.handleItemsChange.bind(this) } />
                     </fieldset>
                     || null
             }
