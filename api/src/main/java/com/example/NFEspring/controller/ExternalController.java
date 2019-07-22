@@ -78,8 +78,7 @@ public class ExternalController extends ABaseController {
 
             switch (item.getLabel()) {
                 case "Dégradations visibles":
-                    data.setValue(""); // à remplir plus tard
-                    break;
+                    break; // à remplir plus tard
                 case "Nom du client":
                     data.setValue(client);
                     break;

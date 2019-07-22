@@ -46,6 +46,7 @@ export class InputFileUniversal extends React.Component<InputFileUniversalProps,
 
         let files = event.target.files;
         if (files.length == 0) {
+            this.setState({ readonly: false });
             return; // do something
         } else {
             files = Array.from(files)
