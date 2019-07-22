@@ -43,6 +43,10 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter implements Fil
                             SerializableUtils.singletonMap("error", exception.getMessage())
                     )
             );
+        } finally {
+            // debug
+            TenantThread.clear();
+            // debug
         }
     }
 
