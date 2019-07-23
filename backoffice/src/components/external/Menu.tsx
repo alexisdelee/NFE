@@ -39,7 +39,7 @@ export class Menu extends React.Component<Object, IMenuState> {
                         && <React.Fragment>
                             <Flex.Col xs={ 0 } sm={ 3 }></Flex.Col>
                                 <Flex.Col xs={ 12 } sm={ 6 } className="tile">
-                                    <a href="/tickets">
+                                    <a href={ Permission.parseFromStorage().roleId == 1 ? "/tickets?resource=assignee&resourceId=" + Permission.parseFromStorage().userId : "/tickets" }>
                                         <span>Tous les tickets</span>
                                     </a>
                                 </Flex.Col>

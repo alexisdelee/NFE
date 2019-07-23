@@ -29,7 +29,7 @@ export class Permission {
 
                 permissions = part.permissions;
                 userId = part.userId;
-                roleId = part.roleid;
+                roleId = part.roleId;
 
             }
         }

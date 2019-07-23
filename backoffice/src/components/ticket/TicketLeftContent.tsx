@@ -57,8 +57,6 @@ export class TicketLeftContent extends React.Component<TicketLeftContentProps, T
             ticket.reporter = users.find(user => user.id == Permission.parseFromStorage().userId) || null;
         }
 
-        console.log(ticket.reporter);
-
         this.setState({ users, regions, ticket });
         this.props.onChange(ticket);
     }
@@ -221,7 +219,12 @@ export class TicketLeftContent extends React.Component<TicketLeftContentProps, T
                                                     </React.Fragment>
                                             }
 
-                                            <input type="button" value="Archiver" onClick={ this.props.onArchived.bind(this) } />&nbsp;
+                                            {
+                                                Permission.parseFromStorage().has("tickets", PermissionMethod.UPDATE)
+                                                    && <React.Fragment>
+                                                        <input type="button" value="Archiver" onClick={ this.props.onArchived.bind(this) } />&nbsp;
+                                                    </React.Fragment>
+                                            }
                                         </React.Fragment>
                                 }
 
